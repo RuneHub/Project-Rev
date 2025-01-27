@@ -38,7 +38,7 @@ namespace KS.AI
             if (action.considerations.Length == 0)
                 return 0;
 
-            Debug.Log("  Action: " + action.name);
+            //Debug.Log("  Action: " + action.name);
             return action.score = CalculateTotalScore(action.considerations, action);
         }
 
@@ -56,6 +56,9 @@ namespace KS.AI
 
                 Debug.Log("   Consideration: " + list[i].name + ", score: " + considerationScore);
                 score *= considerationScore;
+
+                //if (score == 0)
+                //    return 0;
 
             }
 

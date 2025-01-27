@@ -79,6 +79,11 @@ namespace KS
 
         }
 
+        public GameObject GetMeleeBuildupVFX()
+        {
+            return currentMeleeAttack.meleeBuildUpVFX;
+        }
+
         #endregion
 
         #region Fan

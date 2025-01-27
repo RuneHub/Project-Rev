@@ -88,7 +88,7 @@ namespace KS {
         }
 
         //a virtual function that is running in the background,
-        //it can be used to move thbe character whilst it is doing an animation.
+        //it can be used to move the character whilst it is doing an animation.
         public virtual void HandleAdditionalInteractionMovement()
         {
             if (character.isInteracting && useAdditionalMovement)
@@ -97,7 +97,7 @@ namespace KS {
             }
         }
 
-        //turns off the movment boolean and reset the values.
+        //turns off the movement boolean and reset the values.
         public virtual void ResetAdditionalInteractionMovement()
         {
             adMoveDirection = Vector3.zero;

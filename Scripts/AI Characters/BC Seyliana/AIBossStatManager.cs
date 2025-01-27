@@ -85,6 +85,10 @@ namespace KS
 
             CheckCurrentHPPercentage();
 
+            if (!boss.battleData.damageTrackerRunning)
+            {
+                boss.battleData.StartAccumuledDamage();
+            }
 
             boss.animator.SetBool("isDamaged", false);
         }

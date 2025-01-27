@@ -20,8 +20,7 @@ namespace KS
         public GameObject BossMechanics;
 
         [Header("VFX Buildup")]
-        public GameObject melee3BU_Parent;
-        public GameObject MeleeBuild3BuildUp;
+        public GameObject meleeBU_Parent;
 
         [Header("Melee VFX")]
         public GameObject Melee1;
@@ -51,20 +50,11 @@ namespace KS
             MeleeFinishDeactive();
         }
 
-        public void BuildUpVFX(int num)
+        public void BuildUpVFX()
         {
-            GameObject vfx = new GameObject();
-            switch (num)
-            {
-                case 3:
-                    vfx = Instantiate(MeleeBuild3BuildUp, melee3BU_Parent.transform);
-                    break;
-                default:
-                    Debug.LogError("no correct buildup num vfx");
-                    break;
-            }
-
+            GameObject vfx = Instantiate(manager.combatManager.GetMeleeBuildupVFX(), meleeBU_Parent.transform);
             Destroy(vfx, .5f);
+           
         }
 
         //turns ON melee hitbox
@@ -108,7 +98,7 @@ namespace KS
         //instanciates slash & Stab VFX
         public void MeleeVFX(int comboNum)
         {
-            GameObject vfx = new GameObject();
+            GameObject vfx = null;
             switch (comboNum)
             {
                 case 1:

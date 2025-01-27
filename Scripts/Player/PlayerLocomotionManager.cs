@@ -125,11 +125,8 @@ namespace KS
                     targetDirection.Normalize();
                     targetDirection.y = 0;
 
-
                     if (targetDirection == Vector3.zero)
-                    {
                         targetDirection = transform.forward;
-                    }
 
                     Quaternion tr = Quaternion.LookRotation(targetDirection);
                     Quaternion targetRotation = Quaternion.Slerp(transform.rotation, tr, rotationSpeed * Time.deltaTime);

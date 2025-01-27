@@ -23,6 +23,7 @@ namespace KS
         public AIBossSoundManager soundManager;
         public AIBossEffectManager effectManager;
         public AIBossHpTriggerManager hpTriggerManager;
+        public AIBossBattleData battleData;
 
         public AnimatorOverrideController animatorOV;
 
@@ -49,6 +50,9 @@ namespace KS
         public Vector3 CentralPosition; //this is the position where the boss is whilst doing mechanics.
         public Quaternion CentralRotation; //this is the rotation where the boss is facing whilst doing mechanics.
         public float CombatRange = 30f;
+        public BoxCollider field;
+
+       
 
         protected override void Awake()
         {
@@ -67,12 +71,10 @@ namespace KS
             statManager = GetComponent<AIBossStatManager>();
             animationEvents = GetComponentInChildren<AIBossAnimationEvents>();
             combatAnimationEvents = GetComponentInChildren<AIBossCombatAnimationEvents>();
-
             soundManager = GetComponent<AIBossSoundManager>();
             effectManager = GetComponent<AIBossEffectManager>();
-
             hpTriggerManager = GetComponent<AIBossHpTriggerManager>();
-
+            battleData = GetComponent<AIBossBattleData>();
         }
 
         protected override void Start()

@@ -43,6 +43,8 @@ namespace KS
         {
             boss = FindAnyObjectByType<AIBossManager>();
             player = FindAnyObjectByType<PlayerManager>();
+            field = boss.field;
+            stormsEyeVisual.SetActive(false);
         }
 
         //loop x amount of times, start
@@ -67,6 +69,7 @@ namespace KS
 
         IEnumerator ExecuteMechanic()
         {
+            stormsEyeVisual.SetActive(true);
             for (int i = 0; i < castAmount; i++)
             {
                 Transform output = GetOutput();
