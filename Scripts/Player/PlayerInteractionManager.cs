@@ -22,8 +22,8 @@ namespace KS
         private void FixedUpdate()
         {
             //if our UI Menu is NOT open, and we don't have a POP UP (current interaction message) check for interactible.
-            if (!PlayerUIManager.instance.menuWindowIsOpen &&
-                !PlayerUIManager.instance.popUpWindowisOpen)
+            if (!UIManager.instance.menuWindowIsOpen &&
+                !UIManager.instance.popUpWindowisOpen)
             {
                 CheckForInteractable(); 
             }
@@ -45,7 +45,7 @@ namespace KS
             if (currentInteractibleActions[0] != null)
             {
                 // popup manager sent player message.
-                PlayerUIManager.instance.popupManager.SendPlayerMessagePopUp(currentInteractibleActions[0].interactibleText);
+                UIManager.instance.popupManager.SendPlayerMessagePopUp(currentInteractibleActions[0].interactibleText);
             }
 
         }

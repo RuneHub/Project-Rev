@@ -31,7 +31,7 @@ namespace KS
 
                 interactibleCollider.enabled = false;
                 player.interactionManager.RemoveInteractionFromList(this);
-                PlayerUIManager.instance.popupManager.CloseAllPopUpWindows();
+                UIManager.instance.popupManager.CloseAllPopUpWindows();
                 isInteractable = false;
             }
         }
@@ -60,7 +60,7 @@ namespace KS
                 {
                     //pass interaction to player.
                     player.interactionManager.RemoveInteractionFromList(this);
-                    PlayerUIManager.instance.popupManager.CloseAllPopUpWindows();
+                    UIManager.instance.popupManager.CloseAllPopUpWindows();
                 }
             }
 

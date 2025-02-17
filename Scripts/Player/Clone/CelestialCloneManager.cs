@@ -273,6 +273,7 @@ namespace KS
             for (int x = 0; x < SMR.Length; x++)
             {
                 SMR[x].materials[0].SetFloat("_DissolveAmount", 0);
+                SMR[x].materials[1].SetFloat("_DissolveAmount", 0);
             }
 
             for (int x = 0; x < MR.Length; x++)
@@ -287,6 +288,7 @@ namespace KS
             for (int x = 0; x < SMR.Length; x++)
             {
                 SMR[x].materials[0].SetFloat("_DissolveAmount", 1);
+                SMR[x].materials[1].SetFloat("_DissolveAmount", 1);
             }
 
             for (int x = 0; x < MR.Length; x++)
@@ -319,6 +321,7 @@ namespace KS
                     for (int x = 0; x < SMR.Length; x++)
                     {
                         SMR[x].materials[0].SetFloat("_DissolveAmount", counter);
+                        SMR[x].materials[1].SetFloat("_DissolveAmount", counter);
                     }
 
                     for (int x = 0; x < MR.Length; x++)

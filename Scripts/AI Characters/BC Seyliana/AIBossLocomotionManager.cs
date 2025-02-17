@@ -14,6 +14,8 @@ namespace KS
         public float movementSpeed = 10;
         public float horizontalInput;
         public float verticalInput;
+        public bool isMoving;
+        public float yHeight = 0.23f;
 
         [Header("Teleport")]
         [Space(10)]
@@ -65,9 +67,15 @@ namespace KS
             if (!manager.isGrounded)
                 return;
 
-            //moveDirection = manager.GetTarget().transform.position - transform.position;
             moveDirection.Normalize();
-            moveDirection.y = transform.position.y;
+            if (!isMoving)
+            {
+                moveDirection.y = transform.position.y;
+            }
+            else
+            {
+                moveDirection.y = yHeight;
+            }
 
             manager.controller.Move(moveDirection * movementSpeed * Time.deltaTime);
             manager.bossAnimations.UpdateAnimatorValues(horizontalInput, verticalInput);

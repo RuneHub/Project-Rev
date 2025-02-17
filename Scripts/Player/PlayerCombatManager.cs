@@ -34,7 +34,6 @@ namespace KS
         public int MaxCapacity = 250;
 
         private GameObject poolParent;
-        // private ObjectPool<ProjectileCollisionDetection> _pool;
         private ObjectPool<GameObject> _pool; //needs to be changed to projectile script when Projectile scripts get redone.
 
         [Header("Raycast shooting")]

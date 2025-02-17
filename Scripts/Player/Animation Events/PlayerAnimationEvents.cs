@@ -180,5 +180,37 @@ namespace KS
         }
         #endregion
 
+        #region Cutscene
+
+        public void IntroCutsceneMove()
+        {
+            StartCoroutine(MoveToZero());
+        }
+
+        IEnumerator MoveToZero()
+        {
+            float duration = 4f;
+            float time = 0;
+            Vector3 targetPos = new Vector3(0, 0, 0);
+
+            while (time < duration) 
+            {
+                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, time/ duration);
+                
+                if(transform.localPosition == targetPos )
+                {
+                    break;
+                }
+                
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            transform.localPosition = Vector3.zero;
+
+        }
+
+        #endregion
+
     }
 }

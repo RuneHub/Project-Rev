@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GridBrushBase;
 
 namespace KS
 {
@@ -15,9 +11,6 @@ namespace KS
         //refences
         PlayerControl controls;
         PlayerManager player;
-
-        [Header("payer input")]
-        public bool playerInput;
 
         [Header("Movement Numericals")]
         public Vector2 movementInput;
@@ -42,6 +35,10 @@ namespace KS
         public bool SkillSouthInput;
         public bool SkillWestInput;
         public bool SkillEastInput;
+
+        [Header("Healing Inputs")]
+        public bool smallHealInput;
+        public bool largeHealInput;
 
         [Header("Action Inputs")]
         public bool interactInput;
@@ -88,8 +85,9 @@ namespace KS
         [SerializeField] bool quedSkillEInput;
 
         [Header("UI inputs")]
-        [SerializeField] bool openMainMenuInput = false;
-        [SerializeField] bool closeMenuInput = false;
+        [SerializeField] bool uiOpenMenu = false;
+        [SerializeField] bool uiConfirm = false;
+        [SerializeField] bool uiReturn = false;
 
         private void Awake()
         {
@@ -121,6 +119,11 @@ namespace KS
                 controls.PlayerAction.Jump.performed += i => jumpInput = true;
                 controls.PlayerAction.Dodge.performed += i => dodgeInput = true;
 
+                controls.PlayerAction.HealSmall.performed += i => smallHealInput = true;
+                controls.PlayerAction.HealSmall.canceled += i => smallHealInput = false;
+                controls.PlayerAction.HealLarge.performed += i => largeHealInput = true;
+                controls.PlayerAction.HealLarge.canceled += i => largeHealInput = false;
+
                 //control
                 controls.Control.LockOn.performed += i => lockOnInput = true;
                 controls.Control.LockOnRight.performed += i => lockOnRightInput = true;
@@ -130,17 +133,19 @@ namespace KS
                 controls.Control.Skill.performed += i => SkillSetOpenInput = true;
                 controls.Control.Skill.canceled += i => SkillSetOpenInput = false;
 
+
                 //Camera
                 controls.Camera.Rotation.performed += i => cameraInput = i.ReadValue<Vector2>();
 
                 //UI
-                controls.Control.OpenMainMenu.performed += i => openMainMenuInput = true;
-                controls.PlayerAction.Interact.performed += i => closeMenuInput = true;
+                controls.Control.OpenMainMenu.performed += i => uiOpenMenu = true;
+                controls.UI.ResumeTime.performed += i => uiConfirm = true; //needs to be set to confirm when done with debugging menu's
+                controls.UI.Return.performed += i => uiReturn = true;
 
             }
 
-            controls.Enable();
-
+            controls.Enable(); 
+            DisableGameplayInput();
         }
 
         //disable the controls.
@@ -152,7 +157,7 @@ namespace KS
         //public, the function that gets called on Update(), so it checks the private input funcionts.
         public void HandleAllInputs()
         {
-
+           
             HandleCameraInput();
 
             HandleSkillModifierInput();
@@ -169,26 +174,26 @@ namespace KS
             HandleSkillInput();
             HandleUniqueAbilityInput();
 
+            HandleSmallHealInput();
+            HandleLargeHealInput();
+
             HandleInteractInput();
 
             HandleLockOnInput();
 
             HandleQuedInputs();
 
-            HandleOpenMainMenuInput();
-            HandleCloseUIInput();
-
-            if (playerInput)
-            {
-                playerInput = false;
-            }
+            HandleUIOpenMainMenuInput(); 
+            HandleUIConfirmInput();
+            HandleUiReturnInput();
 
         }
 
+        #region Gameplay
         //seperates the horizontal and vertical inputs for the camera.
         private void HandleCameraInput()
         {
-            if (PlayerUIManager.instance.menuWindowIsOpen)
+            if (UIManager.instance.menuWindowIsOpen)
                 return; //might change this later?
 
             cameraHorizontalInput = cameraInput.x;
@@ -249,7 +254,7 @@ namespace KS
         //changes the boolean value based on if the jump button is pressed, changes it too false immediately after it is reqqognized as true
         private void HandleJumpInput()
         {
-            if (PlayerUIManager.instance.menuWindowIsOpen)
+            if (UIManager.instance.menuWindowIsOpen)
             {
                 jumpInput = false;
                 return;
@@ -425,7 +430,6 @@ namespace KS
         //handles the skill attacks
         private void HandleSkillInput()
         {
-
             if (SkillNorthInput)
             {
                 SkillNorthInput = false;
@@ -449,6 +453,62 @@ namespace KS
                 SkillEastInput = false;
                 //Debug.Log("input East");
                 player.combatManager.HandleSkillAction('E');
+            }
+        }
+
+        //handles small heal input
+        private void HandleSmallHealInput()
+        {
+            if (largeHealInput)
+                return;
+
+            if (player.playerStats.smallhealingAmount == 0)
+                return;
+
+            if (smallHealInput)
+            {
+                player.playerStats.smallHealCharging = true;
+                player.playerStats.HandleHealingCharge(); 
+                if (player.playerStats.healingCharged)
+                {
+                    player.playerStats.HandleHealing(player.playerStats.smallHealingPercentage, false);
+                    smallHealInput = false;
+                }
+
+            }
+            else
+            {
+                player.playerStats.smallHealCharging = false;
+                player.playerStats.healCharging = false;
+                smallHealInput = false;
+            }
+        }
+
+        //handles large heal input
+        private void HandleLargeHealInput()
+        {
+            if (smallHealInput)
+                return;
+
+            if (player.playerStats.LargeHealingAmount == 0)
+                return;
+
+            if (largeHealInput)
+            {
+                player.playerStats.LargeHealCharging = true;
+                player.playerStats.HandleHealingCharge();
+                if (player.playerStats.healingCharged)
+                {
+                    player.playerStats.HandleHealing(0, true);
+                    largeHealInput = false;
+                }
+
+            }
+            else
+            {
+                player.playerStats.LargeHealCharging = false;
+                player.playerStats.healCharging = false;
+                largeHealInput = false;
             }
         }
 
@@ -545,7 +605,9 @@ namespace KS
             }
 
         }
+        #endregion
 
+        #region Queying inputs
         private void CheckQuedInputs()
         {
             if (!SkillSetOpenInput)
@@ -687,34 +749,72 @@ namespace KS
             quedSkillEInput = false;
 
         }
+        #endregion
 
-        private void HandleOpenMainMenuInput()
+        #region UI
+        private void HandleUIOpenMainMenuInput()
         {
-            if (openMainMenuInput)
+            if (!UIManager.instance.menuWindowIsOpen && uiOpenMenu)
             {
-                openMainMenuInput = false;
+                uiOpenMenu = false;
 
-                PlayerUIManager.instance.CloseAllMenuWindows();
+                cameraVerticalInput = 0;
+                cameraHorizontalInput = 0;
 
-                PlayerUIManager.instance.menuManager.OpenGameMenu();
-
+                UIManager.instance.CloseAllMenuWindows();
+                UIManager.instance.menuManager.OpenMenu();
             }
         }
 
-        private void HandleCloseUIInput()
+        private void HandleUiReturnInput()
         {
-            if (closeMenuInput)
+            if (uiReturn)
             {
-                closeMenuInput = false;
-
-                if (PlayerUIManager.instance.menuWindowIsOpen)
+                uiReturn = false;
+                if (UIManager.instance.menuWindowIsOpen 
+                    && UIManager.instance.gameplayMenuIsOpen)
                 {
-                    PlayerUIManager.instance.CloseAllMenuWindows();
+                    UIManager.instance.CloseAllMenuWindows();
                 }
-
+                else if (UIManager.instance.menuWindowIsOpen)
+                {
+                    Debug.Log("Return");
+                    UIManager.instance.currentOpenMenu.CloseMenu();
+                    Debug.Log("Returned!");
+                }
             }
         }
 
+        private void HandleUIConfirmInput()
+        {
+            if (uiConfirm)
+            {
+                uiConfirm = false;
+                if (Time.timeScale == 0)
+                    Time.timeScale = 1;
+            }
+        }
+
+        public void DisableGameplayInput()
+        {
+            controls.PlayerAction.Disable();
+            controls.PlayerMovement.Disable();
+            controls.Control.Disable();
+            controls.Camera.Disable();
+            controls.UI.Enable();
+        }
+
+        public void EnableGameplayInput()
+        {
+            controls.PlayerAction.Enable();
+            controls.PlayerMovement.Enable();
+            controls.Control.Enable();
+            controls.Camera.Enable();
+            controls.UI.Disable();
+        }
+        #endregion
+
+        #region Directional inputs
         //returns a vector2 of which direction is inputted.
         public Vector2 GetDirectionalValues(float horizontal, float vertical)
         {
@@ -798,6 +898,7 @@ namespace KS
 
             return inputDir;
         }
+        #endregion
 
     }
 

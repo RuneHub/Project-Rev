@@ -100,7 +100,8 @@ namespace KS {
 
         protected virtual void HandleDeath()
         {
-            
+            if(currentHealth < 0)
+                currentHealth = 0;
         }
 
         public virtual void TakeDamage(float damage, bool isCrit, Color displayColor, float angledContact = 0, DamageProperties property = DamageProperties.Normal)

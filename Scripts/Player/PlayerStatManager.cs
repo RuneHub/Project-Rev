@@ -29,6 +29,21 @@ namespace KS {
         public float CamerashakeMagnitude = .2f;
         public float hitStopAnimationSpeedMultiplier = .1f;
 
+        [Header("Healing")]
+        public int smallhealingAmount = 3;
+        public float smallHealingPercentage = 25f;
+        public float smallHealCharge = 0;
+        public bool smallHealCharging;
+
+        public int LargeHealingAmount = 1;
+        public float largeHealCharge = 0;
+        public bool LargeHealCharging;
+
+        public float healingChargeSpeed = 0.25f;
+        public float maxHealingCharge = 100;
+        public bool healingCharged = false;
+        public bool healCharging = false;
+
         protected override void Awake()
         {
             base.Awake();
@@ -40,7 +55,7 @@ namespace KS {
             base.Start();
             player = GetComponent<PlayerManager>();
 
-            PlayerUIManager.instance.SetupHUD();
+            UIManager.instance.SetupHUD();
 
             GetAllHurtBoxColliders();
         }
@@ -54,9 +69,29 @@ namespace KS {
         {
             base.Update();
 
+            if (!LargeHealCharging && largeHealCharge > 0)
+            {
+                largeHealCharge -= healingChargeSpeed;
+                if (largeHealCharge <= 0) 
+                {
+                    largeHealCharge = 0;
+                }
+            }
+                
+            if (!smallHealCharging && smallHealCharge > 0)
+            {
+                smallHealCharge -= healingChargeSpeed;
+                if (smallHealCharge <= 0)
+                {
+                    smallHealCharge = 0;
+                }
+            }
+            
+
             HandleJDCollision();
         }
 
+        #region Death & Damage
         protected override void HandleDeath()
         {
             base.HandleDeath();
@@ -64,8 +99,8 @@ namespace KS {
             player.playerAnimations.PlayTargetAnimation("Death", true, layerNum: 1);
 
             //would probably need to put this is a proper death event.
-            PlayerUIManager.instance.popupManager.SendQuestFailedPopup();
-
+            UIManager.instance.popupManager.SendQuestFailedPopup();
+            player.inputs.DisableGameplayInput();
         }
 
         public override void TakeDamage(float damage, bool isCrit, Color displayColor, float angledContact, DamageProperties property)
@@ -157,7 +192,81 @@ namespace KS {
 
             player.animator.SetBool("DamageRecover", true);
         }
+        #endregion
 
+        #region Healing
+
+        public void HandleHealingCharge()
+        {
+            healCharging = true;
+
+            if (LargeHealCharging)
+            {
+                largeHealCharge += healingChargeSpeed;
+                if (largeHealCharge > maxHealingCharge)
+                {
+                    largeHealCharge = maxHealingCharge;
+                    healingCharged = true;
+                }
+            }
+            else if (smallHealCharging)
+            {
+                smallHealCharge += healingChargeSpeed;
+                if (smallHealCharge > maxHealingCharge)
+                {
+                    smallHealCharge = maxHealingCharge;
+                    healingCharged = true;
+                }
+            }
+        }    
+
+        public void HandleHealing(float healingAmountPercentage,bool healFully)
+        {
+            if (currentHealth <= 0)
+                return;
+
+            if (player.isDead)
+                return;
+
+            Debug.Log("Healed!");
+            healingCharged = false;
+            healCharging = false;
+            if (healFully)
+            {
+                if (LargeHealingAmount > 0)
+                {
+                    LargeHealingAmount--;
+                    currentHealth = maxHealth;
+                    largeHealCharge = 0;
+
+                    if (LargeHealingAmount == 0)
+                    {
+                        largeHealCharge = maxHealingCharge;
+                    }
+
+                }
+            }
+            else
+            {
+                if (smallhealingAmount > 0)
+                {
+                    smallhealingAmount--;
+                    float healingAmount = ((maxHealth / 100) * healingAmountPercentage);
+                    currentHealth += healingAmount;
+                    smallHealCharge = 0;
+
+                    if (smallhealingAmount == 0)
+                    {
+                        smallHealCharge = maxHealingCharge;
+                    }
+                }
+            }
+
+        }
+
+        #endregion
+
+        #region Hurtboxes
         //get all the colliders under the model object,
         //remove the colliders that have not been tagged as "Hurtbox"
         private void GetAllHurtBoxColliders()
@@ -198,7 +307,9 @@ namespace KS {
                 }
             }
         }
+        #endregion
 
+        #region Just Dodge
         public void ActivateJD(bool useDefaultTime = true, float otherTime = 0)
         {
             JDActiveTime = true;
@@ -255,20 +366,22 @@ namespace KS {
                 }
             }
         }
+        #endregion
 
+        #region Status Effects
         public override void AddStatusEffect(StatusEffectsSO adding)
         {
             base.AddStatusEffect(adding);
-            PlayerUIManager.instance.hudManager.HandleStatusEffects(adding);
+            UIManager.instance.hudManager.HandleStatusEffects(adding);
         }
 
         public override void RemoveStatusEffect(StatusEffectsSO removing)
         {
             base.RemoveStatusEffect(removing);
-            PlayerUIManager.instance.hudManager.RemoveStatusEffectIcon(removing);
+            UIManager.instance.hudManager.RemoveStatusEffectIcon(removing);
         }
+        #endregion
 
-        //temp
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;

@@ -27,8 +27,6 @@ namespace KS {
 
         public FXMeshTrail trailEffect; //temp <- this needs to be more modular in the future.
 
-        public bool listenToInputs = true;
-
         [Header("player movement booleans")]
         public bool isSprinting;
         public bool isDodging;
@@ -116,10 +114,7 @@ namespace KS {
             animator.SetBool("isAiming", isAiming);
             animator.SetBool("isCharging", isCharging);
             
-            if (listenToInputs)
-            {
-                inputs.HandleAllInputs(); // checks for inputs.
-            }
+            inputs.HandleAllInputs(); // checks for inputs.
 
             playerLocomotion.HandleAllMovements();
 
@@ -129,7 +124,7 @@ namespace KS {
 
             uniqueMechManager.UniqueMechUpdate();
 
-            PlayerUIManager.instance.hudManager.UpdateHUD();
+            UIManager.instance.hudManager.UpdateHUD();
 
         }
 

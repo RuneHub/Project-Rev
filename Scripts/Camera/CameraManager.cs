@@ -1,6 +1,6 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace KS
@@ -51,7 +51,7 @@ namespace KS
         private Vector3 rotation;
         private Quaternion targetRotation;
         public static CameraManager singleton;
-        private Camera mainCam;
+        private CinemachineVirtualCamera mainCam;
 
         [Header("Lock on")]
         public bool LockedOn = false;
@@ -77,11 +77,7 @@ namespace KS
         {
             singleton = this;
 
-            mainCam = GetComponentInChildren<Camera>();
-            if (mainCam != Camera.main)
-            {
-                Debug.LogError("Not correct Camera");
-            }
+            mainCam = GetComponentInChildren<CinemachineVirtualCamera>();
 
             player = FindObjectOfType<PlayerManager>();
 
@@ -437,7 +433,7 @@ namespace KS
         }
 
         //returns the camera.
-        public Camera GetCamera()
+        public CinemachineVirtualCamera GetCamera()
         {
             return mainCam;
         }
