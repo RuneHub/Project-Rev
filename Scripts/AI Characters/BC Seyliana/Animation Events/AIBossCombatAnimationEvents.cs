@@ -13,6 +13,7 @@ namespace KS
 
         public Transform WeaponOutput;
         public MeleeDamageCollider meleeHitbox;
+        public MeleeDamageCollider ArmHitbox;
         public MeleeDamageCollider meleeHitboxFinish;
         public GameObject AuraBlade;
 
@@ -45,6 +46,7 @@ namespace KS
         public void SetupMeleeHitboxes()
         {
             meleeHitbox.Init(DestroyHitbox, manager, manager.statManager.baseAttack);
+            ArmHitbox.Init(DestroyHitbox, manager, manager.statManager.baseAttack);
             MeleeDeactive();
             meleeHitboxFinish.Init(DestroyHitbox, manager, manager.statManager.baseAttack);
             MeleeFinishDeactive();
@@ -63,13 +65,17 @@ namespace KS
             meleeHitbox.ResetBeforeUse(); 
             meleeHitbox.SetAttackPower(manager.combatManager.currentMeleeAttack.baseDamage);
             meleeHitbox.gameObject.SetActive(true);
-            
+
+            ArmHitbox.ResetBeforeUse();
+            ArmHitbox.SetAttackPower(manager.combatManager.currentMeleeAttack.baseDamage);
+            ArmHitbox.gameObject.SetActive(true);
         }
 
         //turns OFF melee hitbox
         public void MeleeDeactive()
         {
             meleeHitbox.gameObject.SetActive(false);
+            ArmHitbox.gameObject.SetActive(false);
         }
 
         //turns ON melee hitbox Finish (last combo attack)
@@ -79,6 +85,10 @@ namespace KS
             meleeHitboxFinish.SetAttackPower(manager.combatManager.currentMeleeAttack.baseDamage);
             meleeHitboxFinish.gameObject.SetActive(true);
             AuraBlade.SetActive(true);
+
+            ArmHitbox.ResetBeforeUse();
+            ArmHitbox.SetAttackPower(manager.combatManager.currentMeleeAttack.baseDamage);
+            ArmHitbox.gameObject.SetActive(true);
         }
 
         //turns OFF melee hitbox Finish (last combo attack)
@@ -86,6 +96,7 @@ namespace KS
         {
             meleeHitboxFinish.gameObject.SetActive(false);
             AuraBlade.SetActive(false);
+            ArmHitbox.gameObject.SetActive(false);
         }
 
         //sets Combo flag boolean to true,

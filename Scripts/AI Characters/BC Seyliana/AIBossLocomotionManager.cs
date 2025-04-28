@@ -168,7 +168,7 @@ namespace KS
 
         }
 
-        //places the character at a given location, if invisibili and invulnability are turned on, turns those off.
+        //places the character at a given location, if invisibilty and invulnability are turned on, turns those off.
         public void FastTravel(Vector3 Location, bool isInvisible, bool isInvincible)
         {
             manager.controller.enabled = false;

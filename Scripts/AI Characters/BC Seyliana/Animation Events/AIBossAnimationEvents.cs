@@ -10,6 +10,7 @@ namespace KS
 
         public GameObject fanWeapon;
 
+        public GameObject LoopingCastVFX;
         public GameObject CastFinishVFX;
 
         [SerializeField] private List<SkinnedMeshRenderer> SMR;
@@ -19,6 +20,8 @@ namespace KS
         private void Awake()
         {
             manager = GetComponentInParent<AIBossManager>();
+
+            LoopingCastOff();
         }
 
         #region Visuals & VFX
@@ -38,20 +41,20 @@ namespace KS
         #endregion
 
         #region Magic
-
-        public void CastLoopingVFX()
+        public void LoopingCastOn()
         {
+            LoopingCastVFX.gameObject.SetActive(true);
+        }
 
-            GameObject Cast;
-            float timer;
-            (Cast, timer) = manager.combatManager.GetMagicCastLooping();
-
-            GameObject vfx = Instantiate(Cast, transform);
-            Destroy(vfx.gameObject, timer);
+        public void LoopingCastOff()
+        {
+            LoopingCastVFX.gameObject.SetActive(false);
+            
         }
 
         public void CastFinish()
         {
+            LoopingCastOff();
             GameObject vfx = Instantiate(CastFinishVFX, transform);
             Destroy(vfx.gameObject, .5f);
         }

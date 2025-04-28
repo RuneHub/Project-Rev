@@ -9,7 +9,6 @@ namespace KS
     {
         public string ID;
         public float CastTime;
-        public GameObject CastingVFX;
 
     }
 }

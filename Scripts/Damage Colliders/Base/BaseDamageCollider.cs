@@ -11,6 +11,8 @@ namespace KS
         public TargetTypes Owners;
         public TargetTypes Targets;
 
+        public GameObject impactVFX;
+
         public bool DestroyAfterImpact = false;
         public bool DestroyWithTime = true;
         public float DestroyTimer = 15f;
@@ -79,6 +81,16 @@ namespace KS
         public void SetAttackPower(float atkPwr)
         {
             colliderAtkPwr = atkPwr;
+        }
+
+        public void CreateImpactVFX(Vector3 position)
+        {
+            if (impactVFX != null)
+            {
+                var impactFX = Instantiate(impactVFX);
+                Destroy(impactFX, 2);
+                impactFX.transform.position = position;
+            }
         }
 
     }

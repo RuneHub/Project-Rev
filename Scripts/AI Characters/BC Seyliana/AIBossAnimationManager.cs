@@ -79,5 +79,19 @@ namespace KS
             animator.SetFloat(vertical, snappedVertical, 0.1f, Time.deltaTime);
         }
 
+        //gets the animation multiplier from the animation and changes the animation speed for the given duration.
+        //changes it back to normal aftwards.
+        public void AdjustAnimationSpeed(string multiplier, float speed, float duration)
+        {
+            StartCoroutine(AdjustSpeed(multiplier, speed, duration));
+        }
+
+        IEnumerator AdjustSpeed(string multiplier, float speed, float duration)
+        {
+            animator.SetFloat(multiplier, speed);
+            yield return new WaitForSeconds(duration);
+            animator.SetFloat(multiplier, 1);
+        }
+
     }
 }

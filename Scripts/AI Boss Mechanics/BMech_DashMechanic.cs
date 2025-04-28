@@ -43,6 +43,11 @@ namespace KS
 
         private void Awake()
         {
+            FindManagers();
+        }
+
+        private void FindManagers()
+        {
             boss = FindAnyObjectByType<AIBossManager>();
             player = FindAnyObjectByType<PlayerManager>();
         }
@@ -50,6 +55,12 @@ namespace KS
         [ContextMenu("PlayMechanic")]
         public override void PlayMechanic()
         {
+            if (boss == null ||
+                player == null)
+            {
+                FindManagers();
+            }
+
             base.PlayMechanic();
 
             Debug.DrawLine(startPosition.position, transform.forward * Mathf.Infinity, Color.cyan, 10);

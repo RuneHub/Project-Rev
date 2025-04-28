@@ -25,7 +25,6 @@ namespace KS
         [Header("Magic Casts")]
         public BossMagicCastsMechanicSO magicAttack;
         public BossMagicCastsMechanicSO currentMagicAttack;
-        public GameObject magicCastLoopinVFX;
 
         [Header("Dash Attack")]
         public BossDashAttackSO DashAttackSO;
@@ -157,14 +156,7 @@ namespace KS
         //set given magic cast to the current one
         public void HandleMagicCast(BossMagicCastsMechanicSO so)
         {
-            magicCastLoopinVFX = so.CastingVFX;
             currentMagicAttack = so;
-        }
-
-        //returns the casting vfx with the time
-        public (GameObject, float) GetMagicCastLooping()
-        {
-            return (magicCastLoopinVFX, currentMagicAttack.CastTime);
         }
 
         #endregion

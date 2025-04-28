@@ -41,8 +41,13 @@ namespace KS
 
         private void Awake()
         {
+            FindManagers(); 
+        }
+
+        private void FindManagers()
+        {
             boss = FindAnyObjectByType<AIBossManager>();
-            player = FindAnyObjectByType<PlayerManager>();
+            player = FindAnyObjectByType<PlayerManager>(); 
             field = boss.field;
             stormsEyeVisual.SetActive(false);
         }
@@ -63,6 +68,12 @@ namespace KS
         [ContextMenu("PlayMechanic")]
         public void PlayMechanic()
         {
+            if (boss == null ||
+               player == null)
+            {
+                FindManagers();
+            }
+
             StartCoroutine(ExecuteMechanic());
             Debug.Log("start Eye of the Storm!");
         }

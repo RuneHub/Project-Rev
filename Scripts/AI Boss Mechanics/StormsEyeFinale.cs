@@ -35,6 +35,10 @@ namespace KS
 
         private void Awake()
         {
+            FindManagers();
+        }
+        private void FindManagers()
+        {
             boss = FindAnyObjectByType<AIBossManager>();
         }
 
@@ -48,6 +52,11 @@ namespace KS
         [ContextMenu("PlayFinale")]
         public void PlayFinale()
         {
+            if (boss == null)
+            {
+                FindManagers();
+            }
+
             StartCoroutine(ExecuteFinale());
         }
 

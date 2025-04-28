@@ -8,6 +8,8 @@ namespace KS
     {
 
         public List<Collider> ArenaInvisibleWalls = new List<Collider>();
+        public AIBossManager boss;
+        public AIBossHpTriggerManager hpTriggerManager;
 
         protected override void Awake()
         {
@@ -47,6 +49,9 @@ namespace KS
             for (int i = 0; i < ArenaInvisibleWalls.Count; i++)
             {
                 ArenaInvisibleWalls[i].gameObject.SetActive(true);
+                boss.gameObject.SetActive(true);
+                hpTriggerManager.gameObject.SetActive(true);
+                gameObject.SetActive(false);
             }
 
             //start intro cutscene

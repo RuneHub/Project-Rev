@@ -51,6 +51,9 @@ namespace KS
                             StartCoroutine(HitStopDelay(.3f, col, dir));
                         }
 
+                        var colPoint = col.ClosestPoint(transform.position);
+                        CreateImpactVFX(colPoint);
+
                     }
                     else
                     {

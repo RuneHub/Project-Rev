@@ -22,6 +22,11 @@ namespace KS
 
         private void Awake()
         {
+            FindManagers();
+        }
+
+        private void FindManagers()
+        {
             boss = FindAnyObjectByType<AIBossManager>();
             atlos = AtlosMain.atlos;
         }
@@ -34,6 +39,11 @@ namespace KS
         [ContextMenu("PlayMechanic")]
         public override void PlayMechanic()
         {
+            if (boss == null)
+            {
+                FindManagers();
+            }
+
             switch (type)
             {
                 case MechanicType.Sequencer:
