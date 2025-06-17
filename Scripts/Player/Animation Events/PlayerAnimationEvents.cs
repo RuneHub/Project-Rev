@@ -85,6 +85,7 @@ namespace KS
         {
             player.effectManager.JumpEffect();
         }
+
         #endregion
 
         #region Sound FX

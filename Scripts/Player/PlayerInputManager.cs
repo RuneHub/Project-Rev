@@ -75,7 +75,8 @@ namespace KS
         [Header("Qued Inputs")]
         [SerializeField] private bool InputQueActive = false;
         [SerializeField] float queInputTimer = 0;
-        [SerializeField] float defaultQueTime = 0.35f; 
+        [SerializeField] float defaultQueTime = 0.35f;
+        [SerializeField] float SkillQueTime = .7f;
         [SerializeField] bool quedAttackInput;
         [SerializeField] bool quedJumpInput;
         [SerializeField] bool quedUniqueInput;
@@ -616,48 +617,48 @@ namespace KS
                     basicAttackInput && player.isInteracting)
                 {
                     //Debug.Log("que attack");
-                    QueInput(ref quedAttackInput);
+                    QueInput(ref quedAttackInput, defaultQueTime);
                 }
 
                 if (uniqueAttackInput && player.isInteracting && !player.isCharging)
                 {
                     //Debug.Log("que unique");
-                    QueInput(ref quedUniqueInput);
+                    QueInput(ref quedUniqueInput, defaultQueTime);
                 }
             } 
 
-            if (SkillNorthInput && player.isInteracting)
+            if (SkillNorthInput && player.isInteracting && player.skillCancellable)
             {
                 //Debug.Log("que Skill N");
-                QueInput(ref quedSkillNInput);
+                QueInput(ref quedSkillNInput, SkillQueTime);
             }
-            if (SkillSouthInput && player.isInteracting)
+            if (SkillSouthInput && player.isInteracting && player.skillCancellable)
             {
                 //Debug.Log("que Skill S");
-                QueInput(ref quedSkillSInput);
+                QueInput(ref quedSkillSInput, SkillQueTime);
             }
-            if (SkillWestInput && player.isInteracting)
+            if (SkillWestInput && player.isInteracting && player.skillCancellable)
             {
                 //Debug.Log("que Skill W");
-                QueInput(ref quedSkillWInput);
+                QueInput(ref quedSkillWInput, SkillQueTime);
             }
-            if (SkillEastInput && player.isInteracting)
+            if (SkillEastInput && player.isInteracting && player.skillCancellable)
             {
                 // Debug.Log("que Skill E");
-                QueInput(ref quedSkillEInput);
+                QueInput(ref quedSkillEInput, SkillQueTime);
             }
 
             if (!SkillSetOpenInput)
             {    if (jumpInput && !player.isGrounded)
                 {
                     //Debug.Log("que jump");
-                    QueInput(ref quedJumpInput);
+                    QueInput(ref quedJumpInput, defaultQueTime);
                 }
             }
             
         }
 
-        private void QueInput(ref bool quedInput)
+        private void QueInput(ref bool quedInput, float qTime)
         {
 
             ResetQuedInputs();
@@ -666,7 +667,7 @@ namespace KS
                 (player.isJumping && !player.isGrounded))
             {
                 quedInput = true;
-                queInputTimer = defaultQueTime;
+                queInputTimer = qTime;
                 InputQueActive = true;
             }
            

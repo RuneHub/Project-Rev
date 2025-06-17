@@ -8,7 +8,7 @@ namespace KS
     public class AttackStandardSO : ScriptableObject
     {
         public AnimationClip attackAnim;
-        public GameObject FX_FakeProjectile; //this will later be change when projectile scripts are redone.
+        public GameObject FX_FakeProjectile;
         public GameObject FX_Muzzleflash;
         public GameObject FX_Impact;
 

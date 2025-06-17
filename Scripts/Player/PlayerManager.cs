@@ -38,6 +38,7 @@ namespace KS {
         public bool isCharging;
         public bool animCancelled;
         public bool dodgeCancellable;
+        public bool skillCancellable;
         public bool JustDodge;
 
         [Header("Player Combat floats")]
@@ -104,6 +105,7 @@ namespace KS {
             isCancellable = animator.GetBool("isCancellable");
             animCancelled = animator.GetBool("Cancelled");
             dodgeCancellable = animator.GetBool("isDodgeCancellable");
+            skillCancellable = animator.GetBool("isSkillCancellable");
 
             playerLocomotion.useAdditionalMovement = animator.GetBool("AdMovement");
 

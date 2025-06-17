@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace KS
-{ 
+{
     public class CastedProjectile : MonoBehaviour
     {
+        /*
         public float playTime = 2f;
         public VFXBase indicator;
         public float indicatorTimer;
@@ -50,6 +51,6 @@ namespace KS
         {
             Destroy(proj.transform.root.gameObject);
         }
-
+         */
     }
 }

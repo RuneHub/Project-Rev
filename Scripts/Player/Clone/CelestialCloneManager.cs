@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.VFX;
 using static UnityEditor.PlayerSettings;
 
 namespace KS
@@ -49,14 +50,14 @@ namespace KS
         {
             HandleInvisible();
             currentIdleTime = idleTimeBeforeDissolve;
+            appearVFX.SetActive(false);
         }
 
         public void ActivateClone(Vector3 pos, float followUpNum)
         {
+            appearVFX.SetActive(false);
             PositionClone(pos);
             followUp = followUpNum;
-
-
 
             if (!Active)
             {
@@ -103,11 +104,9 @@ namespace KS
         private IEnumerator ActivatedClone()
         {
             Active = true;
-            HandleVisibile();
 
             //use appearing vfx
-            //GameObject vfx = Instantiate(appearVFX, basePosition);
-            //Destroy(vfx, 1f);
+            appearVFX.SetActive(true);
 
             //wait x time for vfx
             yield return new WaitForSeconds(appearTime);

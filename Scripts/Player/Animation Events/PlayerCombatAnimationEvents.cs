@@ -19,6 +19,7 @@ namespace KS
         public event EventHandler<Transform> OnShootEventTriggered;
         public event EventHandler OnSkillTriggered;
         public event EventHandler OnSkillDeactiveTriggered;
+        public event EventHandler OnFXTriggered;
 
         private void Awake()
         {
@@ -153,6 +154,11 @@ namespace KS
         public void DeactivateSkill()
         {
             OnSkillDeactiveTriggered?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ActivateFX()
+        {
+            OnFXTriggered?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

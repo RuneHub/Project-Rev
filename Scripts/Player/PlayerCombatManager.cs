@@ -34,7 +34,7 @@ namespace KS
         public int MaxCapacity = 250;
 
         private GameObject poolParent;
-        private ObjectPool<GameObject> _pool; //needs to be changed to projectile script when Projectile scripts get redone.
+        private ObjectPool<GameObject> _pool; 
 
         [Header("Raycast shooting")]
         public float FakeBulletSpeed = 500f;
@@ -485,7 +485,7 @@ namespace KS
                 if (SkillsSealed)
                     return;
             }
-            else
+            else if (player.isCancellable || player.skillCancellable)
             {
                 player.animator.SetBool("Cancelled", true);
                 player.animationEvents.HandleCancelAnim();
