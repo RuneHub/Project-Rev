@@ -17,6 +17,8 @@ namespace KS
         public LayerMask collisionLayers;
         public Transform CrossHairTarget;
         public bool StopFollowingTarget = false;
+        public bool resettingCam = false;
+        public bool stopRotatingCamera = false;
 
         [SerializeField] private Vector3 cameraFollowVelocity = Vector3.zero;
         private float defaultPosition;
@@ -33,6 +35,7 @@ namespace KS
         [SerializeField] private float groundFollowSpeed = 2f; //the smooth timer of the following
         [SerializeField] private float aerialFollowSpeed = 1f;
         public float cameraSmoothTime = 0.2f; //the smooth rotation.
+        public float cameraResetTime = 0.7f;
 
         public float LookAngle; //camera look up and right
         public float pivotAngle; //camera look left and right
@@ -97,7 +100,10 @@ namespace KS
                 FollowTarget();
             }
 
-            HandleCameraRotation();
+            if (!stopRotatingCamera)
+            {
+                HandleCameraRotation();
+            }
 
             HandleCameraCollision();
         }
@@ -317,8 +323,11 @@ namespace KS
         //activates the camera shake effect
         public void EffectShake(float duration, float magnitude)
         {
-            ShakeEffect = effectManager.Shake(duration, magnitude);
-            StartCoroutine(ShakeEffect);
+            if (player.ScreenShake)
+            {
+                ShakeEffect = effectManager.Shake(duration, magnitude);
+                StartCoroutine(ShakeEffect);
+            }
         }
 
         //stops the camera shake effect
@@ -438,6 +447,35 @@ namespace KS
             return mainCam;
         }
 
+        //calls the coroutine to reset camera rotation
+        public void ResetCamera()
+        {
+            StartCoroutine(ResettingCamera());
+
+            if(!resettingCam)
+                StopCoroutine(ResettingCamera());
+        }
+
+        //resets the camera rotation back to zero
+        private IEnumerator ResettingCamera()
+        {
+            Quaternion targetRot = Quaternion.Euler(0, 0, 0);
+            float elapsedTime = 0;
+            while (elapsedTime < cameraResetTime )
+            {
+                resettingCam = true;
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, cameraLookSpeed);
+                cameraPivot.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, cameraLookSpeed);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            LookAngle = 0;
+            pivotAngle = 0;
+            transform.rotation = targetRot;
+            cameraPivot.transform.rotation = targetRot;
+            resettingCam = false;
+            stopRotatingCamera = false;
+        }
 
     }
 

@@ -12,6 +12,10 @@ namespace KS
         public GameObject RightHandWeapon;
         public GameObject LeftHolsterWeapon;
         public GameObject RightHolsterWeapon;
+        [Space]
+        public GameObject LeftSpinEffect;
+        public GameObject RightSpinEffect;
+        
 
         private void Awake()
         {
@@ -86,11 +90,49 @@ namespace KS
             player.effectManager.JumpEffect();
         }
 
+        //spin effect turning on
+        public void SpinFXOn(string _side)
+        {
+            if (_side == "Left")
+            {
+                LeftSpinEffect.SetActive(true);
+            }
+            else if (_side == "Right")
+            {
+
+                RightSpinEffect.SetActive(true);
+            }
+            else if (_side == "Both")
+            {
+                LeftSpinEffect.SetActive(true);
+                RightSpinEffect.SetActive(true);
+            }
+        }
+
+        //spin effect turning off
+        public void SpinFXOff(string _side)
+        {
+            if (_side == "Left")
+            {
+                LeftSpinEffect.SetActive(false);
+            }
+            else if (_side == "Right")
+            {
+
+                RightSpinEffect.SetActive(false);
+            }
+            else if (_side == "Both")
+            {
+                LeftSpinEffect.SetActive(false);
+                RightSpinEffect.SetActive(false);
+            }
+        }
+
         #endregion
 
         #region Sound FX
         //for movement on solid underground
-        public void PlayWalkingSFX()
+        public void PlayRunSFX()
         {
             player.soundManager.PlayFootstepAudio();
         }
@@ -105,6 +147,11 @@ namespace KS
         public void PlayLandingSFX()
         {
             player.soundManager.PlayLandingSound();
+        }
+
+        public void PlaySprintStopSFX()
+        {
+            player.soundManager.PlayerSprintStop();
         }
 
         //when dodging

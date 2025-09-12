@@ -21,13 +21,13 @@ namespace KS
         private void Awake()
         {
             sceneManagement = SceneManagement.instance;
+            UIManager.LockCursor();
             if (sceneManagement.reloadState == SceneManagement.ReloadState.intoGameplay)
             {
                 StartCoroutine(WaitThenPlay());
             }
             else
             {
-                UIManager.instance.menuWindowIsOpen = true;
                 OpenMenu();
             }
         }
@@ -39,7 +39,6 @@ namespace KS
             CloseMenu();
             UIManager.instance.menuWindowIsOpen = false;
             introVCam.Priority = 9;
-            UIManager.LockCursor();
             CutsceneManager.PlayCutscene(introCutscene);
         }
 
@@ -51,11 +50,13 @@ namespace KS
         public override void OpenMenu()
         {
             Debug.Log("Opening titlescreen");
+            UIManager.instance.titleWindowIsOpen = true;
             base.OpenMenu();
         }
 
         public override void CloseMenu()
         {
+            UIManager.instance.titleWindowIsOpen = false;
             base.CloseMenu();
         }
 

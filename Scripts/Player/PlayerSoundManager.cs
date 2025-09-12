@@ -19,6 +19,8 @@ namespace KS
         [SerializeField] private AudioClip DodgeSound;
         [SerializeField] private AudioClip DashSound;
 
+        [SerializeField] private AudioClip sprintStopSound;
+
         protected override void Awake()
         {
             base.Awake();
@@ -50,7 +52,7 @@ namespace KS
                 swapper.CheckLayers();
                 int cfs = Random.Range(1, footstepSounds.Count);
                 footstepAS.clip = footstepSounds[cfs];
-                PlaySoundFX(ref footstepAS, footstepAS.clip, 1, true);
+                PlaySoundFX(ref footstepAS, footstepAS.clip, footstepAS.volume, true, .1f);
 
                 footstepSounds[cfs] = footstepSounds[0];
                 footstepSounds[0] = footstepAS.clip;
@@ -73,6 +75,12 @@ namespace KS
             swapper.CheckLayers();
             footstepAS.clip = LandSound;
             footstepAS.PlayOneShot(LandSound);
+        }
+
+        public void PlayerSprintStop()
+        {
+            footstepAS.clip = sprintStopSound;
+            footstepAS.Play();
         }
 
         //plays the dodge sound when dodging

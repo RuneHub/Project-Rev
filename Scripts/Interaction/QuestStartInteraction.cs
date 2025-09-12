@@ -13,8 +13,6 @@ namespace KS
         //player
         public GameObject csPlayer;
         //boss
-        public AIBossManager boss;
-        public AIBossHpTriggerManager hpTriggerManager;
         public GameObject csBoss;
         //Cutscene
         public CutsceneManager cutsceneManager;
@@ -32,10 +30,7 @@ namespace KS
         {
             base.Start();
 
-            for (int i = 0; i < ArenaInvisibleWalls.Count; i++)
-            {
-                ArenaInvisibleWalls[i].gameObject.SetActive(false);
-            }
+            ToggleArenaWalls(false);
 
         }
 
@@ -63,8 +58,27 @@ namespace KS
             cutsceneManager.BlackScreenFadeOut();
             yield return new WaitForSeconds(1.5f); //fade timer;
             playerHUD.ToggleHUD(false);
+            ToggleArenaWalls(true);
             //play cutscene
             cutsceneManager.PlayCutscene(QuestStartCutscene);
+        }
+
+        private void ToggleArenaWalls(bool toggle)
+        {
+            if (toggle)
+            {
+                for (int i = 0; i < ArenaInvisibleWalls.Count; i++)
+                {
+                    ArenaInvisibleWalls[i].gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < ArenaInvisibleWalls.Count; i++)
+                {
+                    ArenaInvisibleWalls[i].gameObject.SetActive(false);
+                }
+            }
         }
 
     }

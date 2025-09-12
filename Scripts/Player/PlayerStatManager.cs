@@ -28,6 +28,9 @@ namespace KS {
         public float CamerashakeDuration = .15f;
         public float CamerashakeMagnitude = .2f;
         public float hitStopAnimationSpeedMultiplier = .1f;
+        public float gamepadRumbleLowFreq = 0.25f;
+        public float gamepadRumbleHighFreq = 1f;
+        public float gamepadRumbleDuration = .2f;
 
         [Header("Healing")]
         public int smallhealingAmount = 3;
@@ -109,6 +112,8 @@ namespace KS {
 
             player.cameraHandler.EffectShake(CamerashakeDuration, CamerashakeMagnitude);
             ScreenManager.instance.StartFullscreenDamageSequence();
+
+            player.inputs.GamepadRumble(gamepadRumbleLowFreq, gamepadRumbleHighFreq, gamepadRumbleDuration);
 
             Debug.Log("hit");
             //Debug.Log("Player damaged for: " + damage);

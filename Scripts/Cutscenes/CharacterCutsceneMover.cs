@@ -9,6 +9,7 @@ namespace KS
         public AIBossManager boss;
         public PlayerManager player;
         public CameraManager gameplayCam;
+        public bool StopFollowingTarget;
 
         public Transform targetLocationBoss;
         public Transform targetLocationPlayer;
@@ -33,8 +34,8 @@ namespace KS
             {
                 player.transform.position = targetLocationPlayer.position;
                 player.transform.rotation = targetLocationPlayer.rotation;
-                gameplayCam.transform.position = targetLocationPlayer.position;
-                gameplayCam.transform.rotation = player.transform.rotation;
+                gameplayCam.StopFollowingTarget = StopFollowingTarget;
+                gameplayCam.transform.rotation = targetLocationPlayer.rotation;
             }
         }
 

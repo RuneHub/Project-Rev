@@ -46,6 +46,9 @@ namespace KS
         public PlayerSkillsSO SkillEast;
 
         [Space(10)]
+        public List<PlayerSkillsSO> skillList = new List<PlayerSkillsSO>();
+
+        [Space(10)]
         public bool GapClosing;
         public PlayerGapCloserSkillSO currentGPSkill;
         public float curGPTime;
@@ -531,7 +534,7 @@ namespace KS
                 CooldownHandler.instance.PutOnCooldown(SkillEast);
             }
 
-        }
+        } 
 
         private void HandleGapCloserMovement()
         {

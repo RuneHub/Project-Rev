@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -21,6 +21,7 @@ namespace KS
         [SerializeField] private AIBossManager bossManager;
         [SerializeField] private AirshipStatus airshipStatus;
         [SerializeField] private CanvasFading fadingCanvas;
+        [SerializeField] private CameraManager cameraManager;
 
         private void Awake()
         {
@@ -87,6 +88,7 @@ namespace KS
         public void SetPropCharacterON()
         {
             csLowell.SetActive(true);
+            csLowell.GetComponent<GetCharacterTheme>().UpdateCharacterTheme();
             csSeyliana.SetActive(true);
         }
 
@@ -95,6 +97,15 @@ namespace KS
             csLowell.SetActive(false);
             csSeyliana.SetActive(false);
         }
+        #endregion
+
+        #region Camera
+
+        public void RotateCameraToZero()
+        {
+            cameraManager.ResetCamera();
+        }
+
         #endregion
 
     }

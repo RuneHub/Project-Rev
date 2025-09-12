@@ -7,6 +7,14 @@ namespace KS
 {
     public class AtlosMain : MonoBehaviour
     {
+        /*Atlos stands for:
+            Artificial
+            Target
+            Locating
+            Operating
+            System
+         * */
+
         public static AtlosMain atlos;
 
         public bool FieldGenerated = false;

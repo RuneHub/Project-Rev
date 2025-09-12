@@ -23,7 +23,7 @@ namespace KS
         {
             //if our UI Menu is NOT open, and we don't have a POP UP (current interaction message) check for interactible.
             if (!UIManager.instance.menuWindowIsOpen &&
-                !UIManager.instance.popUpWindowisOpen)
+                !UIManager.instance.popUpWindowIsOpen)
             {
                 CheckForInteractable(); 
             }

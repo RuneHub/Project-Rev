@@ -10,7 +10,7 @@ namespace KS
 
         private string currentlayer;
 
-        FootstepCollection[] FootstepCollections;
+        public FootstepCollection[] FootstepCollections;
 
         private void Awake()
         {

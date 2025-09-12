@@ -1,4 +1,12 @@
+using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using System;
+using TMPro;
+using Unity.VisualScripting;
+using System.Collections;
+
 
 namespace KS
 {
@@ -9,8 +17,11 @@ namespace KS
         //this script is for player only.
 
         //refences
-        PlayerControl controls;
-        PlayerManager player;
+        public static PlayerControl controls;
+        private PlayerManager player;
+
+        [Header("input status")]
+        public bool GameplayInputs = true;
 
         [Header("Movement Numericals")]
         public Vector2 movementInput;
@@ -59,6 +70,9 @@ namespace KS
         public Vector2 cameraInput;
         public float cameraVerticalInput;
         public float cameraHorizontalInput;
+        public bool invertedYCamera = false;
+        public bool invertedXCamera = false;
+        public bool cameraReset = false;
 
         [Header("Flags")]
         public bool lockOnFlag;
@@ -87,8 +101,18 @@ namespace KS
 
         [Header("UI inputs")]
         [SerializeField] bool uiOpenMenu = false;
-        [SerializeField] bool uiConfirm = false;
         [SerializeField] bool uiReturn = false;
+
+        //Rebinding Events
+        public static event Action rebindComplete;
+        public static event Action rebindCanceled;
+        public static Action<InputAction, int> rebindStarted;
+
+        public static event Action ActiveDeviceChanged;
+        private static cDeviceTypes activeDevice = cDeviceTypes.Keyboard;
+
+        private bool controllerInUse = false;
+        private Coroutine controllerRumble;
 
         private void Awake()
         {
@@ -98,6 +122,8 @@ namespace KS
         //enable the inputs so they can be read by the scripts.
         private void OnEnable()
         {
+            InputSystem.onActionChange += TrackActions;
+
             if (controls == null)
             {
                 controls = new PlayerControl();
@@ -113,17 +139,23 @@ namespace KS
                 controls.PlayerAction.Unique.canceled += i => uniqueAttackInput = false;
 
                 //actions
-                controls.PlayerAction.Shoot.performed += i => basicAttackInput = true;
+                controls.PlayerAction.Attack.performed += i => basicAttackInput = true;
                 controls.PlayerAction.Interact.performed += i => interactInput = true;
-                    
+
                 //these actions get canceled by the animation controller, so no canceled statements
                 controls.PlayerAction.Jump.performed += i => jumpInput = true;
                 controls.PlayerAction.Dodge.performed += i => dodgeInput = true;
+
+                controls.PlayerAction.Skill1.performed += i => SkillWestInput = true;
+                controls.PlayerAction.Skill2.performed += i => SkillNorthInput = true;
+                controls.PlayerAction.Skill3.performed += i => SkillEastInput = true;
+                controls.PlayerAction.Skill4.performed += i => SkillSouthInput = true;
 
                 controls.PlayerAction.HealSmall.performed += i => smallHealInput = true;
                 controls.PlayerAction.HealSmall.canceled += i => smallHealInput = false;
                 controls.PlayerAction.HealLarge.performed += i => largeHealInput = true;
                 controls.PlayerAction.HealLarge.canceled += i => largeHealInput = false;
+
 
                 //control
                 controls.Control.LockOn.performed += i => lockOnInput = true;
@@ -137,22 +169,30 @@ namespace KS
 
                 //Camera
                 controls.Camera.Rotation.performed += i => cameraInput = i.ReadValue<Vector2>();
+                controls.Camera.CameraReset.performed += i => cameraReset = true;
 
                 //UI
                 controls.Control.OpenMainMenu.performed += i => uiOpenMenu = true;
-                controls.UI.ResumeTime.performed += i => uiConfirm = true; //needs to be set to confirm when done with debugging menu's
                 controls.UI.Return.performed += i => uiReturn = true;
 
+            }
+            else
+            {
+                Debug.Log("controls not null, using old one?");
             }
 
             controls.Enable(); 
             DisableGameplayInput();
+
+
         }
 
         //disable the controls.
         private void OnDisable()
         {
+            InputSystem.onActionChange -= TrackActions;
             controls.Disable();
+            controls = null;
         }
 
         //public, the function that gets called on Update(), so it checks the private input funcionts.
@@ -161,7 +201,9 @@ namespace KS
            
             HandleCameraInput();
 
-            HandleSkillModifierInput();
+            HandleCameraResetInput();
+
+            //HandleSkillModifierInput();
 
             CheckQuedInputs();
 
@@ -184,8 +226,7 @@ namespace KS
 
             HandleQuedInputs();
 
-            HandleUIOpenMainMenuInput(); 
-            HandleUIConfirmInput();
+            HandleUIOpenMainMenuInput();
             HandleUiReturnInput();
 
         }
@@ -197,10 +238,37 @@ namespace KS
             if (UIManager.instance.menuWindowIsOpen)
                 return; //might change this later?
 
-            cameraHorizontalInput = cameraInput.x;
-            cameraVerticalInput = cameraInput.y;
+            float camX = invertedXCamera ? -cameraInput.x : cameraInput.x;
+            float camY = invertedYCamera ? -cameraInput.y : cameraInput.y;
+
+            cameraHorizontalInput = camX;
+            cameraVerticalInput = camY;
 
             camDirectionalInput = GetDirectionalValues(cameraHorizontalInput, cameraVerticalInput);
+        }
+
+        //resets camera to 0,0,0 rotation
+        private void HandleCameraResetInput()
+        {
+            if (UIManager.instance.menuWindowIsOpen)
+            {
+                cameraReset = false;
+                return;
+            }
+
+            if (SkillSetOpenInput)
+            {
+                cameraReset = false;
+                return;
+            }
+
+            if (cameraReset)
+            {
+                cameraReset = false;
+                CameraManager.singleton.stopRotatingCamera = true;
+                Debug.Log("Camera Reset");
+                CameraManager.singleton.ResetCamera();
+            }
         }
 
         //movement inputs
@@ -772,10 +840,19 @@ namespace KS
             if (uiReturn)
             {
                 uiReturn = false;
-                if (UIManager.instance.menuWindowIsOpen 
+
+                if (UIManager.instance.titleWindowIsOpen && !UIManager.instance.menuWindowIsOpen)
+                    return;
+
+                if (UIManager.instance.menuWindowIsOpen
                     && UIManager.instance.gameplayMenuIsOpen)
                 {
                     UIManager.instance.CloseAllMenuWindows();
+                }
+                else if (UIManager.instance.menuWindowIsOpen
+                    && UIManager.instance.UITabsAreOpen)
+                {
+                    UIManager.instance.currentTab.ReturnSelected();
                 }
                 else if (UIManager.instance.menuWindowIsOpen)
                 {
@@ -786,18 +863,9 @@ namespace KS
             }
         }
 
-        private void HandleUIConfirmInput()
-        {
-            if (uiConfirm)
-            {
-                uiConfirm = false;
-                if (Time.timeScale == 0)
-                    Time.timeScale = 1;
-            }
-        }
-
         public void DisableGameplayInput()
         {
+            GameplayInputs = false;
             controls.PlayerAction.Disable();
             controls.PlayerMovement.Disable();
             controls.Control.Disable();
@@ -807,6 +875,7 @@ namespace KS
 
         public void EnableGameplayInput()
         {
+            GameplayInputs = true;
             controls.PlayerAction.Enable();
             controls.PlayerMovement.Enable();
             controls.Control.Enable();
@@ -899,6 +968,230 @@ namespace KS
 
             return inputDir;
         }
+        #endregion
+
+        #region Rebinding
+
+        public static void StartRebind(string actionName, int bindingIndex, TextMeshProUGUI statusText, bool excludeMouse)
+        {
+            InputAction action = controls.asset.FindAction(actionName);
+            if (action == null || action.bindings.Count <= bindingIndex)
+            {
+                Debug.Log("Could NOT find action or Binding");
+                return;
+            }
+
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                var firstPartIndex = bindingIndex + 1;
+                if (firstPartIndex < action.bindings.Count && action.bindings[firstPartIndex].isPartOfComposite)
+                {
+                    DoRebind(action, firstPartIndex, statusText, true, excludeMouse);
+                }
+            }
+            else
+            {
+                DoRebind(action, bindingIndex, statusText, false, excludeMouse);
+            }
+
+        }
+
+        private static void DoRebind(InputAction actionToRebind, int bindingIndex, TextMeshProUGUI statusText, bool AllCompositeParts, bool excludeMouse)
+        {
+            if (actionToRebind == null || bindingIndex < 0)
+                return;
+
+            statusText.text = $"Press a {actionToRebind.expectedControlType}";
+
+            actionToRebind.Disable();
+
+            var rebind = actionToRebind.PerformInteractiveRebinding(bindingIndex);
+
+            rebind.OnComplete(operation =>
+            {
+                actionToRebind.Enable();
+                operation.Dispose();
+
+                if (AllCompositeParts)
+                {
+                    var nextBindingIndex = bindingIndex + 1;
+                    if (nextBindingIndex < actionToRebind.bindings.Count && actionToRebind.bindings[nextBindingIndex].isPartOfComposite)
+                    {
+                        DoRebind(actionToRebind, nextBindingIndex, statusText, AllCompositeParts, excludeMouse);
+                    }
+
+                }
+
+                SaveBindingOverride(actionToRebind);
+                rebindComplete?.Invoke();
+            });
+
+            rebind.OnCancel(operation =>
+            {
+                actionToRebind.Enable();
+                operation.Dispose();
+                rebindCanceled?.Invoke();
+            });
+
+            rebind.WithCancelingThrough("<Keyboard>/escape");
+            //rebind.WithCancelingThrough("<Gamepad/start");
+
+            if (excludeMouse)
+                rebind.WithControlsExcluding("Mouse");
+
+            rebindStarted?.Invoke(actionToRebind, bindingIndex);
+            rebind.Start(); //actually starts the rebinding process
+
+        }
+
+        public static string GetBindingName(string actionName, int bindingIndex)
+        {
+            InputAction action = controls.asset.FindAction(actionName);
+            return action.GetBindingDisplayString(bindingIndex);
+        }
+
+        private static void SaveBindingOverride(InputAction action)
+        {
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                PlayerPrefs.SetString(action.actionMap + action.name + i, action.bindings[i].overridePath);
+            }
+        }
+
+        public static void LoadBindingOverride(string actionName)
+        {
+            if (actionName == null)
+                return;
+
+            //Debug.Log("actionName: " + actionName);
+
+            InputAction action = controls.asset.FindAction(actionName);
+
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(PlayerPrefs.GetString(action.actionMap + action.name + i)))
+                    action.ApplyBindingOverride(i, PlayerPrefs.GetString(action.actionMap + action.name + i));
+            }
+        }
+
+        public static void ResetBindings(string actionName, int bindingIndex)
+        {
+            InputAction action = controls.asset.FindAction(actionName);
+
+            if (action == null || action.bindings.Count <= bindingIndex)
+            {
+                Debug.Log("Could NOT find action or binding");
+                return;
+            }
+
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                for (int i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; i++)
+                {
+                    action.RemoveBindingOverride(i);
+                }
+            }
+            else
+            {
+                action.RemoveBindingOverride(bindingIndex);
+            }
+            SaveBindingOverride(action);
+
+        }
+        #endregion
+
+        #region Input prompt
+
+        private void TrackActions(object obj, InputActionChange change)
+        {
+            if (change == InputActionChange.ActionPerformed)
+            {
+                InputAction inputAction = (InputAction)obj;
+                InputControl activeControl = inputAction.activeControl;
+                //Debug.LogFormat("current control {0}", activeControl);
+
+                var newDevice = cDeviceTypes.Keyboard;
+
+                if(activeControl.device is Mouse)
+                if (activeControl.device is Keyboard)
+                {
+                    newDevice = cDeviceTypes.Keyboard;
+                }
+
+                if (activeControl.device is Gamepad)
+                {
+                    newDevice = cDeviceTypes.Gamepad;
+                    controllerInUse = true;
+                }
+                else
+                {
+                    controllerInUse = false;
+                }
+
+                if (activeDevice != newDevice)
+                {
+                    //Debug.LogFormat("switching control to {0}", activeControl);
+                    activeDevice = newDevice;
+                    ActiveDeviceChanged?.Invoke();
+                }
+
+            }
+        }
+
+        public static cDeviceTypes GetActiveDevice()
+        {
+            return activeDevice;
+        }
+
+        public static InputBinding GetBinding(string actionName, cDeviceTypes deviceType)
+        {
+            InputAction action = controls.asset.FindAction(actionName);
+
+            InputBinding deviceBinding = action.bindings[(int)deviceType];
+            return deviceBinding;
+        }
+
+        #endregion
+
+        #region Controller Rumble
+        public void GamepadRumble(float lowFreq = 0.25f, float highFreq = 1f, float duration = 0.5f)
+            
+        {
+            if (!player.GamePadRumble)
+                return;
+
+            if (!controllerInUse)
+                return;
+
+            if (controllerRumble != null)
+            {
+                StopCoroutine(controllerRumble);
+            }
+
+            controllerRumble = StartCoroutine(RumbleController(lowFreq, highFreq, duration));
+        }
+
+        private IEnumerator RumbleController(float lowFreq, float highFreq, float duration)
+        {
+            Gamepad pad = Gamepad.current;
+            float elapsedTime = 0;
+
+            if (pad != null)
+            {
+                pad.SetMotorSpeeds(lowFreq, highFreq);
+
+            
+                while (elapsedTime < duration)
+                {
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+
+                pad.SetMotorSpeeds(0, 0);
+            }
+
+        }
+
         #endregion
 
     }

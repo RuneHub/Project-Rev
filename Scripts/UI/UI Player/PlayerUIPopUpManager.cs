@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace KS
 {
@@ -25,15 +26,19 @@ namespace KS
         [SerializeField] GameObject resultOptions;
         [SerializeField] GameObject RetryOption;
 
+        [Header("Event system")]
+        [SerializeField] EventSystem eventSystem;
+        [SerializeField] GameObject SelectOnOpen;
+
         public void CloseAllPopUpWindows()
         {
             popupMessageGameObject.SetActive(false);
-            UIManager.instance.popUpWindowisOpen = false;
+            UIManager.instance.popUpWindowIsOpen = false;
         }
 
         public void SendPlayerMessagePopUp(string messageText)
         {
-            UIManager.instance.popUpWindowisOpen = true;
+            UIManager.instance.popUpWindowIsOpen = true;
             popUpMessageText.text = messageText;
             popupMessageGameObject.SetActive(true);
         }
@@ -43,7 +48,6 @@ namespace KS
             //activate Post Processing effects
 
             UIManager.instance.player.inputs.DisableGameplayInput();
-            UIManager.instance.UnlockCursor();
 
             popupBgText.text = QuestFailedText;
             popupText.text = QuestFailedText;
@@ -52,7 +56,8 @@ namespace KS
             popupBgText.characterSpacing = 0;
             StartCoroutine(StretchPopUpTextOverTime(popupBgText, 8, 20f));
             StartCoroutine(FadeIn(popupCG, 5));
-            //StartCoroutine(WaitThenFadeOutPopupOverTimer(popupCG, 2, 5));
+
+            eventSystem.SetSelectedGameObject(SelectOnOpen);
         }
 
         public void SendQuestClearedPopup()
@@ -67,6 +72,9 @@ namespace KS
             StartCoroutine(StretchPopUpTextOverTime(popupBgText, 8, 20f));
             StartCoroutine(FadeIn(popupCG, 5));
             StartCoroutine(WaitThenFadeOutPopupOverTimer(popupCG, 2, 5));
+
+
+            eventSystem.SetSelectedGameObject(SelectOnOpen);
         }
 
         private IEnumerator StretchPopUpTextOverTime(TextMeshProUGUI text, float duration, float stretchAmount)

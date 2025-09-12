@@ -47,6 +47,10 @@ namespace KS {
         [Header("Celestial Clone")]
         public CelestialCloneManager Clone;
 
+        [Header("Game Feel")]
+        public bool ScreenShake = true;
+        public bool GamePadRumble = true;
+
         protected override void Awake()
         {
             base.Awake();

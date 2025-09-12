@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace KS
 {
@@ -8,13 +10,24 @@ namespace KS
     {
         [SerializeField] private GameObject menu; 
         [SerializeField] private GameObject PreviousMenu;
+        [SerializeField] private EventSystem eventSystem;
+        [SerializeField] private GameObject selectedOnOpen;
+        [SerializeField] private GameObject lastSelected;
         public bool ReturningInMenu;
-
+        
+        [Space(10)]
+        [SerializeField] private GameObject selectedVFX;
+        [SerializeField] private bool useCommandBar;
+        [SerializeField] private UICommandBar commandBar;
+        
         public virtual void OpenMenu()
         {
             UIManager.instance.currentOpenMenu = this;
             UIManager.instance.hudManager.ToggleHUD(false);
             menu.SetActive(true);
+            eventSystem.SetSelectedGameObject(selectedOnOpen);
+
+            commandBar.SetCommandBar(useCommandBar);
         }
 
         public virtual void OpenMenu(GameObject Menu)
@@ -24,6 +37,9 @@ namespace KS
             menu.SetActive(true);
             PreviousMenu = Menu;
             Debug.Log("prevMenu: " + PreviousMenu.name);
+            eventSystem.SetSelectedGameObject(selectedOnOpen);
+
+            commandBar.SetCommandBar(useCommandBar);
         }
 
         public virtual void CloseMenu()
@@ -38,7 +54,6 @@ namespace KS
                 bui.OpenMenu();
             }
 
-            
         }
 
         public virtual void CloseMenuAfterFixedUpdate()
@@ -49,7 +64,7 @@ namespace KS
         protected virtual IEnumerator WaitThenCloseMenu()
         {
             yield return new WaitForFixedUpdate();
-
+            
             menu.SetActive(false);
 
             if (ReturningInMenu)
@@ -59,6 +74,16 @@ namespace KS
                 bui.OpenMenu(); 
             }
 
+        }
+
+        public GameObject GetSelectedVFX()
+        {
+            return selectedVFX;
+        }
+
+        public GameObject GetSelectOnOpen()
+        {
+            return selectedOnOpen;
         }
 
     }

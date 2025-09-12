@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KS {
+namespace KS 
+{
     public class UIManager : MonoBehaviour
     {
         public static UIManager instance;
@@ -14,15 +15,21 @@ namespace KS {
         public FloatingUIManager floatingManager;
         public PlayerUIMenuManager menuManager;
         public PlayerUICharacterWindowManager characterWindowManager;
+        public PlayerUISkillMenuManager skillMenuManager;
         public PlayerUIPopUpManager popupManager;
         public SettingsUIManager settingsManager;
+        public UITab currentTab;
 
         [Header("UI")]
+        public bool titleWindowIsOpen = false;
         public bool menuWindowIsOpen = false;
         public bool gameplayMenuIsOpen = false;
-        public bool popUpWindowisOpen = false;
+        public bool popUpWindowIsOpen = false;
+        public bool UITabsAreOpen = false;
 
         public BaseUIManager currentOpenMenu;
+
+        public GameObject guideBar;
 
         private void Awake()
         {
@@ -40,8 +47,11 @@ namespace KS {
             floatingManager = FindObjectOfType<FloatingUIManager>();
             menuManager = GetComponentInChildren<PlayerUIMenuManager>();
             characterWindowManager = GetComponentInChildren<PlayerUICharacterWindowManager>();
+            skillMenuManager = GetComponentInChildren<PlayerUISkillMenuManager>();
             popupManager = GetComponentInChildren<PlayerUIPopUpManager>();
             settingsManager = FindObjectOfType<SettingsUIManager>();
+
+            guideBar.SetActive(false);
         }
 
         public void SetupHUD()
@@ -55,11 +65,11 @@ namespace KS {
         {
             menuManager.CloseMenu();
             characterWindowManager.CloseMenu();
+            skillMenuManager.CloseMenu();
             settingsManager.CloseMenu();
             menuWindowIsOpen = false;
             gameplayMenuIsOpen= false;
             Time.timeScale = 1;
-            LockCursor();
         }
 
         public void LockCursor()
@@ -74,5 +84,12 @@ namespace KS {
             Cursor.visible = true;
         }
 
+        private void Update()
+        {
+            if (menuWindowIsOpen)
+                guideBar.SetActive(true);
+            else
+                guideBar.SetActive(false);
+        }
     }
 }
