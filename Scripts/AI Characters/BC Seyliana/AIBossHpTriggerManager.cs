@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace KS
 {
@@ -11,26 +12,40 @@ namespace KS
         public BMech_HPTrigger hpTrigger;
         public AirshipStatus airshipStatus;
 
+        [SerializeField] private CutsceneManager cutsceneManager;
+        [SerializeField] private PlayableAsset StormsEyeCutscene;
+
         private void Awake()
         {
             manager = GetComponent<AIBossManager>();
 
         }
 
+        public void TurnOffBoss()
+        {
+            manager.combatManager.BreakLockOn();
+            manager.animationEvents.CharInvisible();
+            manager.statManager.InvulnOFF();
+        }
+
+        public void StartPhaseTransition()
+        {
+            //starts buildup animation
+            manager.bossAnimations.PlayTargetAnimation("StormEye Buildup", true, layerNum: 2);
+        }
+
+        public void StartCutscene()
+        {
+            cutsceneManager.PlayCutscene(StormsEyeCutscene);
+        }
+
         public void StartHpTrigger()
         {
-            //the way this is done is going to change in the future
             StartCoroutine(StartInteraction());
         }
 
         IEnumerator StartInteraction()
         {
-            manager.combatManager.BreakLockOn();
-            manager.animationEvents.CharInvisible();
-            manager.statManager.InvulnOFF();
-
-            airshipStatus.SwapParts();
-            yield return new WaitForSeconds(1);
             hpTrigger.PlayMechanic();
             yield return new WaitForSeconds(1);
 

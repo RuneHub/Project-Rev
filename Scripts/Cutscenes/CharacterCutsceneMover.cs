@@ -7,7 +7,9 @@ namespace KS
     public class CharacterCutsceneMover : MonoBehaviour
     {
         public AIBossManager boss;
+        public bool moveBoss = false;
         public PlayerManager player;
+        public bool movePlayer = false;
         public CameraManager gameplayCam;
         public bool StopFollowingTarget;
 
@@ -28,14 +30,20 @@ namespace KS
         {
             if (boss != null && targetLocationBoss != null)
             {
-                boss.transform.position = targetLocationBoss.position;
+                if (moveBoss)
+                {
+                    boss.transform.position = targetLocationBoss.position;
+                }
             }
             if (player != null && targetLocationPlayer != null && gameplayCam != null)
             {
-                player.transform.position = targetLocationPlayer.position;
-                player.transform.rotation = targetLocationPlayer.rotation;
-                gameplayCam.StopFollowingTarget = StopFollowingTarget;
-                gameplayCam.transform.rotation = targetLocationPlayer.rotation;
+                if (movePlayer)
+                {
+                    player.transform.position = targetLocationPlayer.position;
+                    player.transform.rotation = targetLocationPlayer.rotation;
+                    gameplayCam.StopFollowingTarget = StopFollowingTarget;
+                    gameplayCam.transform.rotation = targetLocationPlayer.rotation;
+                }
             }
         }
 

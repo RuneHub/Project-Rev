@@ -72,7 +72,6 @@ namespace KS
         public float cameraHorizontalInput;
         public bool invertedYCamera = false;
         public bool invertedXCamera = false;
-        public bool cameraReset = false;
 
         [Header("Flags")]
         public bool lockOnFlag;
@@ -102,6 +101,11 @@ namespace KS
         [Header("UI inputs")]
         [SerializeField] bool uiOpenMenu = false;
         [SerializeField] bool uiReturn = false;
+
+        [Header("testing")]
+        public CutsceneManager CSManager;
+        public bool cameraReset = false;
+        public bool startBattle = false;
 
         //Rebinding Events
         public static event Action rebindComplete;
@@ -169,11 +173,14 @@ namespace KS
 
                 //Camera
                 controls.Camera.Rotation.performed += i => cameraInput = i.ReadValue<Vector2>();
-                controls.Camera.CameraReset.performed += i => cameraReset = true;
 
                 //UI
                 controls.Control.OpenMainMenu.performed += i => uiOpenMenu = true;
                 controls.UI.Return.performed += i => uiReturn = true;
+
+                //TEMP, for testing
+                controls.Testing.CameraReset.performed += i => cameraReset = true;
+                controls.Testing.StartBattle.performed += i => startBattle = true;
 
             }
             else
@@ -201,7 +208,10 @@ namespace KS
            
             HandleCameraInput();
 
+            // *******   Testing *****
             HandleCameraResetInput();
+            HandleBattleStart();
+            // *******   Testing *****
 
             //HandleSkillModifierInput();
 
@@ -245,30 +255,6 @@ namespace KS
             cameraVerticalInput = camY;
 
             camDirectionalInput = GetDirectionalValues(cameraHorizontalInput, cameraVerticalInput);
-        }
-
-        //resets camera to 0,0,0 rotation
-        private void HandleCameraResetInput()
-        {
-            if (UIManager.instance.menuWindowIsOpen)
-            {
-                cameraReset = false;
-                return;
-            }
-
-            if (SkillSetOpenInput)
-            {
-                cameraReset = false;
-                return;
-            }
-
-            if (cameraReset)
-            {
-                cameraReset = false;
-                CameraManager.singleton.stopRotatingCamera = true;
-                Debug.Log("Camera Reset");
-                CameraManager.singleton.ResetCamera();
-            }
         }
 
         //movement inputs
@@ -674,6 +660,50 @@ namespace KS
             }
 
         }
+        #endregion
+
+
+        #region Testing
+
+        //resets camera to given look angle, THIS IS TEMP NEEDS TO BE REMOVED
+        private void HandleCameraResetInput()
+        {
+            if (UIManager.instance.menuWindowIsOpen)
+            {
+                cameraReset = false;
+                return;
+            }
+
+            if (SkillSetOpenInput)
+            {
+                cameraReset = false;
+                return;
+            }
+
+            if (cameraReset)
+            {
+                cameraReset = false;
+                CameraManager.singleton.stopRotatingCamera = true;
+                Debug.Log("Camera Reset");
+                CameraManager.singleton.ResetCamera(270);
+            }
+        }
+
+        //starts battle setup
+        private void HandleBattleStart()
+        {
+            if (startBattle)
+            {
+                startBattle = false;
+
+                CSManager.TurnOnBossBehaviour();
+
+                //player.combatAnimationEvents.InvulnON();
+            }
+
+            
+        }
+
         #endregion
 
         #region Queying inputs

@@ -22,6 +22,7 @@ namespace KS
         [SerializeField] private AirshipStatus airshipStatus;
         [SerializeField] private CanvasFading fadingCanvas;
         [SerializeField] private CameraManager cameraManager;
+        [SerializeField] private AIBossHpTriggerManager TriggerManager;
 
         private void Awake()
         {
@@ -97,16 +98,47 @@ namespace KS
             csLowell.SetActive(false);
             csSeyliana.SetActive(false);
         }
+
+        public void SetPropBossCharOn()
+        {
+            csSeyliana.SetActive(true);
+        }
+        public void SetPropBossCharOff()
+        {
+            csSeyliana.SetActive(false);
+        }
         #endregion
 
         #region Camera
 
+        public void CameraShake()
+        {
+            cameraManager.EffectShake(.3f, .7f);
+        }
+
         public void RotateCameraToZero()
         {
-            cameraManager.ResetCamera();
+            cameraManager.ResetCamera(0);
+        }
+
+        public void RotateCameraToNinety()
+        {
+            cameraManager.ResetCamera(90);
         }
 
         #endregion
 
+        #region Mechanics
+
+        public void turnBossOffMech()
+        {
+            TriggerManager.TurnOffBoss();
+        }
+
+        public void startHPTrigger()
+        {
+            TriggerManager.StartHpTrigger();
+        }
+        #endregion
     }
 }

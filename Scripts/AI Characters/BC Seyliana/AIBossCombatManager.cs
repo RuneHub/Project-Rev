@@ -159,6 +159,11 @@ namespace KS
             currentMagicAttack = so;
         }
 
+        public void HandleFastCast()
+        {
+            GameObject cast = Instantiate(currentMagicAttack.magicCast, transform.position, Quaternion.identity);
+        }
+
         #endregion
 
         #region Dash Attack

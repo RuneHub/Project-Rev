@@ -99,11 +99,11 @@ namespace KS {
         {
             base.HandleDeath();
 
+            player.inputs.DisableGameplayInput();
             player.playerAnimations.PlayTargetAnimation("Death", true, layerNum: 1);
 
             //would probably need to put this is a proper death event.
             UIManager.instance.popupManager.SendQuestFailedPopup();
-            player.inputs.DisableGameplayInput();
         }
 
         public override void TakeDamage(float damage, bool isCrit, Color displayColor, float angledContact, DamageProperties property)

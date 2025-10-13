@@ -145,6 +145,15 @@ namespace KS
 
         #endregion
 
+        #region Cast
+
+        public void ExecuteCast()
+        {
+            manager.LongCastFinish = true;
+            manager.combatManager.HandleFastCast();
+        }
+        #endregion
+
         #region Magic: Summon
 
         //animation event function, Instatiate's summon buildup vfx

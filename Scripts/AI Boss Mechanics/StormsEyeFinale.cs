@@ -31,6 +31,10 @@ namespace KS
         [Header("Fissure VFX")]
         public GameObject fissureVFX;
 
+        [Space(10)]
+        public GameObject StormEyeVFX;
+        public GameObject CSBoss;
+
         private AIBossManager boss;
 
         private void Awake()
@@ -150,6 +154,8 @@ namespace KS
 
             }
             Fissure.gameObject.SetActive(false);
+            StormEyeVFX.SetActive(false);
+            CSBoss.SetActive(false);
             Debug.Log("End Eye of the Storm!");
             boss.HpTriggerFlag = true;
         }

@@ -10,5 +10,11 @@ namespace KS
         public string ID;
         public float CastTime;
 
+        public bool fastCast = false;
+
+        [DrawIf("fastCast", true)] public GameObject buildUp;
+        [DrawIf("fastCast", true)] public GameObject magicCast;
+
+
     }
 }

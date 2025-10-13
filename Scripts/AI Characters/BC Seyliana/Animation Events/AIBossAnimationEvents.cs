@@ -9,10 +9,21 @@ namespace KS
         AIBossManager manager;
 
         public GameObject fanWeapon;
-
+        [Space(10)]
         public GameObject LoopingCastVFX;
         public GameObject CastFinishVFX;
-
+        [Space(10)]
+        public GameObject LeftOrbVFX;
+        public GameObject RightOrbVFX;
+        public GameObject MorphOrbVFX;
+        [Space(10)]
+        public GameObject StormAura;
+        [Space(10)]
+        public GameObject buildUpShine;
+        public float buildUpShineDestroyTimer = 1f;
+        [Space(10)]
+        [SerializeField] private SkylightManager skylightManager;
+        [Space(10)]
         [SerializeField] private List<SkinnedMeshRenderer> SMR;
         [SerializeField] private MeshRenderer MR;
         [SerializeField] private List<GameObject> smrVFX;    
@@ -71,6 +82,40 @@ namespace KS
             Destroy(vfx.gameObject, timer);
         }
 
+        public void CastBuildUp()
+        {
+            
+        }
+
+        public void OrbCast(string str)
+        {
+            switch (str)
+            {
+                case "Left":
+                    LeftOrbVFX.SetActive(true);
+                    break;
+                case "Right":
+                    RightOrbVFX.SetActive(true);
+                    break;
+                case "Both":
+                    LeftOrbVFX.SetActive(true);
+                    RightOrbVFX.SetActive(true);
+                    break;
+                case "Morph":
+                    MorphOrbVFX.SetActive(true);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        public void CeaseOrb()
+        {
+            LeftOrbVFX.SetActive(false);
+            RightOrbVFX.SetActive(false);
+            MorphOrbVFX.SetActive(false);
+        }
         #endregion
 
         #region Teleport
@@ -112,6 +157,30 @@ namespace KS
         #endregion
 
         #endregion
+
+        public void ActivateStormAura()
+        {
+            StormAura.SetActive(true);
+        }
+
+        public void DisableStormAura()
+        {
+            StormAura.SetActive(false);
+        }
+
+        public void ActivateTransitionShine()
+        {
+            GameObject ins = Instantiate(buildUpShine, MorphOrbVFX.transform.GetChild(0).position, Quaternion.identity);
+            Destroy(ins, buildUpShineDestroyTimer);
+
+            //skylightManager.ChangeSky();
+        }
+
+        public void StartTransition()
+        {
+            StormAura.SetActive(false);
+            manager.hpTriggerManager.StartCutscene();
+        }
 
         public void RestoreStagger()
         {

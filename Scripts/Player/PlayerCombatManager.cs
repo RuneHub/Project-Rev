@@ -735,6 +735,7 @@ namespace KS
             prefab =>
             {
                 Destroy(prefab.gameObject);
+                
             },
             false,
             defaultCapacity,

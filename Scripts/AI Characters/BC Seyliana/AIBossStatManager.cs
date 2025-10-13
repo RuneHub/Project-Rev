@@ -72,6 +72,12 @@ namespace KS
         protected override void HandleDeath()
         {
             base.HandleDeath();
+
+            //turn off behavbiour tree
+            boss.behaviourRunner.enabled = false;
+            //play aanimation
+                //boss.bossAnimations.PlayTargetAnimation();
+            //start cutscene #4
         }
         
         public override void TakeDamage(float damage, bool isCrit, Color displayColor, float angledContact = 0, DamageProperties property = DamageProperties.Normal)

@@ -188,6 +188,8 @@ namespace KS
 
             player.combatAnimationEvents.DeactivateSkill();
 
+            SpinFXOff("Both");
+
             if (player.inputs.moveAmount > 0)
             {
                 player.animator.Play("empty", -1);
@@ -196,7 +198,7 @@ namespace KS
             player.animator.SetBool("Cancelled", false);
         }
 
-        //handles the animation cancel, if cancellable is true and there is an input.
+        //handles the animation cancel, if cancellable is true and there is an input. this works via the animator
            // set rootmotion & interacting to false, reset the animations and swap the gun to the holsters.
         public void HandleAllAnimCancels()
         {
@@ -215,6 +217,8 @@ namespace KS
                     SwapWeaponToHolster("Both");
                     player.combatAnimationEvents.ResetCombatAnimations();
                     player.combatAnimationEvents.HardComboReset();
+
+                    SpinFXOff("Both");
 
                     if (player.inputs.moveAmount > 0)
                     {

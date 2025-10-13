@@ -447,32 +447,33 @@ namespace KS
             return mainCam;
         }
 
-        //calls the coroutine to reset camera rotation
-        public void ResetCamera()
+        //calls the coroutine to reset look angle of the camera
+        public void ResetCamera(float rotation)
         {
-            StartCoroutine(ResettingCamera());
+            StartCoroutine(ResettingCamera(rotation));
 
             if(!resettingCam)
-                StopCoroutine(ResettingCamera());
+                StopCoroutine(ResettingCamera(rotation));
         }
 
-        //resets the camera rotation back to zero
-        private IEnumerator ResettingCamera()
+        //resets the camera look angle to given parameter
+        private IEnumerator ResettingCamera(float rotation)
         {
-            Quaternion targetRot = Quaternion.Euler(0, 0, 0);
+            transform.rotation = Quaternion.Euler(Vector3.zero);
+            cameraPivot.rotation = Quaternion.Euler(Vector3.zero);
+
             float elapsedTime = 0;
-            while (elapsedTime < cameraResetTime )
+            float targetLookAngle = rotation; 
+            while (elapsedTime < cameraResetTime)
             {
                 resettingCam = true;
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, cameraLookSpeed);
-                cameraPivot.transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, cameraLookSpeed);
+                LookAngle = Mathf.Lerp(LookAngle, targetLookAngle, cameraLookSpeed);
                 elapsedTime += Time.deltaTime;
                 yield return null;
+
             }
-            LookAngle = 0;
-            pivotAngle = 0;
-            transform.rotation = targetRot;
-            cameraPivot.transform.rotation = targetRot;
+
+            LookAngle = targetLookAngle;
             resettingCam = false;
             stopRotatingCamera = false;
         }
