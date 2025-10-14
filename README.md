@@ -1,8 +1,9 @@
 # Project Rev.
 ### Current status: On-going, V0.75.
 >[!NOTE]
+> **WORK-IN-PROGRESS DISCLAIMER** this project is actively under development, code is functional but it may lack polish or documentation in places. Refinement is ongoing.
+>[!Warning]
 >This is only a codebase without any necessary files, Downloading might give errors due to lack of necessary assets.
-
 
 This is the codebase of my personal project, Project Rev, which is a third-person action game demo, where you fight a boss. 
 This project was made with the intention of learning more about game development and explore the industry more thoroughly.
