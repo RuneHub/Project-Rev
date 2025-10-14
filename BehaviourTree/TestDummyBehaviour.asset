@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7080366628578cb488860ccab742bb72, type: 3}
+  m_Name: TestDummyBehaviour
+  m_EditorClassIdentifier: 
+  rootNode:
+    rid: 371566057402925057
+  nodes:
+  - rid: 371566057402925057
+  - rid: 371566057402925062
+  - rid: 371566057402925065
+  - rid: 371566057402925066
+  - rid: 371566057402925067
+  - rid: 371566057402925068
+  - rid: 371566057402925069
+  treeState: 0
+  blackboard:
+    moveToPosition: {x: 0, y: 0, z: 0}
+  viewPosition: {x: 600, y: 300, z: 0}
+  viewScale: {x: 1, y: 1, z: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 371566057402925057
+      type: {class: RootNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: c3cde121-ba8d-41ac-9432-fc82f018cd1a
+        position: {x: 0, y: 0}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        child:
+          rid: 371566057402925066
+    - rid: 371566057402925062
+      type: {class: MoveToPositionNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 32b2a613b1890524a9346e99c9a66cfe
+        position: {x: 174, y: 410}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: moves to given position
+        speed: 5
+        nextLocation: {x: 0, y: 0, z: 0}
+    - rid: 371566057402925065
+      type: {class: SequencerNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 84fb186e28d5d7d48a37035d6b1f6366
+        position: {x: 0, y: 249}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        children:
+        - rid: 371566057402925068
+        - rid: 371566057402925069
+        - rid: 371566057402925067
+        - rid: 371566057402925062
+    - rid: 371566057402925066
+      type: {class: RepeatNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 0f24be58ecf11094d91ef441a1176ad8
+        position: {x: 0, y: 131}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        child:
+          rid: 371566057402925065
+    - rid: 371566057402925067
+      type: {class: RandomPositionNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 21d760d04f7a90a42b9c43368c393d7b
+        position: {x: -8, y: 410}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: create a random position to move to
+        min: {x: -10, y: -10}
+        max: {x: 10, y: 10}
+    - rid: 371566057402925068
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 357a0eb5237cd034f87a877db3ad404d
+        position: {x: -355.6, y: 410}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        duration: 1
+    - rid: 371566057402925069
+      type: {class: Log, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: a6367077e578c5d4489fccf2801a70cd
+        position: {x: -194, y: 410}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        message: Moving

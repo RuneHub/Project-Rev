@@ -1,0 +1,1092 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7080366628578cb488860ccab742bb72, type: 3}
+  m_Name: BC_Seyliana_Behaviour
+  m_EditorClassIdentifier: 
+  rootNode:
+    rid: 3324233294718435329
+  nodes:
+  - rid: 3324233294718435329
+  - rid: 3324233294718435333
+  - rid: 3324233361142054929
+  - rid: 3324233361142054930
+  - rid: 3324233361142054932
+  - rid: 3324233361142054933
+  - rid: 1835529142696935425
+  - rid: 1835529142696935426
+  - rid: 1835529165809909768
+  - rid: 1835529165809909769
+  - rid: 1835529214189371395
+  - rid: 1835529283871178754
+  - rid: 1835529283871178757
+  - rid: 1835529371485208579
+  - rid: 1835529371485208580
+  - rid: 1835529508928618497
+  - rid: 1835529508928618498
+  - rid: 7943752745797025793
+  - rid: 7943752745797025794
+  - rid: 7943752745797025795
+  - rid: 7943752969419751425
+  - rid: 7943752969419751426
+  - rid: 7943753154412937216
+  - rid: 7943753154412937217
+  - rid: 7943753154412937221
+  - rid: 5799060154665664514
+  - rid: 5799060154665664516
+  - rid: 647830427660976129
+  - rid: 647830427660976131
+  - rid: 647830427660976132
+  - rid: 647830427660976135
+  - rid: 647830427660976136
+  - rid: 647830427660976137
+  - rid: 647830427660976138
+  - rid: 647830427660976140
+  - rid: 647830427660976141
+  - rid: 647830427660976142
+  - rid: 647830427660976143
+  - rid: 647830427660976145
+  - rid: 647830427660976146
+  - rid: 647830451015909376
+  - rid: 647830451015909379
+  - rid: 647830451015909381
+  - rid: 647830451015909382
+  - rid: 647830451015909383
+  - rid: 647830451015909384
+  - rid: 647830451015909385
+  - rid: 647830495760482305
+  - rid: 647830495760482310
+  - rid: 647830495760482311
+  - rid: 647830495760482313
+  - rid: 647830495760482314
+  - rid: 647830495760482315
+  - rid: 647830495760482316
+  - rid: 647830561647230977
+  - rid: 647830561647230978
+  - rid: 6586185877216296960
+  treeState: 0
+  blackboard:
+    moveToPosition: {x: 0, y: 0, z: 0}
+    cooldown: 0
+  viewPosition: {x: 600, y: 300, z: 0}
+  viewScale: {x: 1, y: 1, z: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 647830427660976129
+      type: {class: UGoalNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: b25facb14d59fa047b6f91abbc754954
+        position: {x: -917.06055, y: 289.99997}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Ranged
+        description: 
+        children:
+        - rid: 647830561647230978
+        considerations:
+        - {fileID: 11400000, guid: 3970cff84e2339e4a8599835a122c956, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976131
+      type: {class: UGoalNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: cf86949569229564db7c7dadeab77f74
+        position: {x: 1233.011, y: 293}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee
+        description: 
+        children:
+        - rid: 647830561647230977
+        considerations:
+        - {fileID: 11400000, guid: 4bbca57f7da80144baf390c5ff40eefa, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976132
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 952c4d41ec0950f4bb9262d80b44dfcf
+        position: {x: 401.00003, y: 798}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee Combo A
+        description: 
+        children:
+        - rid: 3324233361142054929
+        - rid: 3324233361142054930
+        - rid: 3324233361142054932
+        - rid: 1835529142696935426
+        - rid: 1835529142696935425
+        considerations:
+        - {fileID: 11400000, guid: adb59769076928647b05b0bae06cbcc3, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976135
+      type: {class: UGoalNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: adf3fed3223f4cc4e9c4b12f7de81237
+        position: {x: -1796.9996, y: -25.068613}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Mechanic
+        description: 
+        children:
+        - rid: 647830427660976141
+        considerations:
+        - {fileID: 11400000, guid: 1452b57de6702c7499cf5c73349b55d8, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976136
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: bd31889adf79fab4191dc4d4ea1320fa
+        position: {x: 817.243, y: 1245.5099}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Aerial Blitz
+        description: 
+        children:
+        - rid: 1835529165809909768
+        - rid: 1835529165809909769
+        considerations:
+        - {fileID: 11400000, guid: adb59769076928647b05b0bae06cbcc3, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976137
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 67f02fe062e534e40b4f94aa82d13c14
+        position: {x: -989.4591, y: 979}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Summon WindSpear
+        description: 
+        children:
+        - rid: 1835529283871178757
+        - rid: 1835529283871178754
+        considerations:
+        - {fileID: 11400000, guid: adb59769076928647b05b0bae06cbcc3, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976138
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 6bd721c1e98b7b641b4554690f00631a
+        position: {x: -521.9583, y: 686}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Cast Backdraft
+        description: 
+        children:
+        - rid: 1835529508928618498
+        - rid: 1835529508928618497
+        considerations:
+        - {fileID: 11400000, guid: adb59769076928647b05b0bae06cbcc3, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976140
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 989d614db67219b4a99f2f913e8f5487
+        position: {x: -1458.28, y: 686}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Cast T.Alpha
+        description: 
+        children:
+        - rid: 7943752745797025793
+        - rid: 7943752745797025795
+        - rid: 7943752745797025794
+        considerations:
+        - {fileID: 11400000, guid: adb59769076928647b05b0bae06cbcc3, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976141
+      type: {class: ApproachSelectorNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 729c09004c43ed0418e31f0b07ccb631
+        position: {x: -1797.0002, y: 85.06084}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 647830427660976142
+        - rid: 647830427660976143
+    - rid: 647830427660976142
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 991f26da78b84c4429c1991edea28cac
+        position: {x: -2056.2505, y: 243}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Mech Dash
+        description: 
+        children:
+        - rid: 7943752969419751426
+        - rid: 7943752969419751425
+        considerations:
+        - {fileID: 11400000, guid: 90af4e94f5bdb1440b2fabd3700cab57, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976143
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 9f22fcd49d442064a8fcda7dff0f969a
+        position: {x: -1524, y: 246.00005}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Mech T.Torrents
+        description: 
+        children:
+        - rid: 1835529371485208579
+        - rid: 1835529371485208580
+        considerations:
+        - {fileID: 11400000, guid: c33263868f8ba3d49987adba91bd4f75, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830427660976145
+      type: {class: SequencerNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 6afde6e5f028b2f48876adfeb8f88efa
+        position: {x: -108, y: -600}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 647830427660976146
+    - rid: 647830427660976146
+      type: {class: GoalSelectorNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 1f1e0b55421279c44a7057b0a9f535c3
+        position: {x: -108, y: -455.99988}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 647830427660976135
+        - rid: 647830427660976129
+        - rid: 647830427660976131
+        - rid: 647830495760482305
+    - rid: 647830451015909376
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 4c9c98165a472694b9816a5138e28f74
+        position: {x: 1562.3044, y: 1263}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Aerial Blitz Aura
+        description: 
+        children:
+        - rid: 1835529214189371395
+        - rid: 647830451015909379
+        considerations:
+        - {fileID: 11400000, guid: adb59769076928647b05b0bae06cbcc3, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830451015909379
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 75b7676ccfe1c9d45a3511b70e4646a9
+        position: {x: 1718.0001, y: 1409.225}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        duration: 0
+        useForCooldown: 1
+    - rid: 647830451015909381
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 9cca3c8d8ddf2b04ea5a87e8818b1c35
+        position: {x: 2018.16, y: 774}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee Combo B
+        description: 
+        children:
+        - rid: 647830451015909382
+        - rid: 647830451015909383
+        - rid: 3324233361142054933
+        - rid: 647830451015909384
+        - rid: 647830451015909385
+        considerations:
+        - {fileID: 11400000, guid: adb59769076928647b05b0bae06cbcc3, type: 2}
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830451015909382
+      type: {class: UMeleeAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: fb6f98492ca0de145865d085b04afc56
+        position: {x: 1652.0001, y: 1017.0001}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee 1B
+        description: 
+        range: 3
+        cooldown: 0
+        useCooldown: 0
+        considerations:
+        - {fileID: 11400000, guid: 6f451f9a824d133419e3614fc0497fc6, type: 2}
+        - {fileID: 11400000, guid: ea8518123b8aed248876a5684d4f8e0d, type: 2}
+        MeleeAttack: {fileID: 11400000, guid: d1581fd987954f3409bf43c6e46ec347, type: 2}
+    - rid: 647830451015909383
+      type: {class: UMeleeAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 2b4ce674eef94dd469a6cc46439d3ccc
+        position: {x: 1868.0001, y: 1017}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee 2B
+        description: 
+        range: 3
+        cooldown: 0
+        useCooldown: 0
+        considerations:
+        - {fileID: 11400000, guid: 6f451f9a824d133419e3614fc0497fc6, type: 2}
+        - {fileID: 11400000, guid: ea8518123b8aed248876a5684d4f8e0d, type: 2}
+        MeleeAttack: {fileID: 11400000, guid: 75631352f5d07a44db4d05593f2c4cd9, type: 2}
+    - rid: 647830451015909384
+      type: {class: ResetMeleeAnimationsNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 41425342dcbb62d40b899230f56674b3
+        position: {x: 2303.664, y: 1017.00006}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+    - rid: 647830451015909385
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 3ca04a3a9a14add4a97df7134f873ad9
+        position: {x: 2519, y: 1017.0002}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        duration: 0
+        useForCooldown: 1
+    - rid: 647830495760482305
+      type: {class: UGoalNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: c1f61ca1a2fb7ca4cb06c67d8182acb3
+        position: {x: 2997, y: -26}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Random Teleport
+        description: 
+        children:
+        - rid: 647830495760482313
+        - rid: 647830495760482314
+        considerations:
+        - {fileID: 11400000, guid: 90d76aadbdb2bde4294b26a68944e4ac, type: 2}
+        Available: 1
+        useCooldown: 1
+        CD: 3
+        selectedAmount: 0
+    - rid: 647830495760482310
+      type: {class: UTeleportNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 3b067ec155df00143850f155342648f2
+        position: {x: 2856, y: 444}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Random Teleport
+        description: 
+        range: 0
+        cooldown: 0
+        useCooldown: 0
+        considerations: []
+        so: {fileID: 11400000, guid: 0302f4ebd7081df4fa787c5ef945dbf0, type: 2}
+        nextLocation: 2
+        useRandomTeleportTime: 1
+        teleportTime: {x: 0.2, y: 1}
+    - rid: 647830495760482311
+      type: {class: RandomInFieldLocationNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: df3bfc725b1acc94497d9d7fe25876e9
+        position: {x: 2638, y: 444}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+    - rid: 647830495760482313
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: cecd6f5536b6cb6478480040a6450a85
+        position: {x: 2759.68, y: 293.99997}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Random Location
+        description: 
+        children:
+        - rid: 647830495760482311
+        - rid: 647830495760482310
+        considerations: []
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830495760482314
+      type: {class: UApproachNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: bf7f250ff746f464fa96e23d35540194
+        position: {x: 3320.16, y: 294}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 647830495760482315
+        - rid: 647830495760482316
+        considerations: []
+        Available: 1
+        useCooldown: 0
+        CD: 0
+        selectedAmount: 0
+    - rid: 647830495760482315
+      type: {class: RandomPositionAroundTargetNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 9c3e898e4b981ba4fb8c414c1dca0f61
+        position: {x: 3144.0002, y: 444}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        range: 3
+    - rid: 647830495760482316
+      type: {class: UTeleportNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: d47134108a7b91e4c8ce07a30b1261a0
+        position: {x: 3408, y: 444}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        range: 0
+        cooldown: 0
+        useCooldown: 0
+        considerations: []
+        so: {fileID: 11400000, guid: aef1bdb00c059764c8120088ee78be52, type: 2}
+        nextLocation: 2
+        useRandomTeleportTime: 1
+        teleportTime: {x: 0.3, y: 0.8}
+    - rid: 647830561647230977
+      type: {class: ApproachRandomWheelNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 7cb29d32238c99e4284f032c074f2cd1
+        position: {x: 1198.0619, y: 411.68002}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 647830427660976132
+        - rid: 647830427660976136
+        - rid: 647830451015909376
+        - rid: 647830451015909381
+    - rid: 647830561647230978
+      type: {class: ApproachRandomWheelNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: e8bd5a1e318ee8f448c5771265b37622
+        position: {x: -958.3131, y: 417.43472}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 647830427660976140
+        - rid: 647830427660976137
+        - rid: 647830427660976138
+    - rid: 1835529142696935425
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: db240e7f685655846b20ac1debcdfcbf
+        position: {x: 834.5352, y: 1010.99976}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        duration: 0
+        useForCooldown: 1
+    - rid: 1835529142696935426
+      type: {class: ResetMeleeAnimationsNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 95014c0c67da6c04d889601bdb105576
+        position: {x: 619.5351, y: 1010.99976}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+    - rid: 1835529165809909768
+      type: {class: UFanAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 3fae1ce0ca6e45a4885999f6e7f0d2b2
+        position: {x: 727.0001, y: 1396}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Aerial Blitz
+        description: 
+        range: 6
+        cooldown: 0
+        useCooldown: 1
+        considerations:
+        - {fileID: 11400000, guid: 81166579d002c44419e3781aa364f3d1, type: 2}
+        - {fileID: 11400000, guid: fc7e9c01c6b72254c9a07de6881254a1, type: 2}
+        - {fileID: 11400000, guid: a3b7c3d1b3ecc4b4eb4fd7bfd56f62de, type: 2}
+        FanAttack: {fileID: 11400000, guid: 036f96a5bbdb03a499a659dde2cd7dc3, type: 2}
+    - rid: 1835529165809909769
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 78bb735c107e52b47aa2d2c5b749df43
+        position: {x: 938.0002, y: 1396}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        duration: 0
+        useForCooldown: 1
+    - rid: 1835529214189371395
+      type: {class: UFanAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 055d9020ffb31c449abd5d712092aaf0
+        position: {x: 1471.0001, y: 1409.225}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Aerial Blitz Aura
+        description: 
+        range: 4
+        cooldown: 0
+        useCooldown: 1
+        considerations:
+        - {fileID: 11400000, guid: 81166579d002c44419e3781aa364f3d1, type: 2}
+        - {fileID: 11400000, guid: fc7e9c01c6b72254c9a07de6881254a1, type: 2}
+        - {fileID: 11400000, guid: ea8518123b8aed248876a5684d4f8e0d, type: 2}
+        FanAttack: {fileID: 11400000, guid: 25be40914f4dab5458b4f93309069ba3, type: 2}
+    - rid: 1835529283871178754
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: c374375c786161f4c9135d4e4f571c96
+        position: {x: -789.45917, y: 1116}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        duration: 0
+        useForCooldown: 1
+    - rid: 1835529283871178757
+      type: {class: UMagicSummonNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: b0f29dd892bb1e84a89de7f516d1286f
+        position: {x: -1097, y: 1116}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: WindSpear Summon
+        description: 
+        range: 0
+        cooldown: 0
+        useCooldown: 1
+        considerations:
+        - {fileID: 11400000, guid: aaacd5340a3bb1d409214c6ed2ab2222, type: 2}
+        - {fileID: 11400000, guid: dbe8c3d2a7521324b9d0374faae40bfe, type: 2}
+        summonAttack: {fileID: 11400000, guid: 4eb396b8379113f47be232749b3b4f93, type: 2}
+    - rid: 1835529371485208579
+      type: {class: ULongCastNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: cff83749f5162dd4990d3352ddb788f7
+        position: {x: -1678.5209, y: 375.00003}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: T.Torrents Cast
+        description: 
+        range: 0
+        cooldown: 0
+        useCooldown: 0
+        considerations:
+        - {fileID: 11400000, guid: b58fc7da79476ff4f98c146474b1e692, type: 2}
+        - {fileID: 11400000, guid: 1f8f0e85f8b8759429ea7b4dc23476bc, type: 2}
+        MagicCastSO: {fileID: 11400000, guid: b40e1d85337054546bff447863939e08, type: 2}
+    - rid: 1835529371485208580
+      type: {class: ULongCastFinishNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: ba5a78592d460b54f9e5dc86db5d783f
+        position: {x: -1437.5209, y: 375.00003}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: T.Torrents Finish
+        description: 
+        range: 0
+        cooldown: 10
+        useCooldown: 1
+        considerations: []
+        MagicCastSO: {fileID: 11400000, guid: b40e1d85337054546bff447863939e08, type: 2}
+    - rid: 1835529508928618497
+      type: {class: ULongCastFinishNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: ed61eabb78610464192ccc3ca9abdce0
+        position: {x: -402.95822, y: 842}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Backdraft Finish
+        description: 
+        range: 0
+        cooldown: 2
+        useCooldown: 0
+        considerations: []
+        MagicCastSO: {fileID: 11400000, guid: f2e4e7c63bdebda42a495d6236fffc53, type: 2}
+    - rid: 1835529508928618498
+      type: {class: ULongCastNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 65cd24ec909a08f4db32063eb51ed541
+        position: {x: -639.9583, y: 842}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: BackDraft Cast
+        description: 
+        range: 0
+        cooldown: 0
+        useCooldown: 0
+        considerations:
+        - {fileID: 11400000, guid: b58fc7da79476ff4f98c146474b1e692, type: 2}
+        - {fileID: 11400000, guid: 1f8f0e85f8b8759429ea7b4dc23476bc, type: 2}
+        MagicCastSO: {fileID: 11400000, guid: f2e4e7c63bdebda42a495d6236fffc53, type: 2}
+    - rid: 3324233294718435329
+      type: {class: RootNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: a62ec623-0354-4aaf-9c7f-a72e2e48f71a
+        position: {x: -108.24337, y: -1083.7606}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        child:
+          rid: 5799060154665664516
+    - rid: 3324233294718435333
+      type: {class: RepeatNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 2b8ce3ccac1aee54bbf620cbc184dd1b
+        position: {x: -108.00013, y: -968.2875}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        child:
+          rid: 7943753154412937216
+    - rid: 3324233361142054929
+      type: {class: UMeleeAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: ccbe6fc98ce5f254d9aa4b3e7fb5f64d
+        position: {x: -33.00004, y: 1011.00006}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee 1A
+        description: 
+        range: 3
+        cooldown: 0
+        useCooldown: 0
+        considerations:
+        - {fileID: 11400000, guid: 6f451f9a824d133419e3614fc0497fc6, type: 2}
+        - {fileID: 11400000, guid: ea8518123b8aed248876a5684d4f8e0d, type: 2}
+        MeleeAttack: {fileID: 11400000, guid: d1581fd987954f3409bf43c6e46ec347, type: 2}
+    - rid: 3324233361142054930
+      type: {class: UMeleeAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 8cc917983806c914085d238f03b0c4ac
+        position: {x: 182.99995, y: 1011.00006}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee 2A
+        description: 
+        range: 3
+        cooldown: 0
+        useCooldown: 0
+        considerations:
+        - {fileID: 11400000, guid: 6f451f9a824d133419e3614fc0497fc6, type: 2}
+        - {fileID: 11400000, guid: ea8518123b8aed248876a5684d4f8e0d, type: 2}
+        MeleeAttack: {fileID: 11400000, guid: 75631352f5d07a44db4d05593f2c4cd9, type: 2}
+    - rid: 3324233361142054932
+      type: {class: UMeleeAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: d7c8a478e34da374b80560fc99890113
+        position: {x: 400.99988, y: 1011}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee 3A
+        description: 
+        range: 5
+        cooldown: 0
+        useCooldown: 1
+        considerations:
+        - {fileID: 11400000, guid: 6f451f9a824d133419e3614fc0497fc6, type: 2}
+        - {fileID: 11400000, guid: 884c18681d8ba02448b365fec9d76263, type: 2}
+        - {fileID: 11400000, guid: ea8518123b8aed248876a5684d4f8e0d, type: 2}
+        MeleeAttack: {fileID: 11400000, guid: f4e36c34b7bcb1a449f982104d3dea7a, type: 2}
+    - rid: 3324233361142054933
+      type: {class: UMeleeAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 872a4bb63a13ebf46b3a2a9afe42d219
+        position: {x: 2086, y: 1017}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Melee 3B
+        description: 
+        range: 3
+        cooldown: 0
+        useCooldown: 1
+        considerations:
+        - {fileID: 11400000, guid: 6f451f9a824d133419e3614fc0497fc6, type: 2}
+        - {fileID: 11400000, guid: 884c18681d8ba02448b365fec9d76263, type: 2}
+        - {fileID: 11400000, guid: ea8518123b8aed248876a5684d4f8e0d, type: 2}
+        MeleeAttack: {fileID: 11400000, guid: f01897f3f7f9c4247bb12b129a408e5c, type: 2}
+    - rid: 5799060154665664514
+      type: {class: HpTiggerModeNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: ca9ac6699be2e6c42817b2920178a863
+        position: {x: 84, y: -441}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        so: {fileID: 11400000, guid: 0302f4ebd7081df4fa787c5ef945dbf0, type: 2}
+    - rid: 5799060154665664516
+      type: {class: SequencerNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 5b57081d2369b344facd67aa0618111a
+        position: {x: 84, y: -600}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 5799060154665664514
+    - rid: 6586185877216296960
+      type: {class: UMagicSummonNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: f50b4adb19953d64ea7dd98e3a071d06
+        position: {x: 271, y: -456}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Kamaitachi
+        description: 
+        range: 0
+        cooldown: 0
+        useCooldown: 1
+        considerations: []
+        summonAttack: {fileID: 11400000, guid: 4eb396b8379113f47be232749b3b4f93, type: 2}
+    - rid: 7943752745797025793
+      type: {class: UTeleportNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: aa64f8c0ff42722409dd11ebc4ae10c0
+        position: {x: -1680.6464, y: 842}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: Teleport
+        description: 
+        range: 0
+        cooldown: 0
+        useCooldown: 0
+        considerations: []
+        so: {fileID: 11400000, guid: 0302f4ebd7081df4fa787c5ef945dbf0, type: 2}
+        nextLocation: 1
+        useRandomTeleportTime: 0
+        teleportTime: {x: 0, y: 0}
+    - rid: 7943752745797025794
+      type: {class: ULongCastFinishNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 061b9b900e013a844b207d2053b81842
+        position: {x: -1275.6464, y: 842}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: T.Alpha Finish
+        description: 
+        range: 0
+        cooldown: 7
+        useCooldown: 1
+        considerations: []
+        MagicCastSO: {fileID: 11400000, guid: 0701150c68ea24b4d8e6541519f948aa, type: 2}
+    - rid: 7943752745797025795
+      type: {class: ULongCastNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 0f428f8f954353440842681c24d1fef8
+        position: {x: -1496.6464, y: 842}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: T.Alpha Cast
+        description: 
+        range: 0
+        cooldown: 10
+        useCooldown: 1
+        considerations:
+        - {fileID: 11400000, guid: b58fc7da79476ff4f98c146474b1e692, type: 2}
+        - {fileID: 11400000, guid: 1f8f0e85f8b8759429ea7b4dc23476bc, type: 2}
+        MagicCastSO: {fileID: 11400000, guid: 0701150c68ea24b4d8e6541519f948aa, type: 2}
+    - rid: 7943752969419751425
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: e2019a0400dd05545960811799ffef3b
+        position: {x: -1936.2505, y: 375}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        duration: 0
+        useForCooldown: 1
+    - rid: 7943752969419751426
+      type: {class: UDashAttackNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: a3ae0285c63a94941804f2da84ca806d
+        position: {x: -2122.2505, y: 375}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 'Dash '
+        description: 
+        range: 0
+        cooldown: 7
+        useCooldown: 1
+        considerations:
+        - {fileID: 11400000, guid: 00d32a4c42edb6445a0aca7269854647, type: 2}
+        - {fileID: 11400000, guid: 3735a6847088d0b40b706da5c6b1ea1c, type: 2}
+        DashAttackSO: {fileID: 11400000, guid: b1c3db77425b69740a01c2adc0bff911, type: 2}
+    - rid: 7943753154412937216
+      type: {class: AIModeNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 7a395bd2f17d09c46803f91fb1afd1cc
+        position: {x: -108, y: -853}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 7943753154412937217
+        - rid: 647830427660976145
+        modeLeft: 2
+        modeMiddle: 0
+        modeRight: 1
+    - rid: 7943753154412937217
+      type: {class: SequencerNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 97bac024bf7a8c049a2daa049f94982d
+        position: {x: -296, y: -600.48193}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        children:
+        - rid: 7943753154412937221
+    - rid: 7943753154412937221
+      type: {class: BreakModeNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: e5f9a210568f06c4aa0e7601b7d72d8a
+        position: {x: -296.00003, y: -456.00006}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          cooldown: 0
+        name: 
+        description: 
+        BreakTime: 0
+        BreakDone: 0

@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7080366628578cb488860ccab742bb72, type: 3}
+  m_Name: TestBehaviourTree
+  m_EditorClassIdentifier: 
+  rootNode:
+    rid: 371566037624946731
+  nodes:
+  - rid: 371566037624946731
+  - rid: 371566103469752348
+  - rid: 371566103469752361
+  - rid: 371566103469752362
+  - rid: 371566103469752363
+  - rid: 371566103469752369
+  treeState: 0
+  blackboard:
+    moveToPosition: {x: 0, y: 0, z: 0}
+  viewPosition: {x: 600, y: 300, z: 0}
+  viewScale: {x: 1, y: 1, z: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 371566037624946731
+      type: {class: RootNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: a9f37736-422e-4d9c-ab75-7598cbbc026d
+        position: {x: -260, y: -167}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        child:
+          rid: 371566103469752348
+    - rid: 371566103469752348
+      type: {class: SelectorNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: eae7e25df965afa47906f855180c43d4
+        position: {x: -260, y: -72}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        children:
+        - rid: 371566103469752362
+    - rid: 371566103469752361
+      type: {class: SelectorRandomNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 9426f67c5b380a54089a1020921dc61d
+        position: {x: -189.0001, y: 277.00003}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        children: []
+    - rid: 371566103469752362
+      type: {class: RepeatNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 76f4255915e23324884ca7b7e0fc16ca
+        position: {x: -260, y: 25}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        child:
+          rid: 371566103469752369
+    - rid: 371566103469752363
+      type: {class: WaitNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 52c00192daae6ad4f802938ac30eb85a
+        position: {x: -364.9999, y: 277}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        duration: 1
+    - rid: 371566103469752369
+      type: {class: SequencerNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 4035c8fbfc6d0074c8b30618e301e79c
+        position: {x: -259.99997, y: 139}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        children:
+        - rid: 371566103469752363
+        - rid: 371566103469752361
