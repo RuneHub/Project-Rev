@@ -33,3 +33,7 @@ This Project is licensed under the MIT License. See [MIT License](LICENSE) for d
 
 ## Author
   Matthew.
+
+## Acknowledgments
+This project incoporates modified code from the following sources: [TheKiwicoder/https://github.com/thekiwicoder0/UnityBehaviourTreeEditor]
+* followed the tutorial for this functionality, when noticed that the series was incomplete, used his public uploaded repository to finish the necessary base functionality and modified it for my own needs.
