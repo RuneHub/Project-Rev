@@ -20,8 +20,8 @@ namespace KS {
             UIManager.instance.gameplayMenuIsOpen = true;
             UIManager.instance.player.inputs.DisableGameplayInput();
             base.OpenMenu();
-            Time.timeScale = 0;
-            GetSelectOnOpen().GetComponent<UIButtonOnSelected>().ManuallySelectAnimate(true);
+            Time.timeScale = 0;           
+            GetSelectOnOpen().GetComponent<UIButtonOnSelect>().ManuallySelect(true);
 
             QSN.SetQuickSkill(UIManager.instance.player.combatManager.SkillNorth);
             QSE.SetQuickSkill(UIManager.instance.player.combatManager.SkillEast);

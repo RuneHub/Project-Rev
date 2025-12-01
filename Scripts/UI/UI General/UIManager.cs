@@ -1,4 +1,3 @@
-using kS;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +18,7 @@ namespace KS
         public PlayerUIPopUpManager popupManager;
         public SettingsUIManager settingsManager;
         public UITab currentTab;
+        public PlayerUICSMenuManager cutsceneUIManager;
 
         [Header("UI")]
         public bool titleWindowIsOpen = false;
@@ -26,6 +26,7 @@ namespace KS
         public bool gameplayMenuIsOpen = false;
         public bool popUpWindowIsOpen = false;
         public bool UITabsAreOpen = false;
+        public bool CSMenuIsOpen = false;
 
         public BaseUIManager currentOpenMenu;
 
@@ -50,6 +51,7 @@ namespace KS
             skillMenuManager = GetComponentInChildren<PlayerUISkillMenuManager>();
             popupManager = GetComponentInChildren<PlayerUIPopUpManager>();
             settingsManager = FindObjectOfType<SettingsUIManager>();
+            cutsceneUIManager = GetComponentInChildren<PlayerUICSMenuManager>();
 
             guideBar.SetActive(false);
         }
@@ -69,6 +71,7 @@ namespace KS
             settingsManager.CloseMenu();
             menuWindowIsOpen = false;
             gameplayMenuIsOpen= false;
+            guideBar.SetActive(false);
             Time.timeScale = 1;
         }
 

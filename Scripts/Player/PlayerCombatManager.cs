@@ -360,7 +360,7 @@ namespace KS
             // 2. set sfx up
             if (attackSO.ReleaseSFX != null)
             {
-                player.soundManager.PlayActionSound(attackSO.ReleaseSFX);
+                player.soundManager.PlayWeaponSound(attackSO.ReleaseSFX);
             }
 
             // 3. set screen shake

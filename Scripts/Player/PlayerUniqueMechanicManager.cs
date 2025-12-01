@@ -18,6 +18,11 @@ namespace KS
         [Range(0, maxGauge)] public float LoadedGaugeLevel = 0;
         [SerializeField] private float IncreaseRate = 33.35f;
 
+        [Header("timer")]
+        [SerializeField] private float waitTime = 5;
+        [SerializeField] private float totalTime = 30;
+        [SerializeField] private float reduceAmount;
+
         [Header("Loaded Power")]
         public float loadedPower = 0;
 
@@ -33,7 +38,6 @@ namespace KS
         [Header("Loaded lvl 4")]
         public float loadedPowerlvl4 = 400;
         public StatusEffectsSO lvl4Buff;
-        public StatusEffectsSO SolsticeBuff;
 
         private bool SetLoaded;
 
@@ -43,13 +47,16 @@ namespace KS
             uniqueUI = manager.uniqueUI;
 
             uniqueUI.SetHud(maxGauge);
-        }
 
+        }
+        
+        [ContextMenu("IncreaseGauge")]
         //Increases loaded level by the given rate, also Updates the UI.
         public void IncreaseLoadedGauge()
         {
             LoadedGaugeLevel += IncreaseRate;
             uniqueUI.UpdateGaugeAmount();
+            //StartIntervalTime();
         }
 
         //reset Loaded Level, removes all buffs, resets loadedGauge
@@ -156,6 +163,38 @@ namespace KS
             }
 
             SetLoaded = true;
+
+        }
+
+
+        private void StartIntervalTime()
+        {
+            StopCoroutine(RunIntervalTime());
+            StartCoroutine(RunIntervalTime());
+        }
+
+        IEnumerator RunIntervalTime()
+        {
+            Debug.Log("Interval");
+            yield return new WaitForSeconds(waitTime);
+
+            float time = (totalTime / maxGauge) * LoadedGaugeLevel;
+            Debug.Log("time: " + time);
+            reduceAmount = (LoadedGaugeLevel / time);
+            Debug.Log("ReduceAmoutnt: " +  reduceAmount);
+
+            while (time > 0)//(LoadedGaugeLevel > 0)
+            { 
+                yield return new WaitForSeconds(1);
+                Debug.Log("reducing");
+                time--;
+                LoadedGaugeLevel -= reduceAmount;
+
+                CheckLoadedGaugeLevel();
+                uniqueUI.UpdateGaugeAmount();
+            }
+
+            Debug.Log("Done");
 
         }
 

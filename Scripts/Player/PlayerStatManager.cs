@@ -47,6 +47,10 @@ namespace KS {
         public bool healingCharged = false;
         public bool healCharging = false;
 
+        [Header("Passive ability texts")]
+        public PassiveAbilityText passive1;
+        public PassiveAbilityText passive2;
+
         protected override void Awake()
         {
             base.Awake();

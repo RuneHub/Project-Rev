@@ -19,6 +19,8 @@ namespace KS
         [SerializeField] private GameObject selectedVFX;
         [SerializeField] private bool useCommandBar;
         [SerializeField] private UICommandBar commandBar;
+        [SerializeField] private bool useCustomPrompts;
+        [SerializeField] private List<UIInputPrompt> promptList;
         
         public virtual void OpenMenu()
         {
@@ -27,7 +29,7 @@ namespace KS
             menu.SetActive(true);
             eventSystem.SetSelectedGameObject(selectedOnOpen);
 
-            commandBar.SetCommandBar(useCommandBar);
+            SetCommandBar();
         }
 
         public virtual void OpenMenu(GameObject Menu)
@@ -39,13 +41,15 @@ namespace KS
             Debug.Log("prevMenu: " + PreviousMenu.name);
             eventSystem.SetSelectedGameObject(selectedOnOpen);
 
-            commandBar.SetCommandBar(useCommandBar);
+            SetCommandBar();
         }
 
         public virtual void CloseMenu()
         {
             UIManager.instance.hudManager.ToggleHUD(true);
             menu.SetActive(false);
+
+            ClearCommandBar();
 
             if (ReturningInMenu)
             {
@@ -67,6 +71,8 @@ namespace KS
             
             menu.SetActive(false);
 
+            ClearCommandBar();
+
             if (ReturningInMenu)
             {
                 ReturningInMenu = false;
@@ -84,6 +90,30 @@ namespace KS
         public GameObject GetSelectOnOpen()
         {
             return selectedOnOpen;
+        }
+
+        //adds all the prompts for the current menu.
+        private void SetCommandBar()
+        {
+            commandBar.SetCommandBar(useCommandBar);
+
+            if (useCommandBar && useCustomPrompts)
+            {
+                for (int i = 0; i < promptList.Count; i++)
+                {
+                    commandBar.AddToCommandBar(promptList[i]);
+                }
+            }
+        }
+
+        //removes all of the added prompts from the current menu.
+        private void ClearCommandBar()
+        {
+            if (useCommandBar && useCustomPrompts)
+            {
+                commandBar.RemoveCurrentPrompts();
+            }
+
         }
 
     }

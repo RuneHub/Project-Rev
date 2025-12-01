@@ -29,6 +29,12 @@ namespace KS
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI attackText;
 
+        [Header("Passive")]
+        [SerializeField] private TextMeshProUGUI p1Name;
+        [SerializeField] private TextMeshProUGUI p1Description;
+        [SerializeField] private TextMeshProUGUI p2Name;
+        [SerializeField] private TextMeshProUGUI p2description;
+
         #region Menu's
         public override void OpenMenu()
         {
@@ -122,6 +128,11 @@ namespace KS
             levelText.text = playerManager.playerStats.Level.ToString();
             healthText.text = playerManager.playerStats.currentHealth.ToString();
             attackText.text = playerManager.playerStats.baseAttack.ToString();
+
+            p1Name.text = playerManager.playerStats.passive1.passiveName;
+            p1Description.text = playerManager.playerStats.passive1.passiveDescription;
+            p2Name.text = playerManager.playerStats.passive2.passiveName;
+            p2description.text = playerManager.playerStats.passive2.passiveDescription;
         }
 
         #endregion

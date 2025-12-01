@@ -31,11 +31,15 @@ namespace KS
             {
                 LeftHandWeapon.SetActive(true);
                 LeftHolsterWeapon.SetActive(false);
+
+                player.soundManager.PlayHolsterSound(false);
             }
             else if (_side == "Right")
             {
                 RightHandWeapon.SetActive(true);
                 RightHolsterWeapon.SetActive(false);
+
+                player.soundManager.PlayHolsterSound(false);
             }
             else if (_side == "Both")
             {
@@ -44,6 +48,8 @@ namespace KS
 
                 LeftHolsterWeapon.SetActive(false);
                 RightHolsterWeapon.SetActive(false);
+
+                player.soundManager.PlayHolsterSound(false);
             }
 
 
@@ -57,11 +63,15 @@ namespace KS
             {
                 LeftHolsterWeapon.SetActive(true);
                 LeftHandWeapon.SetActive(false);
+
+                player.soundManager.PlayHolsterSound(true);
             }
             else if (_side == "Right")
             {
                 RightHolsterWeapon.SetActive(true);
                 RightHandWeapon.SetActive(false);
+
+                player.soundManager.PlayHolsterSound(true);
             }
             else if (_side == "Both")
             {
@@ -70,6 +80,8 @@ namespace KS
 
                 LeftHandWeapon.SetActive(false);
                 RightHandWeapon.SetActive(false);
+
+                player.soundManager.PlayHolsterSound(true);
             }
 
         }
@@ -158,6 +170,11 @@ namespace KS
         public void PlayDodgeSFX()
         {
             player.soundManager.PlayDodgeSound();
+        }
+
+        public void PlayJDSFX()
+        {
+            player.soundManager.PlayJustDodgeSound();
         }
         #endregion
 

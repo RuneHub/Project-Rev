@@ -160,7 +160,6 @@ namespace KS
                 controls.PlayerAction.HealLarge.performed += i => largeHealInput = true;
                 controls.PlayerAction.HealLarge.canceled += i => largeHealInput = false;
 
-
                 //control
                 controls.Control.LockOn.performed += i => lockOnInput = true;
                 controls.Control.LockOnRight.performed += i => lockOnRightInput = true;
@@ -170,9 +169,11 @@ namespace KS
                 controls.Control.Skill.performed += i => SkillSetOpenInput = true;
                 controls.Control.Skill.canceled += i => SkillSetOpenInput = false;
 
-
                 //Camera
                 controls.Camera.Rotation.performed += i => cameraInput = i.ReadValue<Vector2>();
+
+                //Cutscene
+                controls.Cutscene.OpenCutsceneMenu.performed += i => uiOpenMenu = true;
 
                 //UI
                 controls.Control.OpenMainMenu.performed += i => uiOpenMenu = true;
@@ -662,7 +663,6 @@ namespace KS
         }
         #endregion
 
-
         #region Testing
 
         //resets camera to given look angle, THIS IS TEMP NEEDS TO BE REMOVED
@@ -851,9 +851,13 @@ namespace KS
         #endregion
 
         #region UI
+        
+        // Checks wether a cutscene is playing or gameplay is happening.
+        //opens a different UI menu depending on that.
         private void HandleUIOpenMainMenuInput()
         {
-            if (!UIManager.instance.menuWindowIsOpen && uiOpenMenu)
+            if (!UIManager.instance.menuWindowIsOpen 
+                && uiOpenMenu && !player.InCutscene)
             {
                 uiOpenMenu = false;
 
@@ -863,8 +867,17 @@ namespace KS
                 UIManager.instance.CloseAllMenuWindows();
                 UIManager.instance.menuManager.OpenMenu();
             }
+            else if (!UIManager.instance.menuWindowIsOpen 
+                && uiOpenMenu && player.InCutscene && player.currentCSManager.skipableCS)
+            {
+                uiOpenMenu = false;
+                Debug.Log("open cs menu");
+                UIManager.instance.cutsceneUIManager.OpenMenu();
+                
+            }
         }
 
+        //The return function for UI, checks on which UI menu your on to go to a previous menu or closes all the windows.
         private void HandleUiReturnInput()
         {
             if (uiReturn)
@@ -893,6 +906,7 @@ namespace KS
             }
         }
 
+        //disables gameplay inputs
         public void DisableGameplayInput()
         {
             GameplayInputs = false;
@@ -901,8 +915,14 @@ namespace KS
             controls.Control.Disable();
             controls.Camera.Disable();
             controls.UI.Enable();
+
+            if(player.InCutscene)
+            {
+                controls.Cutscene.Enable();
+            }
         }
 
+        //enables gameplay inputs.
         public void EnableGameplayInput()
         {
             GameplayInputs = true;
@@ -911,6 +931,7 @@ namespace KS
             controls.Control.Enable();
             controls.Camera.Enable();
             controls.UI.Disable();
+
         }
         #endregion
 

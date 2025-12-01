@@ -11,6 +11,8 @@ namespace KS
     {
         [Header("Cutscene")]
         [SerializeField] private PlayableDirector pd;
+        [SerializeField] private float SkipToTimestamp;
+        public bool skipableCS = false;
 
         [Header("Props")]
         public GameObject csLowell;
@@ -38,6 +40,22 @@ namespace KS
         {
             pd.playableAsset = PA;
             pd.Play();
+            playerManager.currentCSManager = this;
+            playerManager.InCutscene = true;
+        }
+
+        public void CutsceneEnd()
+        {
+            playerManager.currentCSManager = null;
+            playerManager.InCutscene = false;
+        }
+
+        public void SkipToPoint()
+        {
+            if (skipableCS)
+            {
+                pd.time = SkipToTimestamp;
+            }
         }
 
         #region  turn on/off
@@ -82,6 +100,11 @@ namespace KS
         public void BlackScreenFadeOut()
         {
             fadingCanvas.FadeOut();
+        }
+
+        public float GetCanvasFadingDuration()
+        {
+            return fadingCanvas.GetDuration();
         }
         #endregion
 

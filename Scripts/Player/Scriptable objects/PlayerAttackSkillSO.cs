@@ -18,9 +18,12 @@ namespace KS
         [DrawIf("useHitbox", true)] public float hitboxKillTime;
         [DrawIf("useHitbox", true)] public bool vectorPlacement;
         [DrawIf("vectorPlacement", true)] public Vector3 vectorLocation;
-        
-        public bool useASOData;
-        [DrawIf("useASOData", true)] public AttackStandardSO ASO_Data;
+
+        public AudioClip releaseSFX;
+
+        public bool useScreenShake;
+        public float shakeDuration;
+        public float shakeMagnitude;
 
         #endregion
 
@@ -50,8 +53,6 @@ namespace KS
                 {
                     animEvents.OnSkillTriggered += PerformSkill;
                 }
-
-
 
                 animEvents.OnSkillDeactiveTriggered += CleanSkill;
                 player.playerAnimations.PlayTargetAnimation(position, true, useRootmotion, layerNum: 1);
@@ -95,22 +96,11 @@ namespace KS
         protected void PerformSkill(System.Object sender, EventArgs e)
         {
             //Debug.Log("perform skill");
+            player.soundManager.PlayWeaponSound(releaseSFX);
 
-            if (useASOData)
+            if (useScreenShake)
             {
-                //set up sfx
-                if (ASO_Data.ReleaseSFX != null)
-                {
-                    player.soundManager.PlayActionSound(ASO_Data.ReleaseSFX);
-                }
-
-                //set up screen shake
-                if (ASO_Data.useScreenShake)
-                {
-                    player.cameraHandler.EffectShake(ASO_Data.shakeDuration,
-                                                        ASO_Data.shakeMagnitude);
-                }
-
+                player.cameraHandler.EffectShake(shakeDuration, shakeMagnitude);
             }
 
             if (useHitbox)

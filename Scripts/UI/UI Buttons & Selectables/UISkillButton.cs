@@ -38,5 +38,8 @@ namespace KS
                 skillManager.SetSkillExplaination(skill.skillName, skill.description);
             }
         }
+
+
+
     }
 }

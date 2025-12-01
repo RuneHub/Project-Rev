@@ -22,7 +22,14 @@ namespace KS
         public float hitboxKillTime;
         public Vector3 hitboxPlacement;
         [Space(10)]
-        public AttackStandardSO ASO_Data;
+        [Header("Effect Data")]
+        public AudioClip releaseSFX;
+        public bool useScreenShake;
+        public float shakeDuration;
+        public float shakeMagnitude;
+        [Space(10)]
+        public GameObject MovementVFX;
+        public float moveVFXTime;
 
         private string position;
 
@@ -55,6 +62,7 @@ namespace KS
             animEvents = owner.GetComponentInChildren<PlayerCombatAnimationEvents>();
             animEvents.OnSkillTriggered += PerformSkill;
             animEvents.OnSkillDeactiveTriggered += CleanSkill;
+            animEvents.OnFXTriggered += moveVFX;
 
             player.combatManager.GapClosing = true;
             player.playerAnimations.PlayTargetAnimation("GapCloser_StartUp", true, startUp, 0, 1, 0);
@@ -89,22 +97,27 @@ namespace KS
             player.playerAnimations.PlayTargetAnimation(position, true, useRootmotion, layerNum: 1);
         }
 
+        public void moveVFX(System.Object sender, EventArgs e)
+        {
+            GameObject fx = Instantiate(MovementVFX, player.transform);
+            Destroy(fx, moveVFXTime);
+        }
+
         public void PerformSkill(System.Object sender, EventArgs e)
         {
-            if (ASO_Data != null)
+            //use SFX
+            player.soundManager.PlayWeaponSound(releaseSFX);
+
+            //use screenshake
+            if(useScreenShake)
             {
-                player.soundManager.PlayActionSound(ASO_Data.ReleaseSFX);
-                player.cameraHandler.EffectShake(ASO_Data.shakeDuration, ASO_Data.shakeMagnitude);
+                player.cameraHandler.EffectShake(shakeDuration, shakeMagnitude);
             }
 
-            BaseDamageCollider _hitbox = Instantiate(hitbox);
-
-            _hitbox.transform.rotation = Quaternion.identity;
-
-            _hitbox.transform.parent = player.transform;
+            BaseDamageCollider _hitbox = Instantiate(hitbox, player.transform.position, player.transform.rotation, player.transform);
             _hitbox.transform.localPosition = hitboxPlacement;
             _hitbox.transform.parent = null;
-
+            
             _hitbox.DestroyWithTime = true;
             _hitbox.DestroyTimer = hitboxKillTime;
 
@@ -116,6 +129,7 @@ namespace KS
         {
             animEvents.OnSkillTriggered -= PerformSkill;
             animEvents.OnSkillDeactiveTriggered -= CleanSkill;
+            animEvents.OnFXTriggered -= moveVFX;
         }
 
         protected void DestroyHitbox(BaseDamageCollider obj)

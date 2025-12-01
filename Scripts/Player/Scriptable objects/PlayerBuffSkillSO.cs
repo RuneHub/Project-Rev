@@ -12,6 +12,7 @@ namespace KS
         public GameObject FX_BuffEffect;
         public float vfxDestroyTimer;
         public AudioClip BuffSFX;
+        [Range(0, 1)] public float BuffSFXVolume = 1; 
         public bool useScreenShake;
         [DrawIf("useScreenShake", true)] public float shakeDuration;
         [DrawIf("useScreenShake", true)] public float shakeMagnitude;
@@ -70,7 +71,7 @@ namespace KS
 
             if (BuffSFX != null) 
             {
-                player.soundManager.PlayActionSound(BuffSFX);
+                player.soundManager.PlayEffectSound(BuffSFX, BuffSFXVolume);
             }
 
         }

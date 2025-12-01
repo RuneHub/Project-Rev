@@ -27,6 +27,7 @@ namespace KS
         [SerializeField] int airDodgeCount = 3;
         [SerializeField] int currentAirDodgeCount;
         private InputDirections JDDir = InputDirections.Zero;
+        [SerializeField] float jdSlomoTime = .3f;
 
         [Header("AE movement")]
         public bool aeMovement;
@@ -373,6 +374,11 @@ namespace KS
             {
                 player.controller.Move(aeMoveVelo * aeMoveForce * Time.deltaTime);
             }
+        }
+
+        public float GetSloMoTime()
+        {
+            return jdSlomoTime;
         }
 
         // returns the "MoveDirection" times a movement speed depending on the input.

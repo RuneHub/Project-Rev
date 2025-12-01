@@ -22,6 +22,7 @@ namespace KS
         public AttackStandardSO finisherSO;
         public GameObject appearVFX;
         public float appearTime;
+        public AudioSource audioHolder;
 
         private float followUp;
 
@@ -39,6 +40,10 @@ namespace KS
         private float animTime;
         public float idleTimeBeforeDissolve = 5;
         [SerializeField] float currentIdleTime;
+
+        [Header("Audio")]
+        public AudioClip appearSFX;
+        public AudioClip disappearSFX;
 
         private void Awake()
         {
@@ -107,6 +112,9 @@ namespace KS
 
             //use appearing vfx
             appearVFX.SetActive(true);
+
+            //PLay Appearing SFX
+            audioHolder.PlayOneShot(appearSFX);
 
             //wait x time for vfx
             yield return new WaitForSeconds(appearTime);
@@ -177,7 +185,7 @@ namespace KS
             // 2. set sfx up
             if (followUpSO.ReleaseSFX != null)
             {
-                player.soundManager.PlayActionSound(followUpSO.ReleaseSFX);
+                player.soundManager.PlayWeaponSound(followUpSO.ReleaseSFX);
             }
 
             // 4. set up hitscan direction/distance
@@ -311,6 +319,9 @@ namespace KS
             dissolving = true;
             Active = false;
             PlayTargetAnimation("Anim_Away", false);
+
+            audioHolder.PlayOneShot(disappearSFX);
+
             if (SMR.Length > 0)
             {
                 float counter = 0;

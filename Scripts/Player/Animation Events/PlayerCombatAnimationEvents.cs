@@ -208,6 +208,18 @@ namespace KS
         }
         #endregion
 
+        #region Slow motion Time
+        public void SlowMoTime()
+        {
+            Time.timeScale = player.playerLocomotion.GetSloMoTime();
+        }
+
+        public void EndSlowMoTime()
+        {
+            Time.timeScale = 1;
+        }
+        #endregion
+
         #region Celestial Clone
         public void HandleAdditional()
         {

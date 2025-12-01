@@ -13,13 +13,22 @@ namespace KS
         [SerializeField] private List<AudioClip> footstepSounds = new List<AudioClip>();
         [SerializeField] private AudioClip jumpSound;
         [SerializeField] private AudioClip LandSound;
+        [SerializeField] private AudioClip dashSound;
+        [SerializeField] private AudioClip sprintStopSound;
+        [SerializeField, Range(0, 1)] private float FootStepSFXVolume = 1;
 
         private FootstepSwapper swapper;
 
-        [SerializeField] private AudioClip DodgeSound;
-        [SerializeField] private AudioClip DashSound;
+        [SerializeField] private AudioClip dodgeSound;
+        [SerializeField, Range(0, 1)] private float dodgeSFXVolume = 1;
+        [SerializeField] private AudioClip justDodgeSound; 
+        [SerializeField, Range(0, 1)] private float justDodgeSFXVolume = 1;
 
-        [SerializeField] private AudioClip sprintStopSound;
+        [Space(10), SerializeField, Range(0,1)] private float WeaponSFXVolume = 1;
+
+        [Space(10), SerializeField] private AudioClip bf_HolsterUnequip;
+        [Space(10), SerializeField] private AudioClip bf_HolsterEquip;
+        [SerializeField, Range(0, 1)] private float BodyFoleyVolume = 1;
 
         protected override void Awake()
         {
@@ -52,20 +61,23 @@ namespace KS
                 swapper.CheckLayers();
                 int cfs = Random.Range(1, footstepSounds.Count);
                 footstepAS.clip = footstepSounds[cfs];
-                PlaySoundFX(ref footstepAS, footstepAS.clip, footstepAS.volume, true, .1f);
+                PlaySoundFX(ref footstepAS, footstepAS.clip, FootStepSFXVolume, true, .1f);
 
                 footstepSounds[cfs] = footstepSounds[0];
                 footstepSounds[0] = footstepAS.clip;
             }
         }
+        #endregion
 
+        #region Locomotion
         //checks the current platform that is jumped off
         //plays jumping sound
         public void PlayJumpSound()
         {
             swapper.CheckLayers();
             footstepAS.clip = jumpSound;
-            footstepAS.Play();
+            //footstepAS.Play();
+            PlaySoundFX(ref footstepAS, footstepAS.clip, FootStepSFXVolume, false, 0);
         }
 
         //checks current platform landed on
@@ -74,19 +86,63 @@ namespace KS
         {
             swapper.CheckLayers();
             footstepAS.clip = LandSound;
-            footstepAS.PlayOneShot(LandSound);
+
+            PlaySoundFX(ref footstepAS, footstepAS.clip, FootStepSFXVolume, false, 0);
         }
 
+        //plays the dashing sound
+        public void PlayDashSound()
+        {
+            footstepAS.clip = dashSound;
+            PlaySoundFX(ref footstepAS, footstepAS.clip, FootStepSFXVolume, false, 0);
+        }
+
+        //plays the sfx for stopping with sprinting
         public void PlayerSprintStop()
         {
             footstepAS.clip = sprintStopSound;
-            footstepAS.Play();
+            PlaySoundFX(ref footstepAS, footstepAS.clip, FootStepSFXVolume, false, 0);
         }
 
         //plays the dodge sound when dodging
         public void PlayDodgeSound()
         {
-            effectAS.PlayOneShot(DodgeSound);
+            effectAS.clip = dodgeSound;
+            PlaySoundFX(ref effectAS, effectAS.clip, dodgeSFXVolume, false, 0);
+        }
+
+        //plays the Just dodge sound
+        public void PlayJustDodgeSound()
+        {
+            effectAS.clip = justDodgeSound;
+            PlaySoundFX(ref effectAS, effectAS.clip, justDodgeSFXVolume, false, 0);
+        }
+        #endregion
+
+        #region Action
+
+        public void PlayWeaponSound(AudioClip clip)
+        {
+            PlaySoundFX(ref actionAS, clip, volume: WeaponSFXVolume);
+        }
+
+
+        #endregion
+
+        #region Foley
+
+        public void PlayHolsterSound(bool remove)
+        {
+            if (remove)
+            {
+                FoleyAS.clip = bf_HolsterUnequip;
+            }
+            else 
+            {
+                FoleyAS.clip = bf_HolsterEquip;
+            }
+
+            PlaySoundFX(ref FoleyAS, FoleyAS.clip, BodyFoleyVolume, true, .1f);
         }
         #endregion
 

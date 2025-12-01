@@ -17,6 +17,9 @@ namespace KS
         [Header("Voice")]
         [SerializeField] protected AudioSource voiceAS;
 
+        [Header("Foley")]
+        [SerializeField] protected AudioSource FoleyAS;
+
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
@@ -24,27 +27,33 @@ namespace KS
 
         public void PlaySoundFX(ref AudioSource audioSource, AudioClip soundFX, float volume = 1, bool randomizePitch = true,float pitchRandom = .1f)
         {
-            audioSource.PlayOneShot(soundFX, volume);
             audioSource.pitch = 1;
             if (randomizePitch)
             {
                 audioSource.pitch += Random.Range(-pitchRandom, pitchRandom);
             }
+
+            audioSource.PlayOneShot(soundFX, volume);
         }
 
-        public void PlayActionSound(AudioClip clip)
+        public void PlayActionSound(AudioClip clip,float vol = 1)
         {
-            PlaySoundFX(ref actionAS, clip);
+            PlaySoundFX(ref actionAS, clip, volume: vol);
         }
 
-        public void PlayEffectSound(AudioClip clip)
+        public void PlayEffectSound(AudioClip clip, float vol = 1)
         {
-            PlaySoundFX(ref effectAS, clip);
+            PlaySoundFX(ref effectAS, clip, volume: vol);
         }
 
-        public void PlayVoiceSound(AudioClip clip)
+        public void PlayVoiceSound(AudioClip clip, float vol = 1)
         {
-            PlaySoundFX(ref voiceAS, clip);
+            PlaySoundFX(ref voiceAS, clip, volume: vol);
+        }
+
+        public void PlayFoleySound(AudioClip clip, float vol = 1)
+        {
+            PlaySoundFX(ref FoleyAS, clip, volume: vol);
         }
 
     }

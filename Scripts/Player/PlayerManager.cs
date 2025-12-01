@@ -51,6 +51,10 @@ namespace KS {
         public bool ScreenShake = true;
         public bool GamePadRumble = true;
 
+        [Header("Cutscenes")]
+        public CutsceneManager currentCSManager;
+        public bool InCutscene = false;
+
         protected override void Awake()
         {
             base.Awake();
