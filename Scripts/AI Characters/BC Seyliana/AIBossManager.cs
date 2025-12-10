@@ -92,6 +92,12 @@ namespace KS
         {
             base.Update();
 
+            //stop behaviour tree when player is dead.
+            if (target.isDead)
+            {
+                behaviourRunner.enabled = false;
+            }
+
             //works together with the animator for setting animation based booleans.
             //get
             isInteracting = animator.GetBool("isInteracting");

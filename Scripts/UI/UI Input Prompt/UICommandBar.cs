@@ -46,10 +46,9 @@ namespace KS
         {
             foreach (UIInputPrompt child in currentMenuPrompts)
             {
-                currentMenuPrompts.Remove(child);
                 Destroy(child.gameObject);
             }
-
+            currentMenuPrompts.Clear();
         }
 
     }

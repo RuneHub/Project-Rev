@@ -106,6 +106,11 @@ namespace KS
         {
             return fadingCanvas.GetDuration();
         }
+
+        public void ToggleHUD(bool toggle)
+        {
+            playerManager.hudManager.ToggleHUD(toggle);
+        }
         #endregion
 
         #region Props

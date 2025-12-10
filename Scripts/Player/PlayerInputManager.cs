@@ -214,7 +214,7 @@ namespace KS
             HandleBattleStart();
             // *******   Testing *****
 
-            //HandleSkillModifierInput();
+            HandleSkillModifierInput();
 
             CheckQuedInputs();
 
@@ -461,25 +461,36 @@ namespace KS
         //checks for the double input of the modifier + another button
         private void HandleSkillModifierInput()
         {
-            if (SkillSetOpenInput && uniqueAttackInput)
-            {//button north
-                SkillNorthInput = true;
-                //Debug.Log("combo North");
+            /*
+            //if (SkillSetOpenInput && uniqueAttackInput)
+            //{//button north
+            //    SkillNorthInput = true;
+            //    //Debug.Log("combo North");
+            //}
+            //if (SkillSetOpenInput && jumpInput)
+            //{//button South
+            //    SkillSouthInput = true;
+            //    //Debug.Log("combo South");
+            //}
+            //if (SkillSetOpenInput && basicAttackInput)
+            //{//button west
+            //    SkillWestInput = true;
+            //    //Debug.Log("combo West");
+            //}
+            //if (SkillSetOpenInput && interactInput)
+            //{//button east
+            //    SkillEastInput = true;
+            //    //Debug.Log("combo East");
+            //}
+            */
+
+            if (SkillSetOpenInput)
+            {
+                player.hudManager.abilitiesOpen = true;
             }
-            if (SkillSetOpenInput && jumpInput)
-            {//button South
-                SkillSouthInput = true;
-                //Debug.Log("combo South");
-            }
-            if (SkillSetOpenInput && basicAttackInput)
-            {//button west
-                SkillWestInput = true;
-                //Debug.Log("combo West");
-            }
-            if (SkillSetOpenInput && interactInput)
-            {//button east
-                SkillEastInput = true;
-                //Debug.Log("combo East");
+            else
+            {
+                player.hudManager.abilitiesOpen = false;
             }
         }
 
@@ -581,6 +592,9 @@ namespace KS
                 {
                     Debug.Log("lockon target died");
                     player.cameraHandler.LockedOn = false;
+
+                    lockOnFlag = false;
+                    player.modeManager.ResetModes();
                 
                     if (lockOnCoroutine != null)
                         StopCoroutine(lockOnCoroutine);

@@ -12,6 +12,8 @@ namespace KS {
         [SerializeField] private UIQuickSkill QSE;
         [SerializeField] private UIQuickSkill QSS;
         [SerializeField] private UIQuickSkill QSW;
+        [Space]
+        [SerializeField] private CanvasGroup canvasGroup;
 
         public override void OpenMenu()
         {
@@ -27,6 +29,8 @@ namespace KS {
             QSE.SetQuickSkill(UIManager.instance.player.combatManager.SkillEast);
             QSS.SetQuickSkill(UIManager.instance.player.combatManager.SkillSouth);
             QSW.SetQuickSkill(UIManager.instance.player.combatManager.SkillWest);
+
+            canvasGroup.alpha = 1;
         }
 
         public override void CloseMenu()

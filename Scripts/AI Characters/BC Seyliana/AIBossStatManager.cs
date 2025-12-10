@@ -75,8 +75,10 @@ namespace KS
 
             //turn off behavbiour tree
             boss.behaviourRunner.enabled = false;
-            //play aanimation
-                //boss.bossAnimations.PlayTargetAnimation();
+            //play animation
+            boss.animator.SetBool("Staggered", true);
+            boss.bossAnimations.PlayTargetAnimation("StaggerBreak", true, false, CrossFadeSpeed: 0, layerNum: 3, normalizedTime: 0);
+
             //start cutscene #4
         }
         

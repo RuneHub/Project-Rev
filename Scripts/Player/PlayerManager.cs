@@ -22,6 +22,7 @@ namespace KS {
         public PlayerInteractionManager interactionManager;
         public PlayerUniqueMechanicManager uniqueMechManager;
         public PlayerUniqueUI uniqueUI;
+        public PlayerUIHUDManager hudManager;
 
         public AnimatorOverrideController animatorOV;
 
@@ -82,7 +83,8 @@ namespace KS {
             interactionManager = GetComponent<PlayerInteractionManager>();
             uniqueMechManager = GetComponent<PlayerUniqueMechanicManager>();
 
-            uniqueUI = FindObjectOfType<PlayerUniqueUI>(); 
+            uniqueUI = FindObjectOfType<PlayerUniqueUI>();
+            hudManager = FindObjectOfType<PlayerUIHUDManager>();
         }
 
         protected override void Start()

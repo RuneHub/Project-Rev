@@ -22,6 +22,7 @@ namespace KS
         public BossMovementSO TeleportSo;
         public BossMovementSO CurrentTPso;
         public Vector3 nextTeleportLocation;
+        public float teleportCharTime = 0.3f;
         
         private BossTeleportLocations nextLoc;
 
@@ -109,7 +110,7 @@ namespace KS
             //remove player lock on <- maybe
             Instantiate(CurrentTPso.StartUpVFX, transform.position, Quaternion.identity, null);
             manager.statManager.InvulnOFF();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(teleportCharTime);
             manager.animationEvents.CharInvisible();
 
             //move boss to next location
@@ -133,7 +134,7 @@ namespace KS
                     break;
             }
             manager.controller.enabled = true;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(teleportCharTime);
             transform.LookAt(manager.GetTarget().transform.position);
             manager.statManager.InvulnON();
             manager.animationEvents.CharVisible();

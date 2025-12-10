@@ -38,6 +38,7 @@ namespace KS
         {
             base.OpenMenu();
         }
+        
         public override void OpenMenu(GameObject Menu)
         {
             base.OpenMenu(Menu);
@@ -50,23 +51,30 @@ namespace KS
 
         public override void CloseMenu()
         {
+            cancelSwap();
             base.CloseMenu();
         }
 
         public override void CloseMenuAfterFixedUpdate()
         {
+            cancelSwap();
             base.CloseMenuAfterFixedUpdate();
         }
         #endregion
 
         #region Set Skills
+        //Updates the UI and calls for the HUD to be updated
         private void SetSkillSlotIcon()
         {
             skillButtonN.SetSkillButton(combatManager.SkillNorth);
             skillButtonE.SetSkillButton(combatManager.SkillEast);
             skillButtonS.SetSkillButton(combatManager.SkillSouth);
             skillButtonW.SetSkillButton(combatManager.SkillWest);
+
+            UIManager.instance.SetupHUD();
         }
+
+        //Sets the string of text in the explanation textbox of the UI
         public void SetSkillExplaination(string name, string description)
         {
             SkillTitle.text = name;
@@ -75,6 +83,7 @@ namespace KS
         #endregion
 
         #region Skill Swap
+        //UI function, selects the correct slot of which ability needs to be swapped.
         public void SelectedButton(UISkillButton selected)
         {
             if (swapping)
@@ -88,11 +97,13 @@ namespace KS
             }
         }
 
+        //selects the first swapping slot.
         public void SwappingSelect(UISkillButton selected)
         {
             swappingButton = selected;
         }
 
+        //selects the second slot to be swapped and starts the swapping function.
         public void SwappingToSelect(UISkillButton toSelected)
         {
             swapToButton = toSelected;
@@ -100,21 +111,18 @@ namespace KS
             SwapButtons();
         }
 
+        //swaps the skills in the CombatManager, turns off the boolean and Updates the UI & HUD.
         private void SwapButtons()
         {
-            UISkillButton tempButton = swappingButton;
-
-            swappingButton = swapToButton;
-
-            swapToButton = tempButton;
-
+            combatManager.SwapSkillSlots(swappingButton.skill, swapToButton.skill);
+            combatManager.SwapSkillSlots(swapToButton.skill, swappingButton.skill);
             swapping = false;
 
             SetSkillSlotIcon();
-            SetSkillExplaination(combatManager.SkillNorth.skillName, combatManager.SkillNorth.description);
-
+            cancelSwap();
         }
 
+        //empties both swapping slots and sets the bool to false.
         private void cancelSwap()
         {
             swapping = false;

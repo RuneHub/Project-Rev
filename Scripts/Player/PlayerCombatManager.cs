@@ -572,6 +572,29 @@ namespace KS
 
         #endregion
 
+        #region Swap Skills
+        public void SwapSkillSlots(PlayerSkillsSO swapping, PlayerSkillsSO swapTo)
+        {
+            if (SkillNorth == swapTo)
+            {
+                SkillNorth = swapping;
+            }
+            else if (SkillEast == swapTo)
+            {
+                SkillEast = swapping;
+            }
+            else if (SkillSouth == swapTo)
+            {
+                SkillSouth = swapping;
+            }
+            else if (SkillWest == swapTo)
+            {
+                SkillWest = swapping;
+            }
+
+        }
+        #endregion
+
         #region Character Unique Action
         public void HandleUniqueAttack()
         {

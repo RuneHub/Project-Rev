@@ -11,7 +11,7 @@ namespace KS
     {
         public PlayerUISkillMenuManager skillManager;
         
-        [SerializeField] PlayerSkillsSO skill;
+        public PlayerSkillsSO skill;
         [Space]
         [SerializeField] TextMeshProUGUI title;
         [SerializeField] List<UISkillSlot> SkillSlotIcon = new List<UISkillSlot>();
