@@ -59,6 +59,7 @@ namespace KS
         public void SetupHUD()
         {
             hudManager.SetupPlayerVitality();
+            hudManager.SetupBossVitality();
             hudManager.SetSkillSlotIcon();
             hudManager.SetUpHealingItems();
         }

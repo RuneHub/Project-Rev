@@ -4,30 +4,38 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 namespace KS
 {
     public class PlayerUIHUDManager : MonoBehaviour
     {
         [SerializeField]private PlayerManager playerManager;
+        [SerializeField] private AIBossManager bossManager;
 
         [SerializeField] CanvasGroup[] canvasGroup;
 
         [Header("Player Vitality")]
         [SerializeField] GameObject playerVitality;
-
         [SerializeField] private Slider playerHealthSlider;
         [SerializeField] private Slider playerEaseHealthSlider;
         [SerializeField] private float easeHealthLerpSpeed = 0.05f;
+        [SerializeField] private TextMeshProUGUI playerHealthText;
 
+        [Header("Boss Vitality")]
+        [SerializeField] GameObject bossVitality;
+        [SerializeField] private Slider bossHealthSlider;
+        [SerializeField] private Slider bossEaseHealthSlider;
+        [SerializeField] private TextMeshProUGUI bossHealthText;
 
         [Header("Ability Slots")]
-        [SerializeField] UISkillSlot skillSlotIcon_North;
-        [SerializeField] UISkillSlot skillSlotIcon_South;
-        [SerializeField] UISkillSlot skillSlotIcon_West;
-        [SerializeField] UISkillSlot skillSlotIcon_East;
         public Sprite skillSlotIcon_Empty;
         public Sprite skillSlotIcon_NoIcon;
+
+        [SerializeField] List<UISkillSlot> iconSlot_North = new List<UISkillSlot>(2);
+        [SerializeField] List<UISkillSlot> iconSlot_South = new List<UISkillSlot>(2);
+        [SerializeField] List<UISkillSlot> iconSlot_West = new List<UISkillSlot>(2);
+        [SerializeField] List<UISkillSlot> iconSlot_East = new List<UISkillSlot>(2);
 
         [Header("Health Items")]
         [SerializeField] private UIHealingSlot healItemUI_Small;
@@ -66,6 +74,7 @@ namespace KS
             CheckPlayMode();
 
             CheckPlayerVitality();
+            CheckBossVitality();
 
             CheckSkillCoodown();
 
@@ -129,6 +138,60 @@ namespace KS
             playerHealthSlider.value = UIManager.instance.player.playerStats.currentHealth;
             playerEaseHealthSlider.value = Mathf.Lerp(playerEaseHealthSlider.value, UIManager.instance.player.playerStats.currentHealth, easeHealthLerpSpeed);
         }
+
+        //changes the UI text to the current player health.
+        //get called with the "OnChanged" events on the slider
+        public void EditPlayerHealthText()
+        {
+            playerHealthText.text = playerManager.playerStats.currentHealth.ToString() + " / " + playerManager.playerStats.maxHealth.ToString();
+        }
+        #endregion
+
+        #region boss vitality
+
+        //turns the boss healthbar visible with a fade. or turns it invisible instantly.
+        public void toggleBossHUD(bool status, float time)
+        {
+            if (status)
+            {
+                //bossVitality.GetComponent<CanvasGroup>().alpha
+                Mathf.Lerp(bossVitality.GetComponent<CanvasGroup>().alpha, 1, time * Time.deltaTime);
+            }
+            else
+            {
+                bossVitality.GetComponent<CanvasGroup>().alpha = 0;
+            }
+        }
+
+        //Sets up the boss healthbar values.
+        public void SetupBossVitality()
+        {
+            bossHealthSlider.maxValue = bossManager.statManager.maxHealth;
+            bossHealthSlider.value = bossManager.statManager.currentHealth;
+
+            bossEaseHealthSlider.maxValue = bossManager.statManager.maxHealth;
+            bossEaseHealthSlider.value = bossManager.statManager.currentHealth;
+        }
+
+        //checks the boss health and modifies the UI.
+        //uses the same easing method as the players healthbar.
+        private void CheckBossVitality()
+        {
+            bossHealthSlider.value = bossManager.statManager.currentHealth;
+            bossEaseHealthSlider.value = Mathf.Lerp(bossEaseHealthSlider.value, bossManager.statManager.currentHealth, easeHealthLerpSpeed);
+        }
+
+        //calculates the boss health into percentage and modifies the UI.
+        //get called with the "OnChanged" events on the slider
+        public void EditBossHealthText ()
+        {
+            //make the percentage.
+            float bossHealthPercentage = Mathf.Floor((bossManager.statManager.currentHealth / bossManager.statManager.maxHealth) * 100);
+
+            //set to UI text
+            bossHealthText.text = bossHealthPercentage.ToString() + "%";
+        }
+
         #endregion
 
         #region Skill slot
@@ -148,81 +211,127 @@ namespace KS
 
         public void SetSkillSlotIconN()
         {
-            //when there is a skill sloted but not a icon on the SO.
-            if (playerManager.combatManager.SkillNorth != null &&
-                playerManager.combatManager.SkillNorth.SkillIconHUD == null)
+            for (int i = 0; i < iconSlot_North.Count; i++)
             {
-                skillSlotIcon_North.AbilityIcon.sprite = skillSlotIcon_NoIcon;
-            }
-            //set the SO Icon on the HUD
-            else if (playerManager.combatManager.SkillNorth != null)
-            {
-                skillSlotIcon_North.AbilityIcon.sprite = playerManager.combatManager.SkillNorth.SkillIconHUD;
-            }
-            //if there is no Skill sloted, set the empty icon on the HUD.
-            else
-            {
-                skillSlotIcon_North.AbilityIcon.sprite = skillSlotIcon_Empty;
+                //when there is a skill sloted but not a icon on the SO.
+                if (playerManager.combatManager.SkillNorth != null &&
+                    playerManager.combatManager.SkillNorth.SkillIconHUD == null)
+                {
+                    iconSlot_North[i].AbilityIcon.sprite = skillSlotIcon_NoIcon;
+                    Debug.Log("skill exists but no icon!");
+                }
+                //set the SO Icon on the HUD
+                else if (playerManager.combatManager.SkillNorth != null)
+                {
+                    if (!iconSlot_North[i].Small)
+                    {
+                        iconSlot_North[i].AbilityIcon.sprite = playerManager.combatManager.SkillNorth.SkillIconHUD;
+                    }
+                    else
+                    {
+                        // add the small icon from the correct list.
+                        iconSlot_North[i].AbilityIcon.sprite = playerManager.combatManager.SkillNorth.SkillIconHUDSmall;
+                    }
+                }
+                //if there is no Skill sloted, set the empty icon on the HUD.
+                else
+                {
+                    iconSlot_North[i].AbilityIcon.sprite = skillSlotIcon_Empty;
+                }
             }
         }
 
         public void SetSkillSlotIconS()
         {
-            //when there is a skill sloted but not a icon on the SO.
-            if (playerManager.combatManager.SkillSouth != null &&
-               playerManager.combatManager.SkillSouth.SkillIconHUD == null)
+            for (int i = 0; i < iconSlot_South.Count; i++)
             {
-                skillSlotIcon_South.AbilityIcon.sprite = skillSlotIcon_NoIcon;
-            }
-            //set the SO Icon on the HUD
-            else if (playerManager.combatManager.SkillSouth != null)
-            {
-                skillSlotIcon_South.AbilityIcon.sprite = playerManager.combatManager.SkillSouth.SkillIconHUD;
-            }
-            //if there is no Skill sloted, set the empty icon on the HUD.
-            else
-            {
-                skillSlotIcon_South.AbilityIcon.sprite = skillSlotIcon_Empty;
+                //when there is a skill sloted but not a icon on the SO.
+                if (playerManager.combatManager.SkillSouth != null &&
+                playerManager.combatManager.SkillSouth.SkillIconHUD == null)
+                {
+                    iconSlot_South[i].AbilityIcon.sprite = skillSlotIcon_NoIcon;
+                }
+                //set the SO Icon on the HUD
+                else if (playerManager.combatManager.SkillSouth != null)
+                {
+                    if (!iconSlot_South[i].Small)
+                    {
+                        iconSlot_South[i].AbilityIcon.sprite = playerManager.combatManager.SkillSouth.SkillIconHUD;
+                    }
+                    else 
+                    {
+                        // add the small icon from the correct list.
+                        iconSlot_South[i].AbilityIcon.sprite = playerManager.combatManager.SkillSouth.SkillIconHUDSmall;
+                    }
+                }
+                //if there is no Skill sloted, set the empty icon on the HUD.
+                else
+                {
+                    iconSlot_South[i].AbilityIcon.sprite = skillSlotIcon_Empty;
+                }
             }
         }
 
         public void SetSkillSlotIconW()
         {
-            //when there is a skill sloted but not a icon on the SO.
-            if (playerManager.combatManager.SkillWest != null &&
-                playerManager.combatManager.SkillWest.SkillIconHUD == null)
+            for (int i = 0; i < iconSlot_West.Count; i++)
             {
-                skillSlotIcon_West.AbilityIcon.sprite = skillSlotIcon_NoIcon;
-            }
-            //set the SO Icon on the HUD
-            else if (playerManager.combatManager.SkillWest != null)
-            {
-                skillSlotIcon_West.AbilityIcon.sprite = playerManager.combatManager.SkillWest.SkillIconHUD;
-            }
-            //if there is no Skill sloted, set the empty icon on the HUD.
-            else
-            {
-                skillSlotIcon_West.AbilityIcon.sprite = skillSlotIcon_Empty;
+                //when there is a skill sloted but not a icon on the SO.
+                if (playerManager.combatManager.SkillWest != null &&
+                    playerManager.combatManager.SkillWest.SkillIconHUD == null)
+                {
+                    iconSlot_West[i].AbilityIcon.sprite = skillSlotIcon_NoIcon;
+                }
+                //set the SO Icon on the HUD
+                else if (playerManager.combatManager.SkillWest != null)
+                {
+                    if (!iconSlot_West[i].Small)
+                    {
+                        iconSlot_West[i].AbilityIcon.sprite = playerManager.combatManager.SkillWest.SkillIconHUD;
+                    }
+                    else
+                    {
+                        // add the small icon from the correct list. 
+                        iconSlot_West[i].AbilityIcon.sprite = playerManager.combatManager.SkillWest.SkillIconHUDSmall;
+                    }
+
+                }
+                //if there is no Skill sloted, set the empty icon on the HUD.
+                else
+                {
+                    iconSlot_West[i].AbilityIcon.sprite = skillSlotIcon_Empty;
+                }
             }
         }
 
         public void SetSkillSlotIconE()
         {
-            //when there is a skill sloted but not a icon on the SO.
-            if (playerManager.combatManager.SkillEast != null &&
-               playerManager.combatManager.SkillEast.SkillIconHUD == null)
+            for (int i = 0; i < iconSlot_East.Count; i++)
             {
-                skillSlotIcon_East.AbilityIcon.sprite = skillSlotIcon_NoIcon;
-            }
-            //set the SO Icon on the HUD
-            else if (playerManager.combatManager.SkillEast != null)
-            {
-                skillSlotIcon_East.AbilityIcon.sprite = playerManager.combatManager.SkillEast.SkillIconHUD;
-            }
-            //if there is no Skill sloted, set the empty icon on the HUD.
-            else
-            {
-                skillSlotIcon_East.AbilityIcon.sprite = skillSlotIcon_Empty;
+                //when there is a skill sloted but not a icon on the SO.
+                if (playerManager.combatManager.SkillEast != null &&
+                   playerManager.combatManager.SkillEast.SkillIconHUD == null)
+                {
+                    iconSlot_East[i].AbilityIcon.sprite = skillSlotIcon_NoIcon;
+                }
+                //set the SO Icon on the HUD
+                else if (playerManager.combatManager.SkillEast != null)
+                {
+                    if (!iconSlot_East[i].Small)
+                    {
+                        iconSlot_East[i].AbilityIcon.sprite = playerManager.combatManager.SkillEast.SkillIconHUD;
+                    }
+                    else
+                    {
+                        // add the small icon from the correct list.
+                        iconSlot_East[i].AbilityIcon.sprite = playerManager.combatManager.SkillEast.SkillIconHUDSmall;
+                    }
+                }
+                //if there is no Skill sloted, set the empty icon on the HUD.
+                else
+                {
+                    iconSlot_East[i].AbilityIcon.sprite = skillSlotIcon_Empty;
+                }
             }
         }
         #endregion
@@ -232,54 +341,81 @@ namespace KS
         private void CheckSkillCoodown()
         {
 
-            if (skillSlotIcon_North != null && playerManager.combatManager.SkillNorth != null)
+            if (iconSlot_North.Count > 0 && playerManager.combatManager.SkillNorth != null)
             {
                 if (CooldownHandler.instance.isOnCooldown(playerManager.combatManager.SkillNorth.skillID))
                 {
-                    skillSlotIcon_North.CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillNorth.skillID) / playerManager.combatManager.SkillNorth.cooldown;
+                    for (int i = 0; i < iconSlot_North.Count; i++)
+                    {
+                        iconSlot_North[i].CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillNorth.skillID) / playerManager.combatManager.SkillNorth.cooldown;
+                    }
+
                 }
                 else
                 {
-                    skillSlotIcon_North.CDMask.fillAmount = 0;
+                    for (int i = 0; i < iconSlot_North.Count; i++)
+                    {
+                        iconSlot_North[i].CDMask.fillAmount = 0;
+                    }
                 }
 
             }
 
-            if (skillSlotIcon_South != null && playerManager.combatManager.SkillSouth != null)
+            if (iconSlot_South.Count > 0 && playerManager.combatManager.SkillSouth != null)
             {
                 if (CooldownHandler.instance.isOnCooldown(playerManager.combatManager.SkillSouth.skillID))
                 {
-                    skillSlotIcon_South.CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillSouth.skillID) / playerManager.combatManager.SkillSouth.cooldown;
+                    for (int i = 0; i < iconSlot_South.Count; i++)
+                    {
+                        iconSlot_South[i].CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillSouth.skillID) / playerManager.combatManager.SkillSouth.cooldown;
+                    }
+
                 }
                 else
                 {
-                    skillSlotIcon_South.CDMask.fillAmount = 0;
+                    for (int i = 0; i < iconSlot_South.Count; i++)
+                    {
+                        iconSlot_South[i].CDMask.fillAmount = 0;
+                    }
                 }
 
             }
 
-            if (skillSlotIcon_West != null && playerManager.combatManager.SkillWest != null)
+            if (iconSlot_West.Count > 0 && playerManager.combatManager.SkillWest != null)
             {
                 if (CooldownHandler.instance.isOnCooldown(playerManager.combatManager.SkillWest.skillID))
                 {
-                    skillSlotIcon_West.CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillWest.skillID) / playerManager.combatManager.SkillWest.cooldown;
+                    for (int i = 0; i < iconSlot_West.Count; i++)
+                    {
+                        iconSlot_West[i].CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillWest.skillID) / playerManager.combatManager.SkillWest.cooldown;
+                    }
+
                 }
                 else
                 {
-                    skillSlotIcon_West.CDMask.fillAmount = 0;
+                    for (int i = 0; i < iconSlot_West.Count; i++)
+                    {
+                        iconSlot_West[i].CDMask.fillAmount = 0;
+                    }
                 }
 
             }
 
-            if (skillSlotIcon_East != null && playerManager.combatManager.SkillEast != null)
+            if (iconSlot_East.Count > 0 && playerManager.combatManager.SkillEast != null)
             {
                 if (CooldownHandler.instance.isOnCooldown(playerManager.combatManager.SkillEast.skillID))
                 {
-                    skillSlotIcon_East.CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillEast.skillID) / playerManager.combatManager.SkillEast.cooldown;
+                    for (int i = 0; i < iconSlot_East.Count; i++)
+                    {
+                        iconSlot_East[i].CDMask.fillAmount = CooldownHandler.instance.GetCooldownTimer(playerManager.combatManager.SkillEast.skillID) / playerManager.combatManager.SkillEast.cooldown;
+                    }
                 }
                 else
                 {
-                    skillSlotIcon_East.CDMask.fillAmount = 0;
+                    for (int i = 0; i < iconSlot_East.Count; i++)
+                    {
+                        iconSlot_East[i].CDMask.fillAmount = 0;
+                    }
                 }
 
             }
@@ -420,7 +556,6 @@ namespace KS
             yield return new WaitForSeconds(animateDuration);
             isAnimated = false;
         }
-
 
         #endregion
 

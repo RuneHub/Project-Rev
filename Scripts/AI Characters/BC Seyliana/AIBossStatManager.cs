@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace KS
 {
@@ -17,6 +18,10 @@ namespace KS
         [SerializeField] private float armorDamageDivider = 15;
 
         [SerializeField] private List<GameObject> charColl;
+
+        [Space]
+        [SerializeField] private CutsceneManager cutsceneManager;
+        [SerializeField] private PlayableAsset QuestClearCS;
 
         protected override void Awake()
         {
@@ -80,6 +85,7 @@ namespace KS
             boss.bossAnimations.PlayTargetAnimation("StaggerBreak", true, false, CrossFadeSpeed: 0, layerNum: 3, normalizedTime: 0);
 
             //start cutscene #4
+            cutsceneManager.PlayCutscene(QuestClearCS);
         }
         
         public override void TakeDamage(float damage, bool isCrit, Color displayColor, float angledContact = 0, DamageProperties property = DamageProperties.Normal)

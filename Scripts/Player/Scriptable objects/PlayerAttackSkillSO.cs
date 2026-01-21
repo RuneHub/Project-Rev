@@ -21,6 +21,10 @@ namespace KS
 
         public AudioClip releaseSFX;
 
+        public bool useReleaseVFX;
+        [DrawIf("useReleaseVFX", true)] public GameObject releaseVFX;
+        [DrawIf("useReleaseVFX", true)] public float destroyTimer;
+
         public bool useScreenShake;
         public float shakeDuration;
         public float shakeMagnitude;
@@ -43,6 +47,11 @@ namespace KS
                 combatManager.ResetCombatAnimations();
 
                 animEvents = owner.GetComponentInChildren<PlayerCombatAnimationEvents>();
+
+                if (useReleaseVFX)
+                {
+                    animEvents.SetReleaseVFX(releaseVFX, destroyTimer);
+                }
 
                 if (useRaycast)
                 {

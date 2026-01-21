@@ -120,7 +120,7 @@ namespace KS {
             player.inputs.GamepadRumble(gamepadRumbleLowFreq, gamepadRumbleHighFreq, gamepadRumbleDuration);
 
             Debug.Log("hit");
-            //Debug.Log("Player damaged for: " + damage);
+            Debug.Log("Player damaged for: " + damage);
             //Debug.Log("angle: " + angledContact)
 
             if (!player.isDead)

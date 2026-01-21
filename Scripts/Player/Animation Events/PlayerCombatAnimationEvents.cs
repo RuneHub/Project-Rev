@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Rendering.CameraUI;
 
 namespace KS
 {
@@ -20,6 +21,9 @@ namespace KS
         public event EventHandler OnSkillTriggered;
         public event EventHandler OnSkillDeactiveTriggered;
         public event EventHandler OnFXTriggered;
+
+        private GameObject releaseVFX;
+        public float vfxDestroyTimer;
 
         private void Awake()
         {
@@ -243,6 +247,51 @@ namespace KS
         public void ResetLoadedGauge()
         {
             player.uniqueMechManager.ResetLoadedLevel();
+        }
+
+        #endregion
+
+        #region Release VFX
+
+        public void SetReleaseVFX(GameObject VFX, float timer)
+        {
+            releaseVFX = VFX;
+            vfxDestroyTimer = timer;
+        }
+
+        public void PerformReleaseVFX(String _side)
+        {
+            if (releaseVFX == null)
+                return;
+
+            var releaseFX = Instantiate(releaseVFX);
+            Destroy(releaseFX, vfxDestroyTimer);
+
+            if (_side == "Right")
+            {
+                releaseFX.transform.position = WeaponOutputRight.position;
+                releaseFX.transform.rotation = WeaponOutputRight.rotation;
+            }
+            else if (_side == "Left")
+            {
+                releaseFX.transform.position = WeaponOutputLeft.position;
+                releaseFX.transform.rotation = WeaponOutputLeft.rotation;
+            }
+            else if (_side == "Both")
+            {
+                releaseFX.transform.position = WeaponsMiddlePoint.position;
+                releaseFX.transform.rotation = WeaponsMiddlePoint.rotation;
+            }
+            else if (_side == "BothA") //both apart, so twice on both
+            {
+                releaseFX.transform.position = WeaponOutputRight.position;
+                releaseFX.transform.rotation = WeaponOutputRight.rotation;
+
+                var releaseFX2 = Instantiate(releaseVFX);
+                Destroy(releaseFX2, vfxDestroyTimer);
+                releaseFX2.transform.position = WeaponOutputLeft.position;
+                releaseFX2.transform.rotation = WeaponOutputLeft.rotation;
+            }
         }
 
         #endregion

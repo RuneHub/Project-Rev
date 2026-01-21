@@ -7,6 +7,7 @@ namespace KS
 {
     public class UISkillSlot : MonoBehaviour
     {
+        public bool Small = false;
         public Image AbilityIcon;
         public Image CDMask;
     }

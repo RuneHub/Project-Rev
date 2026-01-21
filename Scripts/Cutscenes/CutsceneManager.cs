@@ -17,6 +17,7 @@ namespace KS
         [Header("Props")]
         public GameObject csLowell;
         public GameObject csSeyliana;
+        public GameObject csClone;
 
         [Header("References")]
         [SerializeField] private PlayerManager playerManager;
@@ -114,6 +115,7 @@ namespace KS
         #endregion
 
         #region Props
+        //player
         public void SetPropCharacterON()
         {
             csLowell.SetActive(true);
@@ -127,6 +129,7 @@ namespace KS
             csSeyliana.SetActive(false);
         }
 
+        //boss
         public void SetPropBossCharOn()
         {
             csSeyliana.SetActive(true);
@@ -134,6 +137,12 @@ namespace KS
         public void SetPropBossCharOff()
         {
             csSeyliana.SetActive(false);
+        }
+
+        //clone
+        public void startCloneDissolve()
+        {
+            csClone.GetComponent<CSLowellAnimationEvents>().HandleDissolve();
         }
         #endregion
 
