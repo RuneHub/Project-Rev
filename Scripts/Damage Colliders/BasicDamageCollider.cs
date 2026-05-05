@@ -28,6 +28,7 @@ namespace KS
 
         protected override void OnTriggerEnter(Collider col)
         {
+
             //if it is a hurtbox & this collider hasn't collided yet.
             if (col.tag.Contains("Hurtbox") & !collided)
             {
@@ -43,7 +44,7 @@ namespace KS
 
                         // send data to function for damage
                         HitTarget(col.transform.root.gameObject.GetComponent<CharacterManager>(), hitAngle);
-                        
+
                         if (properties.damageProperties != DamageProperties.Normal)
                         {
                             Vector3 dir = col.transform.position - transform.position;
@@ -74,6 +75,7 @@ namespace KS
             else if (!TargetTag(col.transform.root.gameObject.tag, Owners) &&
                 !TargetTag(col.transform.root.gameObject.tag, Targets))
             {
+                Debug.Log(transform.name + " hit " + col.transform.name);
                 if (DestroyAfterImpact)
                 {
                     DestroyOnImpact();
@@ -91,7 +93,8 @@ namespace KS
         //Destroy's this collider
         private void DestroyOnImpact()
         {
-            _killAction(this);
+            Debug.Log(transform.name + " got destroyed");
+           _killAction(this);
         }
 
         private IEnumerator HitStopDelay(float delay, Collider col, Vector3 dir)

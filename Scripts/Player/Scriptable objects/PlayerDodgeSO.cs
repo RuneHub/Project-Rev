@@ -49,25 +49,24 @@ namespace KS
             SetUp(owner);
 
             //swapping animation depending on given directions
-            if (dir == InputDirections.North)
+            switch (dir)
             {
-                // 12, forward
-                animatorOV["Anim_Combat_DodgePlaceHolder"] = dNorth;
-            }
-            else if(dir == InputDirections.South)
-            {
-                // 6, backwards
-                animatorOV["Anim_Combat_DodgePlaceHolder"] = dSouth;
-            }
-            else if (dir == InputDirections.West)
-            {
-                // 9, Left
-                animatorOV["Anim_Combat_DodgePlaceHolder"] = dWest;
-            }
-            else if (dir == InputDirections.East)
-            {
-                // 3, right
-                animatorOV["Anim_Combat_DodgePlaceHolder"] = dEast;
+                case InputDirections.North:
+                    animatorOV["Anim_Combat_DodgePlaceHolder"] = dNorth;
+                    break;
+                case InputDirections.South:
+                    animatorOV["Anim_Combat_DodgePlaceHolder"] = dSouth;
+                    break;
+                case InputDirections.East:
+                case InputDirections.NorthEast:
+                case InputDirections.SouthEast:
+                    animatorOV["Anim_Combat_DodgePlaceHolder"] = dEast;
+                    break;
+                case InputDirections.West:
+                case InputDirections.NorthWest:
+                case InputDirections.SouthWest:
+                    animatorOV["Anim_Combat_DodgePlaceHolder"] = dWest;
+                    break;
             }
 
             player.playerLocomotion.SetJDDirection(dir);

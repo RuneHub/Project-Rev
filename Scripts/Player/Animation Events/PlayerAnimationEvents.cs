@@ -15,7 +15,9 @@ namespace KS
         [Space]
         public GameObject LeftSpinEffect;
         public GameObject RightSpinEffect;
-        
+        [Space]
+        [SerializeField] private SkinnedMeshRenderer[] SMR;
+        [SerializeField] private MeshRenderer[] MR;
 
         private void Awake()
         {
@@ -137,6 +139,33 @@ namespace KS
             {
                 LeftSpinEffect.SetActive(false);
                 RightSpinEffect.SetActive(false);
+            }
+        }
+
+        public void HandleInvisible()
+        {
+
+            for (int x = 0; x < SMR.Length; x++)
+            {
+                SMR[x].enabled = false;
+            }
+
+            for (int x = 0; x < MR.Length; x++)
+            {
+                MR[x].enabled = false;
+            }
+        }
+
+        public void HandleVisibile()
+        {
+            for (int x = 0; x < SMR.Length; x++)
+            {
+                SMR[x].enabled = true;
+            }
+
+            for (int x = 0; x < MR.Length; x++)
+            {
+                MR[x].enabled = true;
             }
         }
 

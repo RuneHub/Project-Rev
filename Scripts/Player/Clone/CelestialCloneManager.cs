@@ -45,6 +45,9 @@ namespace KS
         public AudioClip appearSFX;
         public AudioClip disappearSFX;
 
+        public APSoundData soundData;
+
+
         private void Awake()
         {
             animator = GetComponentInChildren<Animator>();
@@ -114,7 +117,8 @@ namespace KS
             appearVFX.SetActive(true);
 
             //PLay Appearing SFX
-            audioHolder.PlayOneShot(appearSFX);
+            soundData.clip = appearSFX;
+            player.soundManager.PlayCharacterSound(soundData, transform.position);
 
             //wait x time for vfx
             yield return new WaitForSeconds(appearTime);
@@ -125,7 +129,7 @@ namespace KS
 
         private void PositionClone(Vector3 pos)
         {
-            transform.position = player.transform.position + pos;
+            transform.position = /*player.transform.position +*/ pos;
             transform.rotation = player.transform.rotation;
         }
         
@@ -185,7 +189,7 @@ namespace KS
             // 2. set sfx up
             if (followUpSO.ReleaseSFX != null)
             {
-                player.soundManager.PlayWeaponSound(followUpSO.ReleaseSFX);
+                player.soundManager.PlayWeaponSound(followUpSO.soundData, output.transform.position);
             }
 
             // 4. set up hitscan direction/distance
@@ -320,7 +324,9 @@ namespace KS
             Active = false;
             PlayTargetAnimation("Anim_Away", false);
 
-            audioHolder.PlayOneShot(disappearSFX);
+            //play SFX
+            soundData.clip = disappearSFX;
+            player.soundManager.PlayCharacterSound(soundData, transform.position);
 
             if (SMR.Length > 0)
             {

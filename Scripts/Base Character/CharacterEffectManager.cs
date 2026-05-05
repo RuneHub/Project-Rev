@@ -58,7 +58,7 @@ namespace KS
             }
             if (effect.useSFX)
             {
-                character.charAudioManager.PlayEffectSound(effect.SFX);
+                character.charAudioManager.PlayCharacterSound(effect.soundData, position);
             }
         }
 

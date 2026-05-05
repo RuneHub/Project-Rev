@@ -79,7 +79,6 @@ namespace KS {
 
                 inAirTimer = inAirTimer + Time.deltaTime;
                 yVelocity.y += gravityForce * Time.deltaTime;
-
             }
 
             character.animator.SetFloat("inAirTimer", inAirTimer);

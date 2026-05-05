@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using Coffee.UIEffects;
 
 namespace KS
 {
@@ -17,6 +18,10 @@ namespace KS
 
         [Header("Player Vitality")]
         [SerializeField] GameObject playerVitality;
+        [SerializeField] Image playerCharPortrait;
+        [SerializeField] float shakeDuration;
+        [SerializeField] float shakeMagnitude;
+        [SerializeField] private UIEffectTweener portraitUIEffectTween;
         [SerializeField] private Slider playerHealthSlider;
         [SerializeField] private Slider playerEaseHealthSlider;
         [SerializeField] private float easeHealthLerpSpeed = 0.05f;
@@ -27,6 +32,7 @@ namespace KS
         [SerializeField] private Slider bossHealthSlider;
         [SerializeField] private Slider bossEaseHealthSlider;
         [SerializeField] private TextMeshProUGUI bossHealthText;
+        [SerializeField] private Slider BossArmorSlider;
 
         [Header("Ability Slots")]
         public Sprite skillSlotIcon_Empty;
@@ -40,6 +46,8 @@ namespace KS
         [Header("Health Items")]
         [SerializeField] private UIHealingSlot healItemUI_Small;
         [SerializeField] private UIHealingSlot healItemUI_large;
+        [SerializeField] private UIHealingSlot healItemUI_Regen;
+        [SerializeField] private UIHealingSlot healItemUI_Revive;
 
         [Header("Status Effects")]
         [SerializeField] private List<StatusEffectUI_Icon> statusEffects;
@@ -94,7 +102,7 @@ namespace KS
             {
                 foreach (var canvas in canvasGroup)
                 {
-                    canvas.alpha = 1;
+                    StartCoroutine(FadeinHUD(canvas, canvas.alpha, 1, 1.5f));
                 }
             }
             else
@@ -104,6 +112,22 @@ namespace KS
                     canvas.alpha = 0;
                 }
             }
+        }
+
+        //fades in the HUD by using the Alpha of the CanvasGroup.
+        private IEnumerator FadeinHUD(CanvasGroup group, float start, float end, float durartion)
+        {
+            float elapsed = 0;
+
+            while (elapsed < durartion) 
+            {
+                elapsed += Time.deltaTime;
+                group.alpha = Mathf.Lerp(start, end, elapsed / durartion);
+                yield return null;
+            }
+
+            group.alpha = end;
+
         }
 
         #region player vitality
@@ -145,22 +169,68 @@ namespace KS
         {
             playerHealthText.text = playerManager.playerStats.currentHealth.ToString() + " / " + playerManager.playerStats.maxHealth.ToString();
         }
+
+        //starts the portrait shake coroutine and the flash, called when player is damaged.
+        [ContextMenu("Damage Portrait")]
+        public void DamageShakePortrait()
+        {
+            IEnumerator shakeCR = ShakePortrait(shakeDuration, shakeMagnitude);
+            //StopCoroutine(shakeCR);
+
+            StartCoroutine(shakeCR);
+            portraitUIEffectTween.duration = shakeDuration;
+
+            portraitUIEffectTween.Play();
+
+        }
+
+        //shake coroutine
+        private IEnumerator ShakePortrait(float duration, float magnitude)
+        {
+            Vector2 originalPos = playerCharPortrait.rectTransform.localPosition;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                float x = Random.Range(-.5f, .5f) * magnitude;
+                playerCharPortrait.rectTransform.localPosition = new Vector2(originalPos.x + x, originalPos.y);
+                elapsed += Time.deltaTime;
+
+                yield return null;
+            }
+
+            playerCharPortrait.rectTransform.localPosition = originalPos;
+            portraitUIEffectTween.Stop();
+        }
+
         #endregion
 
         #region boss vitality
-
         //turns the boss healthbar visible with a fade. or turns it invisible instantly.
-        public void toggleBossHUD(bool status, float time)
+        public void ToggleBossHUD(bool status, float time)
         {
             if (status)
             {
-                //bossVitality.GetComponent<CanvasGroup>().alpha
-                Mathf.Lerp(bossVitality.GetComponent<CanvasGroup>().alpha, 1, time * Time.deltaTime);
+                StartCoroutine(FadeInBossVitality(time));
             }
             else
             {
                 bossVitality.GetComponent<CanvasGroup>().alpha = 0;
             }
+        }
+
+        private IEnumerator FadeInBossVitality(float time)
+        {
+            float elapsed = 0;
+
+            while (elapsed < time)
+            {
+                elapsed += Time.deltaTime;
+                bossVitality.GetComponent<CanvasGroup>().alpha = Mathf.Lerp(bossVitality.GetComponent<CanvasGroup>().alpha, 1, elapsed / time);
+                yield return null;
+            }
+            bossVitality.GetComponent<CanvasGroup>().alpha = 1;
+            Debug.Log("done");
         }
 
         //Sets up the boss healthbar values.
@@ -171,6 +241,9 @@ namespace KS
 
             bossEaseHealthSlider.maxValue = bossManager.statManager.maxHealth;
             bossEaseHealthSlider.value = bossManager.statManager.currentHealth;
+
+            BossArmorSlider.maxValue = bossManager.statManager.maxArmor;
+            BossArmorSlider.value = bossManager.statManager.currentArmor;
         }
 
         //checks the boss health and modifies the UI.
@@ -179,6 +252,9 @@ namespace KS
         {
             bossHealthSlider.value = bossManager.statManager.currentHealth;
             bossEaseHealthSlider.value = Mathf.Lerp(bossEaseHealthSlider.value, bossManager.statManager.currentHealth, easeHealthLerpSpeed);
+
+            BossArmorSlider.value = bossManager.statManager.currentArmor;
+
         }
 
         //calculates the boss health into percentage and modifies the UI.
@@ -440,15 +516,52 @@ namespace KS
                 healItemUI_large.amountText.text = UIManager.instance.player.playerStats.LargeHealingAmount.ToString();
             }
 
+            if (healItemUI_Regen != null)
+            {
+                healItemUI_Regen.InputMask.fillAmount = 0;
+                healItemUI_Regen.amountText.text = UIManager.instance.player.playerStats.regenHealingAmount.ToString();
+            }
+
+            if (healItemUI_Revive != null)
+            {
+                healItemUI_Revive.InputMask.fillAmount = 1;
+                healItemUI_Revive.amountText.text = UIManager.instance.player.playerStats.ReviveAmount.ToString();
+            }
+
+        }
+
+        public void SetReviveMaskOff()
+        {
+            if (playerManager.isDead && playerManager.isGrounded)
+            {
+                healItemUI_large.InputMask.fillAmount = 1;
+                healItemUI_Small.InputMask.fillAmount = 1;
+                healItemUI_Regen.InputMask.fillAmount = 1;
+                healItemUI_Revive.InputMask.fillAmount = 0;
+            }
         }
 
         private void UpdateHealingItems()
         {
-                healItemUI_large.InputMask.fillAmount = UIManager.instance.player.playerStats.largeHealCharge / UIManager.instance.player.playerStats.maxHealingCharge;
-                healItemUI_large.amountText.text = UIManager.instance.player.playerStats.LargeHealingAmount.ToString();
+            healItemUI_large.InputMask.fillAmount = UIManager.instance.player.playerStats.largeHealCharge / UIManager.instance.player.playerStats.maxHealingCharge;
 
-                healItemUI_Small.InputMask.fillAmount = UIManager.instance.player.playerStats.smallHealCharge / UIManager.instance.player.playerStats.maxHealingCharge;
-                healItemUI_Small.amountText.text = UIManager.instance.player.playerStats.smallhealingAmount.ToString();
+            healItemUI_Small.InputMask.fillAmount = UIManager.instance.player.playerStats.smallHealCharge / UIManager.instance.player.playerStats.maxHealingCharge;
+
+            healItemUI_Regen.InputMask.fillAmount = UIManager.instance.player.playerStats.regenHealcharge / UIManager.instance.player.playerStats.maxHealingCharge;
+
+            if (playerManager.isDead)
+            {
+                healItemUI_Revive.InputMask.fillAmount = UIManager.instance.player.playerStats.ReviveCharge / UIManager.instance.player.playerStats.maxHealingCharge;
+            }
+            
+        }
+
+        public void UpdateHealingText()
+        {
+            healItemUI_large.amountText.text = UIManager.instance.player.playerStats.LargeHealingAmount.ToString();
+            healItemUI_Small.amountText.text = UIManager.instance.player.playerStats.smallhealingAmount.ToString();
+            healItemUI_Regen.amountText.text = UIManager.instance.player.playerStats.regenHealingAmount.ToString();
+            healItemUI_Revive.amountText.text = UIManager.instance.player.playerStats.ReviveAmount.ToString();
         }
 
         #endregion

@@ -87,6 +87,12 @@ namespace KS
             {
                 Debug.LogError("No animator Overide found!");
             }
+
+            //use SFX
+            for (int i = 0; i < skillSFXList.Count; i++)
+            {
+                player.soundManager.AddToSkillSFXList(skillSFXList[i]);
+            }
         }
 
         public void GapClosed()
@@ -105,11 +111,9 @@ namespace KS
 
         public void PerformSkill(System.Object sender, EventArgs e)
         {
-            //use SFX
-            player.soundManager.PlayWeaponSound(releaseSFX);
 
             //use screenshake
-            if(useScreenShake)
+            if (useScreenShake)
             {
                 player.cameraHandler.EffectShake(shakeDuration, shakeMagnitude);
             }

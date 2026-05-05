@@ -93,9 +93,14 @@ namespace KS
             base.Update();
 
             //stop behaviour tree when player is dead.
+            //this needs to be moved inside the behaviour tree. <<<<<<<<<<<<<<
             if (target.isDead)
             {
                 behaviourRunner.enabled = false;
+            }
+            else if (!target.isDead && target.playerStats.ReviveUsed)
+            {
+                behaviourRunner.enabled = true;
             }
 
             //works together with the animator for setting animation based booleans.
@@ -156,6 +161,11 @@ namespace KS
         public BehaviourContext GetContext()
         {
             return behaviourRunner.GetContext();
+        }
+
+        public void TurnOnBehaviour()
+        {
+            behaviourRunner.enabled = true;
         }
 
     }

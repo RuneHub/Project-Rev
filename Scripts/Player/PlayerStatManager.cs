@@ -37,11 +37,23 @@ namespace KS {
         public float smallHealingPercentage = 25f;
         public float smallHealCharge = 0;
         public bool smallHealCharging;
-
+        [Space]
         public int LargeHealingAmount = 1;
         public float largeHealCharge = 0;
         public bool LargeHealCharging;
-
+        [Space]
+        public int regenHealingAmount = 3;
+        public float regenHealingPercentage = 5f;
+        public float regenHealingActiveTime = 15f;
+        public bool regenTimeActive;
+        public float regenHealcharge = 0;
+        public bool regenHealCharging;
+        [Space]
+        public int ReviveAmount = 1;
+        public bool ReviveUsed = false;
+        public float ReviveCharge = 0;
+        public bool ReviveCharging;
+        [Space]
         public float healingChargeSpeed = 0.25f;
         public float maxHealingCharge = 100;
         public bool healingCharged = false;
@@ -93,7 +105,15 @@ namespace KS {
                     smallHealCharge = 0;
                 }
             }
-            
+
+            if (!regenHealCharging && regenHealcharge > 0)
+            {
+                regenHealcharge -= healingChargeSpeed;
+                if (regenHealcharge <= 0)
+                {
+                    regenHealcharge = 0;
+                }
+            }
 
             HandleJDCollision();
         }
@@ -103,19 +123,36 @@ namespace KS {
         {
             base.HandleDeath();
 
-            player.inputs.DisableGameplayInput();
+
             player.playerAnimations.PlayTargetAnimation("Death", true, layerNum: 1);
 
-            //would probably need to put this is a proper death event.
-            UIManager.instance.popupManager.SendQuestFailedPopup();
+
+            if (ReviveUsed)
+            {
+                player.inputs.DisableGameplayInput();
+                UIManager.instance.popupManager.SendQuestFailedPopup();
+            }
+            else
+            {
+                UIManager.instance.hudManager.SetReviveMaskOff();
+            }
+            
         }
 
         public override void TakeDamage(float damage, bool isCrit, Color displayColor, float angledContact, DamageProperties property)
         {
+
+            if (hasArmor)
+            {
+                damage = damage * 0.5f;
+            }
+
             base.TakeDamage(damage, isCrit, displayColor, angledContact, property);
 
             player.cameraHandler.EffectShake(CamerashakeDuration, CamerashakeMagnitude);
             ScreenManager.instance.StartFullscreenDamageSequence();
+
+            player.hudManager.DamageShakePortrait();
 
             player.inputs.GamepadRumble(gamepadRumbleLowFreq, gamepadRumbleHighFreq, gamepadRumbleDuration);
 
@@ -125,74 +162,76 @@ namespace KS {
 
             if (!player.isDead)
             {
-                player.animator.SetBool("isInvulnerable", true);
-                player.animator.SetBool("isDamaged", true);
-
-                player.effectManager.CharacterShake(hitStopDuration, hitStopMagnitude);
-                player.playerAnimations.AdjustAnimationSpeed("HitStopSpeed", hitStopAnimationSpeedMultiplier, hitStopDuration);
-
-                if (property == DamageProperties.Normal)
+                if (!hasArmor)
                 {
+                    player.animator.SetBool("isInvulnerable", true);
+                    player.animator.SetBool("isDamaged", true);
 
-                    if (angledContact >= -90 && angledContact <= 90)
+                    player.effectManager.CharacterShake(hitStopDuration, hitStopMagnitude);
+                    player.playerAnimations.AdjustAnimationSpeed("HitStopSpeed", hitStopAnimationSpeedMultiplier, hitStopDuration);
+
+                    if (property == DamageProperties.Normal)
                     {
-                        //front
-                        player.playerAnimations.PlayTargetAnimation("Damage_Front", true, layerNum: 2);
-                    }
-                    else if (angledContact >= -90 && angledContact >= 90)
-                    {
-                        //back
-                        player.playerAnimations.PlayTargetAnimation("Damage_Back", true, layerNum: 2);
-                    }
-                    else
-                    {
-                        float ran = Random.Range(0, 1);
-                        if (ran == 1)
+
+                        if (angledContact >= -90 && angledContact <= 90)
                         {
+                            //front
                             player.playerAnimations.PlayTargetAnimation("Damage_Front", true, layerNum: 2);
                         }
-                        else
+                        else if (angledContact >= -90 && angledContact >= 90)
                         {
+                            //back
                             player.playerAnimations.PlayTargetAnimation("Damage_Back", true, layerNum: 2);
                         }
-                    }
-
-                }
-                else if (property == DamageProperties.Launcher)
-                {
-                    if (angledContact >= -90 && angledContact <= 90)
-                    {
-                        //front
-                        Debug.Log("front");
-                        player.playerAnimations.PlayTargetAnimation("Launcher_Up", true, layerNum: 2);
-                    }
-                    else if (angledContact >= -90 && angledContact >= 90)
-                    {
-                        //back
-                        Debug.Log("back");
-                        player.playerAnimations.PlayTargetAnimation("Launcher_Spin", true, layerNum: 2);
-                    }
-                    else
-                    {
-                        float ran = Random.Range(0, 1);
-                        if (ran == 1)
+                        else
                         {
+                            float ran = Random.Range(0, 1);
+                            if (ran == 1)
+                            {
+                                player.playerAnimations.PlayTargetAnimation("Damage_Front", true, layerNum: 2);
+                            }
+                            else
+                            {
+                                player.playerAnimations.PlayTargetAnimation("Damage_Back", true, layerNum: 2);
+                            }
+                        }
+
+                    }
+                    else if (property == DamageProperties.Launcher)
+                    {
+                        if (angledContact >= -90 && angledContact <= 90)
+                        {
+                            //front
+                            Debug.Log("front");
                             player.playerAnimations.PlayTargetAnimation("Launcher_Up", true, layerNum: 2);
+                        }
+                        else if (angledContact >= -90 && angledContact >= 90)
+                        {
+                            //back
+                            Debug.Log("back");
+                            player.playerAnimations.PlayTargetAnimation("Launcher_Spin", true, layerNum: 2);
                         }
                         else
                         {
-                            player.playerAnimations.PlayTargetAnimation("Launcher_Spin", true, layerNum: 2);
+                            float ran = Random.Range(0, 1);
+                            if (ran == 1)
+                            {
+                                player.playerAnimations.PlayTargetAnimation("Launcher_Up", true, layerNum: 2);
+                            }
+                            else
+                            {
+                                player.playerAnimations.PlayTargetAnimation("Launcher_Spin", true, layerNum: 2);
+                            }
                         }
+
                     }
+                    else if (property == DamageProperties.Knockback)
+                    {
+                        player.playerAnimations.PlayTargetAnimation("Knockback", true, layerNum: 2);
 
-                }
-                else if (property == DamageProperties.Knockback)
-                {
-                    player.playerAnimations.PlayTargetAnimation("Knockback", true, layerNum: 2);
-
+                    }
                 }
             }
-
         }
 
         public void HandleRecovery()
@@ -204,7 +243,7 @@ namespace KS {
         #endregion
 
         #region Healing
-
+        //handles the actual charging part of using the healing items.
         public void HandleHealingCharge()
         {
             healCharging = true;
@@ -227,8 +266,29 @@ namespace KS {
                     healingCharged = true;
                 }
             }
+            else if (regenHealCharging)
+            {
+                regenHealcharge += healingChargeSpeed;
+                if (regenHealcharge > maxHealingCharge)
+                {
+                    regenHealcharge = maxHealingCharge;
+                    healingCharged = true;
+                }
+            }
+            else if (ReviveCharging)
+            {
+                ReviveCharge += healingChargeSpeed;
+                if (ReviveCharge > maxHealingCharge)
+                {
+                    ReviveCharge = maxHealingCharge;
+                    healingCharged = true;
+                }
+            }
+
         }    
 
+        //performs the actual healing, has the actual math equation for the healing amount.
+        //reduces the item amount.
         public void HandleHealing(float healingAmountPercentage,bool healFully)
         {
             if (currentHealth <= 0)
@@ -242,35 +302,120 @@ namespace KS {
             healCharging = false;
             if (healFully)
             {
-                if (LargeHealingAmount > 0)
+                if (LargeHealCharging && LargeHealingAmount > 0)
                 {
                     LargeHealingAmount--;
                     currentHealth = maxHealth;
-                    largeHealCharge = 0;
+                    largeHealCharge = 0; 
+                    UIManager.instance.hudManager.UpdateHealingText();
 
                     if (LargeHealingAmount == 0)
                     {
                         largeHealCharge = maxHealingCharge;
                     }
-
                 }
+
+                
             }
             else
             {
-                if (smallhealingAmount > 0)
-                {
-                    smallhealingAmount--;
-                    float healingAmount = ((maxHealth / 100) * healingAmountPercentage);
-                    currentHealth += healingAmount;
-                    smallHealCharge = 0;
-
-                    if (smallhealingAmount == 0)
+                if (smallHealCharging)
+                { 
+                    if (smallhealingAmount > 0)
                     {
-                        smallHealCharge = maxHealingCharge;
+                        smallhealingAmount--;
+                        float healingAmount = ((maxHealth / 100) * healingAmountPercentage);
+                        currentHealth += healingAmount;
+                        smallHealCharge = 0;
+                        UIManager.instance.hudManager.UpdateHealingText();
+
+                        if (smallhealingAmount == 0)
+                        {
+                            smallHealCharge = maxHealingCharge;
+                        }
+                    }
+                }
+
+                if (regenHealCharging)
+                {
+                    if (regenHealingAmount > 0)
+                    {
+                        regenHealingAmount--;
+                        startRegenHeal();
+                        regenHealcharge = 0; 
+                        UIManager.instance.hudManager.UpdateHealingText();
+
+                        if (regenHealingAmount == 0)
+                        {
+                            regenHealcharge = maxHealingCharge;
+                        }
+
                     }
                 }
             }
 
+            
+
+        }
+
+        //handles the revive, sets the use of the revive to 0 & updates the UI.
+        //turns the dead bools off, enables gameplay inputs & starts the revive animation.
+        public void HandleRevive()
+        {
+
+            healingCharged = false;
+            healCharging = false;
+            if (ReviveCharging)
+            {
+                if (!ReviveUsed)
+                {
+                    ReviveUsed = true;
+                    ReviveAmount = 0;
+                    UIManager.instance.hudManager.UpdateHealingText();
+
+                    currentHealth = maxHealth;
+
+                    ReviveCharge = maxHealingCharge;
+
+                    Debug.Log("REVIVED!");
+                    player.isDead = false;
+                    player.isInteracting = false;
+
+                    player.inputs.EnableGameplayInput();
+                    HandleRecovery();
+                    player.playerAnimations.PlayTargetAnimation("Revive", true, true, 0, 1, 0);
+
+                }
+            }
+
+        }
+
+        //stops the regen & restarts the coroutine.
+        private void startRegenHeal()
+        {
+            regenTimeActive = true;
+            StopCoroutine(ActiveRegen());
+
+            StartCoroutine(ActiveRegen());
+        }
+
+        //whilst the timer is on a heal will happen every tick of the regen time.
+        //uses the regular healing equation.
+        private IEnumerator ActiveRegen()
+        {
+            float tempTime = regenHealingActiveTime;
+            while (regenTimeActive)
+            {
+                yield return new WaitForSeconds(1);
+                tempTime--;
+                //heal
+                float healingAmount = ((maxHealth / 100) * regenHealingPercentage);
+                currentHealth += healingAmount;
+                if (tempTime < 0)
+                { 
+                    regenTimeActive = false;
+                }
+            }
         }
 
         #endregion

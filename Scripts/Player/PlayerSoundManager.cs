@@ -19,16 +19,19 @@ namespace KS
 
         private FootstepSwapper swapper;
 
-        [SerializeField] private AudioClip dodgeSound;
-        [SerializeField, Range(0, 1)] private float dodgeSFXVolume = 1;
-        [SerializeField] private AudioClip justDodgeSound; 
-        [SerializeField, Range(0, 1)] private float justDodgeSFXVolume = 1;
+        [SerializeField] private Transform playerTransfrom;
 
-        [Space(10), SerializeField, Range(0,1)] private float WeaponSFXVolume = 1;
+        [Header("Dodge")]
+        [SerializeField] private APSoundData dodgeSoundData;
+        [Space(10), SerializeField] private APSoundData justDodgeSoundData;
 
-        [Space(10), SerializeField] private AudioClip bf_HolsterUnequip;
-        [Space(10), SerializeField] private AudioClip bf_HolsterEquip;
-        [SerializeField, Range(0, 1)] private float BodyFoleyVolume = 1;
+        [Header("Foley, Holster")]
+        [SerializeField] private APSoundData holsterSoundData;
+        [SerializeField] private AudioClip holsterUnequip;
+        [SerializeField] private AudioClip holsterEquip;
+
+        [Header("Skill sfx List")]
+        [SerializeField] private List<APSoundData> skillSFXList = new List<APSoundData>();
 
         protected override void Awake()
         {
@@ -107,24 +110,44 @@ namespace KS
         //plays the dodge sound when dodging
         public void PlayDodgeSound()
         {
-            effectAS.clip = dodgeSound;
-            PlaySoundFX(ref effectAS, effectAS.clip, dodgeSFXVolume, false, 0);
+            PlayCharacterSound(dodgeSoundData, playerTransfrom.position);
         }
 
         //plays the Just dodge sound
         public void PlayJustDodgeSound()
         {
-            effectAS.clip = justDodgeSound;
-            PlaySoundFX(ref effectAS, effectAS.clip, justDodgeSFXVolume, false, 0);
+            PlayCharacterSound(justDodgeSoundData, playerTransfrom.position);
         }
         #endregion
 
         #region Action
 
-        public void PlayWeaponSound(AudioClip clip)
+        public void PlayWeaponSound(APSoundData data, Vector3 position)
         {
-            PlaySoundFX(ref actionAS, clip, volume: WeaponSFXVolume);
+            PlayCharacterSound(data, position);
         }
+
+        public void AddToSkillSFXList(APSoundData data)
+        {
+            skillSFXList.Add(data);
+        }
+
+        public void PlaySkillSFX(int listNum)
+        {
+            APSoundData sfx = skillSFXList[listNum];
+
+            if (sfx == null)
+                return;
+
+            PlayCharacterSound(sfx, playerTransfrom.position);
+
+        }
+
+        public void ClearSkillSFXList()
+        {
+            skillSFXList.Clear();
+        }
+
 
 
         #endregion
@@ -133,16 +156,9 @@ namespace KS
 
         public void PlayHolsterSound(bool remove)
         {
-            if (remove)
-            {
-                FoleyAS.clip = bf_HolsterUnequip;
-            }
-            else 
-            {
-                FoleyAS.clip = bf_HolsterEquip;
-            }
+            holsterSoundData.clip = remove ? holsterUnequip : holsterEquip;
 
-            PlaySoundFX(ref FoleyAS, FoleyAS.clip, BodyFoleyVolume, true, .1f);
+            PlayCharacterSound(holsterSoundData,playerTransfrom.position);
         }
         #endregion
 

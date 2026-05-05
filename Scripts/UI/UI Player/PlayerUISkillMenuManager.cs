@@ -21,8 +21,8 @@ namespace KS
 
         [Header("Swap Slots")]
         [SerializeField] private bool swapping;
-        [SerializeField] private UISkillButton swappingButton;
-        [SerializeField] private UISkillButton swapToButton;
+        [SerializeField] private UISkillButton firstSelected;
+        [SerializeField] private UISkillButton secondSelected;
 
         [Header("Sprites")]
         public Sprite skillSlotIcon_Empty;
@@ -100,13 +100,13 @@ namespace KS
         //selects the first swapping slot.
         public void SwappingSelect(UISkillButton selected)
         {
-            swappingButton = selected;
+            firstSelected = selected;
         }
 
         //selects the second slot to be swapped and starts the swapping function.
         public void SwappingToSelect(UISkillButton toSelected)
         {
-            swapToButton = toSelected;
+            secondSelected = toSelected;
 
             SwapButtons();
         }
@@ -114,8 +114,9 @@ namespace KS
         //swaps the skills in the CombatManager, turns off the boolean and Updates the UI & HUD.
         private void SwapButtons()
         {
-            combatManager.SwapSkillSlots(swappingButton.skill, swapToButton.skill);
-            combatManager.SwapSkillSlots(swapToButton.skill, swappingButton.skill);
+            //(swappingButton, swapToButton) = (swapToButton, swappingButton);
+            combatManager.SwapSkillSlots(firstSelected.skill, secondSelected.skill);
+            //combatManager.SwapSkillSlots(swapToButton.skill, swappingButton.skill);
             swapping = false;
 
             SetSkillSlotIcon();
@@ -126,8 +127,8 @@ namespace KS
         private void cancelSwap()
         {
             swapping = false;
-            swappingButton = null;
-            swapToButton = null;
+            firstSelected = null;
+            secondSelected = null;
             
         }
         #endregion

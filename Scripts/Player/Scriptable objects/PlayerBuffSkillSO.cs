@@ -11,8 +11,7 @@ namespace KS
     {
         public GameObject FX_BuffEffect;
         public float vfxDestroyTimer;
-        public AudioClip BuffSFX;
-        [Range(0, 1)] public float BuffSFXVolume = 1; 
+
         public bool useScreenShake;
         [DrawIf("useScreenShake", true)] public float shakeDuration;
         [DrawIf("useScreenShake", true)] public float shakeMagnitude;
@@ -56,6 +55,11 @@ namespace KS
             {
                 Debug.LogError("No animator Overide found!");
             }
+
+            for (int i = 0; i < skillSFXList.Count; i++)
+            {
+                player.soundManager.AddToSkillSFXList(skillSFXList[i]);
+            }
         }
 
         private void ActivateFX(System.Object sender, EventArgs e)
@@ -67,11 +71,6 @@ namespace KS
                 vfx.transform.rotation = player.transform.rotation;
                 Destroy(vfx, vfxDestroyTimer);
 
-            }
-
-            if (BuffSFX != null) 
-            {
-                player.soundManager.PlayEffectSound(BuffSFX, BuffSFXVolume);
             }
 
         }
@@ -99,6 +98,8 @@ namespace KS
 
         private void CleanSkill(System.Object sender, EventArgs e)
         {
+            player.soundManager.ClearSkillSFXList();
+
             animEvents.OnSkillTriggered -= PerformSkill;
             animEvents.OnFXTriggered -= ActivateFX;
             animEvents.OnSkillDeactiveTriggered -= CleanSkill;

@@ -8,14 +8,8 @@ namespace KS
     {
         private CharacterManager character;
 
-        [Header("Action")]
-        [SerializeField] protected AudioSource actionAS;
-
         [Header("Effect")]
         [SerializeField] protected AudioSource effectAS;
-
-        [Header("Voice")]
-        [SerializeField] protected AudioSource voiceAS;
 
         [Header("Foley")]
         [SerializeField] protected AudioSource FoleyAS;
@@ -25,7 +19,7 @@ namespace KS
             character = GetComponent<CharacterManager>();
         }
 
-        public void PlaySoundFX(ref AudioSource audioSource, AudioClip soundFX, float volume = 1, bool randomizePitch = true,float pitchRandom = .1f)
+        public void PlaySoundFX(ref AudioSource audioSource, AudioClip soundFX, float volume = 1, bool randomizePitch = true, float pitchRandom = .1f)
         {
             audioSource.pitch = 1;
             if (randomizePitch)
@@ -36,24 +30,23 @@ namespace KS
             audioSource.PlayOneShot(soundFX, volume);
         }
 
-        public void PlayActionSound(AudioClip clip,float vol = 1)
-        {
-            PlaySoundFX(ref actionAS, clip, volume: vol);
-        }
-
         public void PlayEffectSound(AudioClip clip, float vol = 1)
         {
             PlaySoundFX(ref effectAS, clip, volume: vol);
         }
 
-        public void PlayVoiceSound(AudioClip clip, float vol = 1)
-        {
-            PlaySoundFX(ref voiceAS, clip, volume: vol);
-        }
-
         public void PlayFoleySound(AudioClip clip, float vol = 1)
         {
             PlaySoundFX(ref FoleyAS, clip, volume: vol);
+        }
+
+        public void PlayCharacterSound(APSoundData data, Vector3 position)
+        { 
+            APSoundManager.Instance.CreateSound()
+                .WithSoundData(data)
+                .WithRandomPitch()
+                .WithPosition(position)
+                .Play();
         }
 
     }

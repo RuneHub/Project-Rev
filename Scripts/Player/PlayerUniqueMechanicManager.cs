@@ -15,6 +15,7 @@ namespace KS
         [Header("Loaded")]
         public MechLoadedLevel loadedLevel = MechLoadedLevel.lvl0;
         const int maxGauge = 100;
+        public bool maxLoaded = false;
         [Range(0, maxGauge)] public float LoadedGaugeLevel = 0;
         [SerializeField] private float IncreaseRate = 33.35f;
 
@@ -69,6 +70,7 @@ namespace KS
             manager.playerStats.RemoveStatusEffect(lvl3Buff);
             manager.playerStats.RemoveStatusEffect(lvl4Buff);
             uniqueUI.ResetGauge();
+            maxLoaded = false;
         }
 
         //update function
@@ -158,6 +160,7 @@ namespace KS
                 case MechLoadedLevel.lvl4:
                     loadedPower = loadedPowerlvl4;
                     manager.playerStats.AddStatusEffect(lvl4Buff);
+                    maxLoaded = true;
                     //manager.playerStats.AddStatusEffect(SolsticeBuff);
                     break;
             }
@@ -165,7 +168,6 @@ namespace KS
             SetLoaded = true;
 
         }
-
 
         private void StartIntervalTime()
         {

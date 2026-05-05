@@ -112,6 +112,11 @@ namespace KS
         {
             playerManager.hudManager.ToggleHUD(toggle);
         }
+
+        public void ToggleHUDBossVitality(bool toggle)
+        {
+            playerManager.hudManager.ToggleBossHUD(true, 1f);
+        }
         #endregion
 
         #region Props

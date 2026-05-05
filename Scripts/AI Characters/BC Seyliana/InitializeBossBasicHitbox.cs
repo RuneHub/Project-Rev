@@ -8,14 +8,19 @@ namespace KS
     {
 
         public AIBossManager boss;
+        public BossBaseSO SO;
 
         private void Start()
         {
-            boss = FindAnyObjectByType<AIBossManager>();
+            if (boss == null)
+            {
+                boss = FindAnyObjectByType<AIBossManager>();
+            }
+
             this.GetComponentInChildren<BaseDamageCollider>().
                 Init(boss.combatAnimationEvents.DestroyHitbox, 
-                        boss, 
-                        boss.statManager.baseAttack);
+                        boss,
+                        StatCalculator.SkillAtkPowerCalculation(SO.baseDamage, boss.statManager.baseAttack));
         }
 
     }

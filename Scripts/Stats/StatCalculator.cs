@@ -109,6 +109,15 @@ namespace KS {
             return sortedList;
         }
 
+        //skill DMG calculator, this will be send to the hitboxes so that they have their own damage amounts instead of only the character dmg.
+        //having only the character damage will make all attacks do the same amount of damage which is not what we want.
+        //the calculation for the skill damage: base power * skill damage mod.
+        public static float SkillAtkPowerCalculation(float skillPower, float baseCharPower)
+        {
+            float skillDMG = ((baseCharPower / 100) * skillPower);
+            return skillDMG;
+        }
+
         //calculate the base damage that the attacker does.
         private static float GetTotalCharacterAttack(CharacterManager attacker)
         {
@@ -251,6 +260,8 @@ namespace KS {
             SEAttacker.Clear();
             SETarget.Clear();
         }
+
+        
 
     }
 }

@@ -12,7 +12,9 @@ namespace KS
         public GameObject FX_Muzzleflash;
         public GameObject FX_Impact;
 
+        public bool useSFX;
         public AudioClip ReleaseSFX;
+        public APSoundData soundData;
 
         public float rawDamage = 1f;
 

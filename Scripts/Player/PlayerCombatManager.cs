@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Windows;
 
 namespace KS
 {
@@ -46,17 +49,15 @@ namespace KS
         public PlayerSkillsSO SkillEast;
 
         [Space(10)]
-        public List<PlayerSkillsSO> skillList = new List<PlayerSkillsSO>();
-
-        [Space(10)]
         public bool GapClosing;
         public PlayerGapCloserSkillSO currentGPSkill;
         public float curGPTime;
 
         [Header("Celestial Clone")]
         public float clonePlacementOffset = 1f;
+        public Transform ccBaseR, ccBaseL, ccFinisher;
 
-        [Header("Unique Attack")]
+        [Header("Unique Attack ('charge')")]
         public float maxChargeTime = 9f;
         public float chargeTime;
         public float chargeSpeed;
@@ -73,6 +74,16 @@ namespace KS
         [SerializeField] AttackStandardSO chargelevel2Attack;
         [SerializeField] AnimationClip ChargeLevel3Anim;
         [SerializeField] AttackStandardSO chargelevel3Attack;
+
+        [Header("Unique Attack")]
+        [SerializeField] private PlayerUniqueSO playerUnique;
+        public bool CanUFinish;
+        public float finisherMovementTime = 1.5f;
+        public float finisherMovementspeed = 7;
+
+        [Header("Unique Aerial Attack")]
+        public AttackStandardSO uniqueAerialAttack;
+        public PlayerSkillsSO UASkill;
 
         private void Awake()
         {
@@ -96,6 +107,7 @@ namespace KS
         {
 
             #region Unique Action Related
+            /*
             if (player.isCharging)
             {
                 CheckChargeTime();
@@ -119,6 +131,8 @@ namespace KS
                     ScreenManager.instance.FullscreenCelestialOFF();
                 }
             }
+            */
+
             #endregion
 
             if (player.modeManager.currentMode == PlayMode.LockOnMode)
@@ -358,9 +372,9 @@ namespace KS
             }
 
             // 2. set sfx up
-            if (attackSO.ReleaseSFX != null)
+            if (attackSO.useSFX)
             {
-                player.soundManager.PlayWeaponSound(attackSO.ReleaseSFX);
+                player.soundManager.PlayCharacterSound(attackSO.soundData, outputTransform.transform.position);
             }
 
             // 3. set screen shake
@@ -573,31 +587,34 @@ namespace KS
         #endregion
 
         #region Swap Skills
-        public void SwapSkillSlots(PlayerSkillsSO swapping, PlayerSkillsSO swapTo)
-        {
-            if (SkillNorth == swapTo)
-            {
-                SkillNorth = swapping;
-            }
-            else if (SkillEast == swapTo)
-            {
-                SkillEast = swapping;
-            }
-            else if (SkillSouth == swapTo)
-            {
-                SkillSouth = swapping;
-            }
-            else if (SkillWest == swapTo)
-            {
-                SkillWest = swapping;
-            }
 
+        //Using a Dictonary for the first time, they get added in as <key,value>
+        public void SwapSkillSlots(PlayerSkillsSO first, PlayerSkillsSO second)
+        {
+            //the Dictonary, gets setup with the values, this is the SET from SETGET functionality.
+            var map = new Dictionary<PlayerSkillsSO, Action<PlayerSkillsSO>>
+            {
+                { SkillNorth, x => SkillNorth = x },
+                { SkillEast,  x => SkillEast  = x },
+                { SkillSouth, x => SkillSouth = x },
+                { SkillWest,  x => SkillWest  = x }
+            };
+
+            //set two temp variables to the selected slots.
+            var firstSlot = map[first];
+            var secondSlot = map[second];
+
+            //the actual swap, set the first to the second & Vice versa.
+            firstSlot(second);
+            secondSlot(first);
+                    
         }
         #endregion
 
         #region Character Unique Action
         public void HandleUniqueAttack()
         {
+            /*
             if (!player.isCancellable)
             {
                 if (player.isInteracting)
@@ -627,9 +644,100 @@ namespace KS
                 //turn on constant effect
                 player.effectManager.UniqueSKillEffect(true);
             }
-        
+            */
+
+            if (player.isInteracting)
+                return;
+
+            if (!player.isGrounded)
+                return;
+
+            /* V2
+            player.playerAnimations.PlayTargetAnimation("Unique_Skill", true, true, layerNum: 1);
+
+            if (player.uniqueMechManager.maxLoaded)
+            {
+                player.UniqueFinisher = true;
+                // add clone attacks
+            }
+            */
+
+            //V3
+            if (player.inputs.moveAmount > 0)
+            {
+                if (player.modeManager.currentMode == PlayMode.LockOnMode)
+                {
+                    playerUnique.PerformUnique(player, false, player.inputs.GetInputDirections());
+                }
+                else if (player.modeManager.currentMode == PlayMode.FreeMode)
+                {
+                    Debug.Log("free Forward");
+                    playerUnique.PerformUnique(player, false, InputDirections.North);
+                }
+            }
+            else
+            {
+                Debug.Log("no input backward");
+                playerUnique.PerformUnique(player, false, InputDirections.South);
+            }
+
         }
 
+        //starts the Unqiue Finisher Sequence that can only be performed under certain conditions.
+        public void HandleUniqueFinisher()
+        {
+            if (!player.isGrounded)
+                return;
+
+            if (player.inputs.UniqueFlag)
+            {
+                Debug.Log("Start UF");
+
+                playerUnique.PerformUnique(player, true, player.inputs.GetInputDirections());
+            }
+        }
+
+        //start movement coroutine (from SO because its not available in there)
+        public void PerformUnqiueMovement(Vector3 dir)
+        {
+            StartCoroutine(UniqueMovement(dir));
+        }
+
+        //Ienumerator for the unique Movement.
+        //checks certain condition and inputs for movement direction and executes based on that.
+        IEnumerator UniqueMovement(Vector3 dir)
+        {
+            //turn on AeMovement with the direction * Speed multiplier.
+            player.playerLocomotion.SetupAeMovement(dir * finisherMovementspeed);
+            player.playerLocomotion.useAdditionalMovement = true;
+            player.playerLocomotion.aeMovement = true;
+
+            yield return new WaitForSeconds(finisherMovementTime);
+
+            //rotation to face the lockon target
+            if (player.modeManager.currentMode == PlayMode.LockOnMode)
+            {
+                Vector3 rotDir = player.cameraHandler.currentLockOnTarget.position - transform.position;
+                rotDir.y = 0;
+                rotDir.Normalize();
+
+                Quaternion tr = Quaternion.LookRotation(rotDir);
+                Quaternion targetRot = Quaternion.Slerp(transform.rotation, tr, 15f * Time.deltaTime);
+
+                transform.rotation = targetRot;
+
+            }
+
+            //turn off AeMovement
+            player.playerLocomotion.useAdditionalMovement = false;
+            player.playerLocomotion.aeMovement = false;
+
+            //make player visible.
+            player.animationEvents.HandleVisibile();
+
+        }
+
+        //V1
         private void CheckChargeTime()
         {
             chargeTime += Time.deltaTime * chargeSpeed;
@@ -667,6 +775,7 @@ namespace KS
             }
         }
 
+        //V1
         private void CheckChargeLevel()
         {
             float CelestialCharge = 0.6f;
@@ -707,7 +816,20 @@ namespace KS
             }
 
         }
-        #endregion
+
+        public void HandleAerialUnqiueAttack()
+        {
+            if (player.isInteracting)
+                return;
+
+            player.isAerial = true;
+
+            
+            //player.playerAnimations.PlayTargetAnimation("U_Aerial_Attack", true, layerNum: 1);
+            player.playerAnimations.PlayTargetAnimation("U_Aerial_Start", true, layerNum: 1);
+
+        }
+        #endregion  
 
         #region Celestial Clone
         public void CelestialCloneAddition()
@@ -716,23 +838,20 @@ namespace KS
             if (player.cameraHandler.GetCameraCross(player.transform))
             {
                 //right
-                addition = new Vector3(clonePlacementOffset, 0, -(clonePlacementOffset / 2));
+                addition = ccBaseR.position;
             }
             else
             {
                 //left
-                addition = new Vector3(-clonePlacementOffset, 0, -(clonePlacementOffset / 2));
+                addition = ccBaseL.position;
             }
-            //Debug.Log("Combo counter: " + comboCounter);
             player.Clone.ActivateClone(addition, comboCounter);
             perfectCombo = false;
         }
 
         public void CelestialClonePerfectFinish()
         {
-            Vector3 addition = new Vector3(clonePlacementOffset, 0, 0);
-            //Debug.Log("Clone Finsiher");
-            player.Clone.ActiveCloneFinisher(addition);
+            player.Clone.ActiveCloneFinisher(ccFinisher.position);
             perfectCombo = false;
         }
 

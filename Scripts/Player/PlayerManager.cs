@@ -35,6 +35,7 @@ namespace KS {
         [Header("Player Combat booleans")]
         public bool canDoCombo;
         public bool perfectTimedCombo;
+        public bool UniqueFinisher;
         public bool isAiming;
         public bool isCharging;
         public bool animCancelled;
@@ -111,6 +112,8 @@ namespace KS {
             canDoCombo = animator.GetBool("canDoCombo");
             isHit = animator.GetBool("isDamaged");
             perfectTimedCombo = animator.GetBool("perfectTimedCombo");
+            isInvulnerable = animator.GetBool("isInvulnerable");
+            isAerial = animator.GetBool("isAerial");
             
             isCancellable = animator.GetBool("isCancellable");
             animCancelled = animator.GetBool("Cancelled");

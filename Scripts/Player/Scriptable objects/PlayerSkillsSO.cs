@@ -27,6 +27,8 @@ namespace KS
         public AnimationClip animation;
         public bool useRootmotion;
 
+        public List<APSoundData> skillSFXList = new List<APSoundData>();
+
         public float cooldown;
         public bool OnCD;
 

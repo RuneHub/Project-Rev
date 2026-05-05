@@ -31,7 +31,7 @@ namespace KS
 
         [Header("Magic Smmon")]
         public GameObject currentSummonBuildup;
-        public List<GameObject> spawners;
+        public GameObject magicSummonSpawner;
 
         private void Awake()
         {
@@ -45,10 +45,7 @@ namespace KS
 
         public void SetupMeleeHitboxes()
         {
-            meleeHitbox.Init(DestroyHitbox, manager, manager.statManager.baseAttack);
-            ArmHitbox.Init(DestroyHitbox, manager, manager.statManager.baseAttack);
             MeleeDeactive();
-            meleeHitboxFinish.Init(DestroyHitbox, manager, manager.statManager.baseAttack);
             MeleeFinishDeactive();
         }
 
@@ -159,13 +156,19 @@ namespace KS
         //animation event function, Instatiate's summon buildup vfx
         public void SummonBuildUp()
         {
+            if (magicSummonSpawner == null)
+            { 
+                GameObject spawner = Instantiate(manager.combatManager.GetSummonSpawner(), manager.transform);
+                magicSummonSpawner = spawner;
+            }
+            
             currentSummonBuildup = manager.combatManager.currentSummonAttack.buildUp;
 
-            for (int i = 0; i < spawners.Count; i++)
+            for (int i = 0; i < magicSummonSpawner.transform.childCount; i++)
             {
-                if (spawners[i].transform.childCount == 0)
+                if (magicSummonSpawner.transform.GetChild(i).transform.childCount == 0)
                 {
-                    Instantiate(currentSummonBuildup, spawners[i].transform);
+                    Instantiate(currentSummonBuildup, magicSummonSpawner.transform.GetChild(i).transform);
                 }
             }
 
@@ -174,7 +177,14 @@ namespace KS
         //animation event function, activate summon magic
         public void ActivateMagicSummon()
         {
-            manager.combatManager.ActivateMagicSummon(spawners);
+            List<GameObject> spawnPoints = new List<GameObject>();
+
+            for (int i = 0; i < magicSummonSpawner.transform.childCount; i++)
+            {
+                spawnPoints.Add(magicSummonSpawner.transform.GetChild(i).gameObject);
+            }
+
+            manager.combatManager.ActivateMagicSummon(spawnPoints);
         }
 
         #endregion

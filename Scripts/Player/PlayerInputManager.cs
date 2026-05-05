@@ -50,6 +50,8 @@ namespace KS
         [Header("Healing Inputs")]
         public bool smallHealInput;
         public bool largeHealInput;
+        public bool RegenHealInput;
+        public bool ReviveHealInput;
 
         [Header("Action Inputs")]
         public bool interactInput;
@@ -106,6 +108,7 @@ namespace KS
         public CutsceneManager CSManager;
         public bool cameraReset = false;
         public bool startBattle = false;
+        public bool maxOutGauge = false;
 
         //Rebinding Events
         public static event Action rebindComplete;
@@ -159,6 +162,10 @@ namespace KS
                 controls.PlayerAction.HealSmall.canceled += i => smallHealInput = false;
                 controls.PlayerAction.HealLarge.performed += i => largeHealInput = true;
                 controls.PlayerAction.HealLarge.canceled += i => largeHealInput = false;
+                controls.PlayerAction.HealRegen.performed += i => RegenHealInput = true;
+                controls.PlayerAction.HealRegen.canceled  += i => RegenHealInput = false;
+                controls.PlayerAction.HealRevive.performed += i => ReviveHealInput = true;
+                controls.PlayerAction.HealRevive.canceled  += i => ReviveHealInput = false;
 
                 //control
                 controls.Control.LockOn.performed += i => lockOnInput = true;
@@ -182,6 +189,7 @@ namespace KS
                 //TEMP, for testing
                 controls.Testing.CameraReset.performed += i => cameraReset = true;
                 controls.Testing.StartBattle.performed += i => startBattle = true;
+                controls.Testing.MaxOutGauge.performed += i => maxOutGauge = true;
 
             }
             else
@@ -210,8 +218,9 @@ namespace KS
             HandleCameraInput();
 
             // *******   Testing *****
-            HandleCameraResetInput();
-            HandleBattleStart();
+            HandleTestCameraResetInput();
+            HandleTestBattleStart();
+            HandleTestMaxoutGauge();
             // *******   Testing *****
 
             HandleSkillModifierInput();
@@ -230,6 +239,8 @@ namespace KS
 
             HandleSmallHealInput();
             HandleLargeHealInput();
+            HandleRegenHealInput();
+            HandleReviveHealInput();
 
             HandleInteractInput();
 
@@ -438,6 +449,45 @@ namespace KS
                 return;
             }
 
+            if (uniqueAttackInput && !player.isGrounded)
+            {
+                uniqueAttackInput = false;
+                player.combatManager.HandleAerialUnqiueAttack();
+
+            }
+            
+            if (uniqueAttackInput)
+            {
+                uniqueAttackInput = false;
+
+                if (player.modeManager.currentMode == PlayMode.LockOnMode)
+                {
+                    Vector3 rotationDirection = player.cameraHandler.currentLockOnTarget.position - transform.position;
+                    rotationDirection.y = 0;
+                    Quaternion tr = Quaternion.LookRotation(rotationDirection);
+                    Quaternion targetRotation = Quaternion.Slerp(transform.rotation, tr, 100);
+                    transform.rotation = targetRotation;
+                }
+
+                if (player.UniqueFinisher)
+                {
+                    UniqueFlag = true;
+                    player.combatManager.HandleUniqueFinisher();
+                    UniqueFlag = false;
+                }
+                else
+                {
+                    if (player.isInteracting)
+                        return;
+                    if (player.UniqueFinisher)
+                        return;
+
+                    player.combatManager.HandleUniqueAttack();
+                }
+
+            }
+            
+            /*
             if (uniqueAttackInput)
             {
                 player.combatManager.HandleUniqueAttack();
@@ -455,7 +505,7 @@ namespace KS
                 player.combatManager.ChargeRelease = true;
                 player.isCharging = false;
             }
-
+            */
         }
 
         //checks for the double input of the modifier + another button
@@ -526,9 +576,6 @@ namespace KS
         //handles small heal input
         private void HandleSmallHealInput()
         {
-            if (largeHealInput)
-                return;
-
             if (player.playerStats.smallhealingAmount == 0)
                 return;
 
@@ -554,10 +601,7 @@ namespace KS
         //handles large heal input
         private void HandleLargeHealInput()
         {
-            if (smallHealInput)
-                return;
-
-            if (player.playerStats.LargeHealingAmount == 0)
+           if (player.playerStats.LargeHealingAmount == 0)
                 return;
 
             if (largeHealInput)
@@ -577,6 +621,57 @@ namespace KS
                 player.playerStats.healCharging = false;
                 largeHealInput = false;
             }
+        }
+
+        //Handles Regen Heal Input
+        private void HandleRegenHealInput()
+        {
+            if (player.playerStats.regenHealingAmount == 0)
+                return;
+
+            if (RegenHealInput)
+            {
+                player.playerStats.regenHealCharging = true;
+                player.playerStats.HandleHealingCharge();
+                if (player.playerStats.healingCharged)
+                {
+                    player.playerStats.HandleHealing(player.playerStats.regenHealingPercentage, false);
+                    RegenHealInput = false;
+                }
+            }
+            else
+            {
+                player.playerStats.regenHealCharging = false;
+                player.playerStats.healCharging = false;
+                RegenHealInput = false;
+            }
+
+        }
+
+        //Handles Revive Heal Input
+        private void HandleReviveHealInput()
+        {
+            if (player.playerStats.ReviveAmount == 0)
+                return;
+
+            if (ReviveHealInput && player.isDead && player.isGrounded)
+            {
+                player.playerStats.ReviveCharging = true;
+                player.playerStats.HandleHealingCharge();
+                if (player.playerStats.healingCharged)
+                {
+                    player.playerStats.HandleRevive();
+                    ReviveHealInput = false;
+                }
+
+            }
+            else
+            {
+                player.playerStats.ReviveCharging = false;
+                player.playerStats.healCharging = false;
+                ReviveHealInput = false;
+            }            
+
         }
 
         //sends out a signal that lockon has been pressed if it is available.
@@ -670,7 +765,6 @@ namespace KS
                 //Debug.Log("interact");
                 interactInput = false;
 
-                //player.playerLocomotion.aeMovement = !player.playerLocomotion.aeMovement; //can't remember what this is for?
                 player.interactionManager.Interact();
             }
 
@@ -680,7 +774,7 @@ namespace KS
         #region Testing
 
         //resets camera to given look angle, THIS IS TEMP NEEDS TO BE REMOVED
-        private void HandleCameraResetInput()
+        private void HandleTestCameraResetInput()
         {
             if (UIManager.instance.menuWindowIsOpen)
             {
@@ -704,7 +798,7 @@ namespace KS
         }
 
         //starts battle setup
-        private void HandleBattleStart()
+        private void HandleTestBattleStart()
         {
             if (startBattle)
             {
@@ -716,6 +810,20 @@ namespace KS
             }
 
             
+        }
+
+        //maxes out the gauge
+        private void HandleTestMaxoutGauge()
+        {
+            if (maxOutGauge)
+            {
+                maxOutGauge = false;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    player.uniqueMechManager.IncreaseLoadedGauge();
+                }
+            }
         }
 
         #endregion
@@ -870,6 +978,9 @@ namespace KS
         //opens a different UI menu depending on that.
         private void HandleUIOpenMainMenuInput()
         {
+            if (player.isDead)
+                return;
+
             if (!UIManager.instance.menuWindowIsOpen 
                 && uiOpenMenu && !player.InCutscene)
             {
@@ -1013,22 +1124,22 @@ namespace KS
             else if (movementInput.x > 0.55f && movementInput.x < 1f &&
                movementInput.y > 0.55f && movementInput.y < 1f)
             {//northwest
-                inputDir = InputDirections.NorthWest;
+                inputDir = InputDirections.NorthEast;
             }
             else if (movementInput.x < -0.55f && movementInput.x > -1f &&
                movementInput.y > 0.55f && movementInput.y < 1f)
             {//northeast
-                inputDir = InputDirections.NorthEast;
+                inputDir = InputDirections.NorthWest;
             }
             else if (movementInput.x > 0.55f && movementInput.x < 1f &&
                movementInput.y < -0.55f && movementInput.y > -1f)
             {//southwest
-                inputDir = InputDirections.SouthWest;
+                inputDir = InputDirections.SouthEast;
             }
             else if (movementInput.x < -0.55f && movementInput.x > -1f &&
                movementInput.y < -0.55f && movementInput.y  > -1f)
             {//southwest
-                inputDir = InputDirections.SouthEast;
+                inputDir = InputDirections.SouthWest;
             }
 
             return inputDir;

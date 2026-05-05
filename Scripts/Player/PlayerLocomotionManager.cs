@@ -270,6 +270,8 @@ namespace KS
 
             //change the dodge direction based on the input and the play mode
             // if in lock on mode, dodge directional, if not then dodge forward.
+            Debug.Log("Dodge");
+
             if (player.inputs.moveAmount > 0)
             {
                 if (player.modeManager.currentMode == PlayMode.LockOnMode)

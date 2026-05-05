@@ -16,6 +16,7 @@ namespace KS
         public Transform WeaponOutputLeft;
         public Transform WeaponOutputRight;
         public Transform WeaponsMiddlePoint;
+        public Transform WeaponUAPoint;
 
         public event EventHandler<Transform> OnShootEventTriggered;
         public event EventHandler OnSkillTriggered;
@@ -157,6 +158,7 @@ namespace KS
 
         public void DeactivateSkill()
         {
+            Debug.Log("DeactiveSkill");
             OnSkillDeactiveTriggered?.Invoke(this, EventArgs.Empty);
         }
 
@@ -249,6 +251,22 @@ namespace KS
             player.uniqueMechManager.ResetLoadedLevel();
         }
 
+        public void PerformUAttack()
+        {
+            player.combatManager.UASkill.HandleSkill(player, "U_Aerial_Attacks");
+        }
+
+        public void CanUFinish()
+        {
+            player.combatManager.CanUFinish = true;
+        }
+
+        public void CancelUFinish()
+        {
+            player.UniqueFinisher = false;
+            player.combatManager.CanUFinish = false;
+        }
+
         #endregion
 
         #region Release VFX
@@ -292,6 +310,15 @@ namespace KS
                 releaseFX2.transform.position = WeaponOutputLeft.position;
                 releaseFX2.transform.rotation = WeaponOutputLeft.rotation;
             }
+        }
+
+        #endregion
+
+        #region Skill SFX
+
+        public void ActivateSFX(int sfxListNum)
+        {
+            player.soundManager.PlaySkillSFX(sfxListNum);
         }
 
         #endregion

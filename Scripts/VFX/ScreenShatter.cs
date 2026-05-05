@@ -41,6 +41,7 @@ namespace KS
             fractureCenter = centerObject.position + centerObject.localPosition;
         }
 
+        [ContextMenu("Start Shatter")]
         public void startShatteringSequence()
         {
             StartCoroutine(RunShatterSequence());

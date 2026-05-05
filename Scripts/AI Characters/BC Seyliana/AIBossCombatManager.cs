@@ -103,7 +103,7 @@ namespace KS
             GameObject fanProj = Instantiate(currentFanAttack.AerialBlitz, manager.transform);
 
             fanProj.GetComponentInChildren<MeleeDamageCollider>().
-                Init(manager.combatAnimationEvents.DestroyHitbox, manager, manager.statManager.baseAttack);
+                Init(manager.combatAnimationEvents.DestroyHitbox, manager, StatCalculator.SkillAtkPowerCalculation(currentFanAttack.baseDamage, manager.statManager.baseAttack));
         }
 
         #endregion
@@ -120,13 +120,18 @@ namespace KS
 
         }
 
+        public GameObject GetSummonSpawner()
+        {
+            return currentSummonAttack.Spawner;
+        }
+
         public void ActivateMagicSummon(List<GameObject> spawners)
         {
-            StartCoroutine(ActivationMagicSummon(spawners, currentSummonAttack.ProjectileDelay));
+            StartCoroutine(ActivationMagicSummon(spawners, currentSummonAttack.ProjectileDelay, currentSummonAttack.baseDamage));
         }
 
         //swaps out the build up vfx for the actual projectile
-        IEnumerator ActivationMagicSummon(List<GameObject> spawners, float delay)
+        IEnumerator ActivationMagicSummon(List<GameObject> spawners, float delay, float SOBaseDamage)
         {
             for (int i = 0; i < spawners.Count; i++)
             {
@@ -134,20 +139,22 @@ namespace KS
                 {
                     Transform child = spawners[i].transform.GetChild(0);
                     Destroy(child.gameObject);
+                    
+                    GameObject proj = Instantiate(currentSummonAttack.projectile, spawners[i].transform);
+                    proj.transform.parent = null;
 
-                    Vector3 tr = (manager.GetTarget().lockOnTransform.position - spawners[i].transform.position).normalized;
-                    GameObject proj = Instantiate(currentSummonAttack.projectile, spawners[i].transform.position, Quaternion.LookRotation(tr), null);
-                    FireMagicSummon(proj);
+                    FireMagicSummon(proj, SOBaseDamage);
                     yield return new WaitForSeconds(delay);
                 }
             }
         }
 
         //shoot the summoned magic projectile towards target
-        private void FireMagicSummon(GameObject projectile)
+        private void FireMagicSummon(GameObject projectile, float SOBaseDamage)
         {
-            projectile.GetComponent<BaseDamageCollider>().Init(manager.combatAnimationEvents.DestroyHitbox, manager, manager.statManager.baseAttack);
-            projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * currentSummonAttack.ProjectileSpeed;
+            projectile.GetComponent<BaseDamageCollider>().Init(manager.combatAnimationEvents.DestroyHitbox, manager, StatCalculator.SkillAtkPowerCalculation(SOBaseDamage, manager.statManager.baseAttack));
+            Vector3 tr = (manager.GetTarget().lockOnTransform.position - projectile.transform.position).normalized * currentSummonAttack.ProjectileSpeed;
+            projectile.GetComponent<Rigidbody>().velocity = tr;
         }
 
         #endregion

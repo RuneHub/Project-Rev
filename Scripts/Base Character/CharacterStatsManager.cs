@@ -139,6 +139,11 @@ namespace KS {
                 StartCoroutine(Countdown(adding));
             }
 
+            if(adding.affectedStat == StatusEffectAffectedStat.Armor)
+            {
+                hasArmor = true;
+            }
+
         }
 
         public virtual void CheckStatusEffects()
@@ -162,6 +167,11 @@ namespace KS {
                 if (statusEffects[i].statusEffectType == removing.statusEffectType &&
                     statusEffects[i].affectedStat == removing.affectedStat)
                 {
+                    if (statusEffects[i].affectedStat == StatusEffectAffectedStat.Armor)
+                    {
+                        hasArmor = false;
+                    }
+
                     //Debug.Log("removing: " + statusEffects[i]);
                     statusEffects.Remove(statusEffects[i]);
                 }

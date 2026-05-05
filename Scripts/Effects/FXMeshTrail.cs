@@ -82,11 +82,12 @@ public class FXMeshTrail : MonoBehaviour
 
                 StartCoroutine(AnimateMaterialFloat(mr.material, 0, shaderVarRate, shaderVarRefreshRate));
                 
-                Destroy(gOb, meshDestroyDelay);
+                Destroy(gOb.gameObject, meshDestroyDelay);
             }
 
             yield return new WaitForSeconds(meshRefreshRate);
         }
+        Destroy(gObP.gameObject);
         isTrailActive = false;
     }
 

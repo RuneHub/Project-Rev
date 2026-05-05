@@ -91,13 +91,16 @@ namespace KS
                 Debug.LogError("No animator Overide found!");
             }
 
+            //use SFX
+            for (int i = 0; i < skillSFXList.Count; i++)
+            {
+                player.soundManager.AddToSkillSFXList(skillSFXList[i]);
+            }
+
         }
 
         protected void Shoot(System.Object sender, Transform output)
         {
-            //Debug.Log("skill ray shoot");
-            //player.combatManager.currentAttack = skillAttack;
-
             player.combatManager.ShootRaycastHitscan(output, skillAttack);
 
         }
@@ -105,7 +108,7 @@ namespace KS
         protected void PerformSkill(System.Object sender, EventArgs e)
         {
             //Debug.Log("perform skill");
-            player.soundManager.PlayWeaponSound(releaseSFX);
+
 
             if (useScreenShake)
             {
@@ -137,6 +140,8 @@ namespace KS
 
         protected void CleanSkill(System.Object sender, EventArgs e)
         {
+            player.soundManager.ClearSkillSFXList();
+
             animEvents.OnShootEventTriggered -= Shoot;
             animEvents.OnSkillTriggered -= PerformSkill;
             animEvents.OnSkillDeactiveTriggered -= CleanSkill;
