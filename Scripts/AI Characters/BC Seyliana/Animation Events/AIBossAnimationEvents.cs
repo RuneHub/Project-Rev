@@ -13,9 +13,7 @@ namespace KS
         public GameObject LoopingCastVFX;
         public GameObject CastFinishVFX;
         [Space(10)]
-        public GameObject LeftOrbVFX;
-        public GameObject RightOrbVFX;
-        public GameObject MorphOrbVFX;
+        public GameObject PhaseTransitVFX;
         [Space(10)]
         public GameObject StormAura;
         [Space(10)]
@@ -87,34 +85,10 @@ namespace KS
             
         }
 
-        public void OrbCast(string str)
+        public void PowerUnleashedVFX()
         {
-            switch (str)
-            {
-                case "Left":
-                    LeftOrbVFX.SetActive(true);
-                    break;
-                case "Right":
-                    RightOrbVFX.SetActive(true);
-                    break;
-                case "Both":
-                    LeftOrbVFX.SetActive(true);
-                    RightOrbVFX.SetActive(true);
-                    break;
-                case "Morph":
-                    MorphOrbVFX.SetActive(true);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-
-        public void CeaseOrb()
-        {
-            LeftOrbVFX.SetActive(false);
-            RightOrbVFX.SetActive(false);
-            MorphOrbVFX.SetActive(false);
+            GameObject vfx = Instantiate(PhaseTransitVFX, manager.transform);
+            Destroy(vfx, 15f);
         }
         #endregion
 
@@ -138,6 +112,7 @@ namespace KS
             {
                 smrVFX[i].SetActive(false);
             }
+            DisableStormAura();
         }
 
         //loops through list of visuals to turn them ON.
@@ -152,6 +127,7 @@ namespace KS
             {
                 smrVFX[i].SetActive(true);
             }
+            ActivateStormAura();
         }
 
         #endregion
@@ -166,14 +142,6 @@ namespace KS
         public void DisableStormAura()
         {
             StormAura.SetActive(false);
-        }
-
-        public void ActivateTransitionShine()
-        {
-            GameObject ins = Instantiate(buildUpShine, MorphOrbVFX.transform.GetChild(0).position, Quaternion.identity);
-            Destroy(ins, buildUpShineDestroyTimer);
-
-            //skylightManager.ChangeSky();
         }
 
         public void StartTransition()

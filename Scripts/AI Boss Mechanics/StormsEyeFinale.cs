@@ -23,8 +23,12 @@ namespace KS
         public GameObject Fissure;
         public float fissureOpenTime;
         [Range(0,100)] public float fissureOpenAmount = 100;
+
+        [Space(10)]
         public GameObject Hitboxes;
+        public float hitboxDelayTime = 1f;
         public float hitboxstayTime = 1f;
+
         [Space(10)]
         public float fissureCloseTime = 1f;
 
@@ -117,13 +121,16 @@ namespace KS
             }
 
             fissureVFX.SetActive(true);
+
+            yield return new WaitForSeconds(hitboxDelayTime);
+
             Hitboxes.SetActive(true);
             for (int i = 0; i < Hitboxes.transform.childCount; i++)
             {
                 Hitboxes.transform.GetChild(i).GetComponent<BasicDamageCollider>().
                     Init(boss.combatAnimationEvents.DestroyHitbox, boss, boss.statManager.HPTriggerAttack);
             }
-            
+
             yield return new WaitForSeconds(hitboxstayTime);
 
             StartCleanUp();
@@ -153,6 +160,7 @@ namespace KS
                 yield return null;
 
             }
+            fissureVFX.SetActive(false);
             Fissure.gameObject.SetActive(false);
             StormEyeVFX.SetActive(false);
             CSBoss.SetActive(false);

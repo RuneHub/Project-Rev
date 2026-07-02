@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using Coffee.UIEffects;
+using Coffee.UIExtensions;
 
 namespace KS
 {
@@ -33,6 +34,7 @@ namespace KS
         [SerializeField] private Slider bossEaseHealthSlider;
         [SerializeField] private TextMeshProUGUI bossHealthText;
         [SerializeField] private Slider BossArmorSlider;
+        [SerializeField] private UIParticle healthParticle;
 
         [Header("Ability Slots")]
         public Sprite skillSlotIcon_Empty;
@@ -266,6 +268,16 @@ namespace KS
 
             //set to UI text
             bossHealthText.text = bossHealthPercentage.ToString() + "%";
+        }
+
+        //plays the UI VFX that is on the healthbar.
+        //get called with the "OnChanged" events on the slider 
+        public void PlayHealthEditVFX()
+        {
+            if (healthParticle != null)
+            {
+                healthParticle.Play();
+            }
         }
 
         #endregion

@@ -8,7 +8,8 @@ namespace KS
     {
         private CharacterManager character;
 
-        public Transform CharacterEffectTransform;
+        public Transform characterEffectTransform;
+        public Transform spineTransform;
 
         protected BaseEffectSO effect;
         private Vector3 position = Vector3.zero;
@@ -40,15 +41,19 @@ namespace KS
         {
             if (effect.useEffectTransform)
             {
-                position = CharacterEffectTransform.position;
+                position = characterEffectTransform.position;
+            }
+            else if(effect.useSpineTransform)
+            {
+                position = spineTransform.position;
             }
             else if (effect.useVector)
             {
-                position = CharacterEffectTransform.position + effect.Location;
+                position = characterEffectTransform.position + effect.Location;
             }
             else
             {
-                position = CharacterEffectTransform.position;
+                position = characterEffectTransform.position;
             }
 
             if (effect.useVFX)

@@ -16,6 +16,7 @@ namespace KS
 
         [Tooltip("Transform will be the default if both 'Transform' and 'Vector' are checked")]
         public bool useEffectTransform = true;
+        public bool useSpineTransform = false;
         public bool useVector = false;
         [DrawIf("useVector", true)] public Vector3 Location;
 

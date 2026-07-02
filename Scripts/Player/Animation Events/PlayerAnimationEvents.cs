@@ -221,7 +221,7 @@ namespace KS
 
         //handles the animation cancel when attack,jump or movement inputs are inputted.
         //also happens before dodge, these parameter ensure that everything animation wise gets reset
-        public void HandleCancelAnim()
+        public void HandleCancelAnim(bool keepComboCounter = false)
         {
             //Debug.Log("Anim cancel");
 
@@ -229,8 +229,11 @@ namespace KS
             player.animator.SetBool("isUsingRootmotion", false);
 
             SwapWeaponToHolster("Both");
-            player.combatAnimationEvents.ResetCombatAnimations();
-            player.combatAnimationEvents.HardComboReset();
+            if (!keepComboCounter)
+            { 
+                player.combatAnimationEvents.ResetCombatAnimations();
+                player.combatAnimationEvents.HardComboReset();
+            }
 
             player.combatAnimationEvents.DeactivateSkill();
 

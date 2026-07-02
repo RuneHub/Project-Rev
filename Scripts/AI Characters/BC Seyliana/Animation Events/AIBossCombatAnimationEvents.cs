@@ -20,9 +20,6 @@ namespace KS
         [Header("Mechanics")]
         public GameObject BossMechanics;
 
-        [Header("VFX Buildup")]
-        public GameObject meleeBU_Parent;
-
         [Header("Melee VFX")]
         public GameObject Melee1;
         public GameObject Melee2;
@@ -47,13 +44,6 @@ namespace KS
         {
             MeleeDeactive();
             MeleeFinishDeactive();
-        }
-
-        public void BuildUpVFX()
-        {
-            GameObject vfx = Instantiate(manager.combatManager.GetMeleeBuildupVFX(), meleeBU_Parent.transform);
-            Destroy(vfx, .5f);
-           
         }
 
         //turns ON melee hitbox

@@ -8,6 +8,7 @@ namespace KS
     public class APSoundEmitter : MonoBehaviour
     { 
         public APSoundData Data { get; private set; }
+        public LinkedListNode<APSoundEmitter> Node { get; set; }
 
         AudioSource audioSource;
         Coroutine playingCoroutine;

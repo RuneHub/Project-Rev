@@ -75,7 +75,7 @@ namespace KS
             else if (!TargetTag(col.transform.root.gameObject.tag, Owners) &&
                 !TargetTag(col.transform.root.gameObject.tag, Targets))
             {
-                Debug.Log(transform.name + " hit " + col.transform.name);
+                //Debug.Log(transform.name + " hit " + col.transform.name);
                 if (DestroyAfterImpact)
                 {
                     DestroyOnImpact();

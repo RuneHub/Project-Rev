@@ -52,7 +52,8 @@ namespace KS
         public float CombatRange = 30f;
         public BoxCollider field;
 
-       
+        [Header("Other")]
+        public Transform targetLocation;
 
         protected override void Awake()
         {
@@ -166,6 +167,11 @@ namespace KS
         public void TurnOnBehaviour()
         {
             behaviourRunner.enabled = true;
+        }
+
+        public void MoveBoss()
+        {
+            transform.position = targetLocation.transform.position;   
         }
 
     }

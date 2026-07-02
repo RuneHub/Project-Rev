@@ -36,6 +36,12 @@ namespace KS
 
         public void Play()
         {
+            if (soundData == null)
+            {
+                Debug.LogError("SoundData is null");
+                return;
+            }
+
             if (!soundManager.CanPlaySound(soundData))
                 return;
 
@@ -51,7 +57,8 @@ namespace KS
 
             if (soundData.frequentSound)
             {
-                soundManager.frequentSoundEmitters.AddLast(soundEmitter);
+                //soundManager.frequentSoundEmitters.AddLast(soundEmitter);
+                soundEmitter.Node = soundManager.frequentSoundEmitters.AddLast(soundEmitter);
             }
 
             soundEmitter.Play();

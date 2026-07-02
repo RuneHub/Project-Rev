@@ -646,8 +646,16 @@ namespace KS
             }
             */
 
-            if (player.isInteracting)
-                return;
+            if (!player.dodgeCancellable)
+            {
+                if (player.isInteracting)
+                    return;
+            }
+            else
+            {
+                player.animator.SetBool("Cancelled", true);
+                player.animationEvents.HandleCancelAnim();
+            }
 
             if (!player.isGrounded)
                 return;
@@ -671,13 +679,11 @@ namespace KS
                 }
                 else if (player.modeManager.currentMode == PlayMode.FreeMode)
                 {
-                    Debug.Log("free Forward");
                     playerUnique.PerformUnique(player, false, InputDirections.North);
                 }
             }
             else
             {
-                Debug.Log("no input backward");
                 playerUnique.PerformUnique(player, false, InputDirections.South);
             }
 
@@ -691,8 +697,6 @@ namespace KS
 
             if (player.inputs.UniqueFlag)
             {
-                Debug.Log("Start UF");
-
                 playerUnique.PerformUnique(player, true, player.inputs.GetInputDirections());
             }
         }
@@ -711,6 +715,9 @@ namespace KS
             player.playerLocomotion.SetupAeMovement(dir * finisherMovementspeed);
             player.playerLocomotion.useAdditionalMovement = true;
             player.playerLocomotion.aeMovement = true;
+
+            //turn invisibility on (gets turned off on animation)
+            player.combatAnimationEvents.InvulnON();
 
             yield return new WaitForSeconds(finisherMovementTime);
 
@@ -811,7 +818,7 @@ namespace KS
 
             if (!ExecutedEffect)
             {
-                player.effectManager.UniqueSkillEffect(chargeLevel, ChargeEffectShakeAmount, ChargeEffectShakeDuration);
+                //player.effectManager.UniqueSkillEffect(chargeLevel, ChargeEffectShakeAmount, ChargeEffectShakeDuration);
                 ScreenManager.instance.FullscreenCelestial(CelestialCharge, ChargeEffectShakeDuration);
             }
 

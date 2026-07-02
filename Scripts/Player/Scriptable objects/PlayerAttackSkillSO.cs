@@ -25,6 +25,11 @@ namespace KS
         [DrawIf("useReleaseVFX", true)] public GameObject releaseVFX;
         [DrawIf("useReleaseVFX", true)] public float destroyTimer;
 
+        public bool useFxEffect;
+        [DrawIf("useFxEffect", true)] public GameObject fxEffect;
+        [DrawIf("useFxEffect", true)] public float fxEffectDestroyTimer;
+
+
         public bool useScreenShake;
         public float shakeDuration;
         public float shakeMagnitude;
@@ -61,6 +66,11 @@ namespace KS
                 else if (useHitbox)
                 {
                     animEvents.OnSkillTriggered += PerformSkill;
+                }
+
+                if(useFxEffect)
+                {
+                    animEvents.OnFXTriggered += ActivateFX;
                 }
 
                 animEvents.OnSkillDeactiveTriggered += CleanSkill;
@@ -138,6 +148,18 @@ namespace KS
             }
         }
 
+        private void ActivateFX(System.Object sender, EventArgs e)
+        {
+            if (fxEffect != null)
+            {
+                GameObject vfx = Instantiate(fxEffect);
+                vfx.transform.position = player.transform.position;
+                vfx.transform.rotation = player.transform.rotation;
+                Destroy(vfx, fxEffectDestroyTimer);
+                
+            }
+        }
+
         protected void CleanSkill(System.Object sender, EventArgs e)
         {
             player.soundManager.ClearSkillSFXList();
@@ -145,6 +167,7 @@ namespace KS
             animEvents.OnShootEventTriggered -= Shoot;
             animEvents.OnSkillTriggered -= PerformSkill;
             animEvents.OnSkillDeactiveTriggered -= CleanSkill;
+            animEvents.OnFXTriggered -= ActivateFX;
         }
 
         protected void DestroyHitbox(BaseDamageCollider obj)

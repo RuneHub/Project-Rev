@@ -306,6 +306,9 @@ namespace KS {
                 {
                     LargeHealingAmount--;
                     currentHealth = maxHealth;
+                    //activate Big Heal vfx
+                    player.effectManager.BigHealEffect();
+
                     largeHealCharge = 0; 
                     UIManager.instance.hudManager.UpdateHealingText();
 
@@ -326,6 +329,9 @@ namespace KS {
                         smallhealingAmount--;
                         float healingAmount = ((maxHealth / 100) * healingAmountPercentage);
                         currentHealth += healingAmount;
+                        //activate small heal vfx
+                        player.effectManager.smallHealEffect();
+
                         smallHealCharge = 0;
                         UIManager.instance.hudManager.UpdateHealingText();
 
@@ -369,25 +375,34 @@ namespace KS {
             {
                 if (!ReviveUsed)
                 {
-                    ReviveUsed = true;
-                    ReviveAmount = 0;
-                    UIManager.instance.hudManager.UpdateHealingText();
-
-                    currentHealth = maxHealth;
-
-                    ReviveCharge = maxHealingCharge;
-
-                    Debug.Log("REVIVED!");
-                    player.isDead = false;
-                    player.isInteracting = false;
-
-                    player.inputs.EnableGameplayInput();
-                    HandleRecovery();
-                    player.playerAnimations.PlayTargetAnimation("Revive", true, true, 0, 1, 0);
+                    StartCoroutine(ActiveRevival());
 
                 }
             }
 
+        }
+
+        private IEnumerator ActiveRevival()
+        {
+            player.effectManager.ReviveEffect();
+
+            yield return new WaitForSeconds(8);
+
+            ReviveUsed = true;
+            ReviveAmount = 0;
+            UIManager.instance.hudManager.UpdateHealingText();
+
+            currentHealth = maxHealth;
+
+            ReviveCharge = maxHealingCharge;
+
+            Debug.Log("REVIVED!");
+            player.isDead = false;
+            player.isInteracting = false;
+
+            player.inputs.EnableGameplayInput();
+            HandleRecovery();
+            player.playerAnimations.PlayTargetAnimation("Revive", true, true, 0, 1, 0);
         }
 
         //stops the regen & restarts the coroutine.
@@ -411,6 +426,9 @@ namespace KS {
                 //heal
                 float healingAmount = ((maxHealth / 100) * regenHealingPercentage);
                 currentHealth += healingAmount;
+                //active regen heal vfx
+                player.effectManager.regenHealEffect();
+
                 if (tempTime < 0)
                 { 
                     regenTimeActive = false;

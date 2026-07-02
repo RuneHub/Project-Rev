@@ -12,22 +12,28 @@ namespace KS {
         private PlayerCombatAnimationEvents animEvents;
         private AnimatorOverrideController animatorOV;
 
-        [Header("Unique Animations")]
+        [Space(10), Header("Unique Animations")]
         public AnimationClip UForward;
         public AnimationClip UBackwards;
         public AnimationClip ULeft;
         public AnimationClip URight;
 
-        [Header("Animation Parameters")]
+        [Space(10), Header("Animation Parameters")]
         public int animationLayer;
         public bool isInteracting, useRootmotion;
 
-        [Header("skill data")]
+        [Space(10), Header("skill data")]
         public AttackStandardSO uniqueData;
         public AttackStandardSO uniqueFinisherData;
         private bool UFinisher;
 
-        [Header("Sound Effects")]
+        [Space(10), Header("VFX")]
+        public GameObject UniqueFinisherVFX;
+        public float UFDestroyTimer;
+        public GameObject UniqueMovementVFX;
+        public float UMDestroyTimer;
+
+        [Space(10), Header("Sound Effects")]
         public List<APSoundData> skillSFXList = new List<APSoundData>();
 
         //set up
@@ -40,6 +46,7 @@ namespace KS {
 
             animEvents.OnShootEventTriggered += Shoot;
             animEvents.OnSkillDeactiveTriggered += CleanUp;
+            animEvents.OnFXTriggered += ActivateFX;
 
             for (int i = 0; i < skillSFXList.Count; i++)
             {
@@ -81,6 +88,10 @@ namespace KS {
             player.animator.runtimeAnimatorController = animatorOV;
 
             player.animationEvents.HandleInvisible();
+            player.animationEvents.SpinFXOff("Both");
+
+            GameObject UMFX = Instantiate(UniqueMovementVFX, player.transform);
+            Destroy(UMFX, UMDestroyTimer);
 
             if (isFinisher)
             {
@@ -128,7 +139,15 @@ namespace KS {
 
             animEvents.OnShootEventTriggered -= Shoot;
             animEvents.OnSkillDeactiveTriggered -= CleanUp;
+            animEvents.OnFXTriggered -= ActivateFX;
         }
+
+        private void ActivateFX(System.Object sender, EventArgs e)
+        {
+            GameObject vfx = Instantiate(UniqueFinisherVFX, player.transform);
+            Destroy(vfx, UFDestroyTimer);
+        }
+
 
     }
 }

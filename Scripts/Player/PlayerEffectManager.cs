@@ -13,8 +13,7 @@ namespace KS
 
         [Header("Combat")]
         public BaseEffectSO perfectTiming;
-        public BaseEffectSO UniqueChargeLvlUp;
-        public GameObject UniqueChargeConstant;
+        public BaseEffectSO perfectTimingOnTop;
 
         [Header("Sprinting")]
         public bool SprintingEffect = false;
@@ -22,6 +21,12 @@ namespace KS
 
         [Header("Jumping")]
         public BaseEffectSO jumpVFX;
+
+        [Header("Healing")]
+        public BaseEffectSO reviveVFX;
+        public BaseEffectSO smallHealVFX;
+        public BaseEffectSO bigHealVFX;
+        public BaseEffectSO regenVFX;
 
         #region defaults
         protected override void Awake()
@@ -57,48 +62,7 @@ namespace KS
         public void PerfectTimingEffect()
         {
             DeployEffect(perfectTiming);
-        }
-
-        //set & deploy effect used for unique skill
-        public void UniqueSkillEffect(PlayerCombatManager.ChargeLevel lvl, float shakeAmount, float shakeDuration)
-        {
-            //switch case for changes per charge lvl
-            switch (lvl)
-            {
-                case PlayerCombatManager.ChargeLevel.lvl1:
-                    player.cameraHandler.EffectShake(shakeDuration, shakeAmount);
-                    break;
-                case PlayerCombatManager.ChargeLevel.lvl2:
-                    player.cameraHandler.EffectShake(shakeDuration, shakeAmount);
-                    DeployEffect(UniqueChargeLvlUp);
-                    break;
-                case PlayerCombatManager.ChargeLevel.lvl3:
-                    player.cameraHandler.EffectShake(shakeDuration, shakeAmount);
-                    DeployEffect(UniqueChargeLvlUp);
-                    break;
-                case PlayerCombatManager.ChargeLevel.lvl4:
-                    player.cameraHandler.EffectShake(shakeDuration, shakeAmount);
-                    DeployEffect(UniqueChargeLvlUp);
-                    break;
-            }
-            
-            player.combatManager.ExecutedEffect = true;
-        }
-
-        public void UniqueSKillEffect(bool Active)
-        {
-            if (UniqueChargeConstant != null)
-            {
-                if (Active)
-                {
-                    UniqueChargeConstant.SetActive(true);
-                }
-                else 
-                {
-                    UniqueChargeConstant.SetActive(false);
-                }
-            }
-
+            DeployEffect(perfectTimingOnTop);
         }
         #endregion
 
@@ -116,6 +80,28 @@ namespace KS
         public void JumpEffect()
         {
             DeployEffect(jumpVFX);
+        }
+        #endregion
+
+        #region Healing
+        public void ReviveEffect()
+        {
+            DeployEffect(reviveVFX);
+        }
+
+        public void smallHealEffect()
+        {
+            DeployEffect(smallHealVFX);
+        }
+
+        public void BigHealEffect()
+        {
+            DeployEffect(bigHealVFX);
+        }
+
+        public void regenHealEffect()
+        {
+            DeployEffect(regenVFX);
         }
         #endregion
 

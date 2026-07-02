@@ -13,6 +13,10 @@ namespace KS
         [SerializeField] GameObject popupMessageGameObject;
         [SerializeField] TextMeshProUGUI popUpMessageText;
 
+        [Header("Stage Intro")]
+        [SerializeField] GameObject stageIntroObject;
+        [SerializeField] CanvasGroup stageIntroCanvas;
+
         [Header("Quest popup")]
         [SerializeField] GameObject popupObject;
         [SerializeField] TextMeshProUGUI popupBgText;
@@ -75,6 +79,11 @@ namespace KS
 
 
             eventSystem.SetSelectedGameObject(SelectOnOpen);
+        }
+
+        public void FadeOutStageIntro()
+        {
+            StartCoroutine(WaitThenFadeOutPopupOverTimer(stageIntroCanvas, 2, 1));
         }
 
         private IEnumerator StretchPopUpTextOverTime(TextMeshProUGUI text, float duration, float stretchAmount)

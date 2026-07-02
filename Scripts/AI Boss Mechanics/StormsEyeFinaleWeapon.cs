@@ -17,6 +17,8 @@ namespace KS
         public GameObject finaleIndicator;
         public float indicatorDestroyTimer = 2f;
 
+        public GameObject VFXWeapon;
+
         [Header("Clean up")]
         public Material wepMat;
         public float dissolveDelay = 2f;
@@ -65,12 +67,16 @@ namespace KS
             yield return new WaitForSeconds(delay);
             follower.enabled = false;
             setEndState();
-            StartCoroutine(CleanUp(dissolveDelay));
-
+            
             //explosion obj
             GameObject explosion = Instantiate(finaleExplosion, targetPostion, Quaternion.identity);
             explosion.GetComponentInChildren<BaseDamageCollider>().Init(boss.combatAnimationEvents.DestroyHitbox, boss, boss.statManager.HPTriggerAttack);
             Destroy(explosion, explosionDestroyTimer);
+
+            VFXWeapon.SetActive(true);
+
+
+            StartCoroutine(CleanUp(dissolveDelay));
         }
 
         IEnumerator CleanUp(float delay)
@@ -87,6 +93,7 @@ namespace KS
                 te += Time.deltaTime;
             }
             Destroy(gameObject);
+            VFXWeapon.SetActive(false);
         }
 
         private void setEndState()

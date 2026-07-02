@@ -12,6 +12,7 @@ namespace KS
 
         [SerializeField] UIManager UIManager;
         [SerializeField] PlayerManager player;
+        [SerializeField] AIBossManager boss;
         [SerializeField] CinemachineVirtualCamera introVCam;
         [SerializeField] CutsceneManager CutsceneManager;
         [SerializeField] CanvasFading canvasFading;
@@ -37,6 +38,7 @@ namespace KS
             Debug.Log("Play Game");
             player.animator.SetBool("OnGameStart", false);
             CloseMenu();
+            boss.MoveBoss();
             UIManager.instance.menuWindowIsOpen = false;
             introVCam.Priority = 9;
             CutsceneManager.PlayCutscene(introCutscene);

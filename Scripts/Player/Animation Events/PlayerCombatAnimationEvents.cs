@@ -158,7 +158,6 @@ namespace KS
 
         public void DeactivateSkill()
         {
-            Debug.Log("DeactiveSkill");
             OnSkillDeactiveTriggered?.Invoke(this, EventArgs.Empty);
         }
 

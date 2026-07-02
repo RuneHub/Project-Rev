@@ -7,10 +7,10 @@ namespace KS
     public class SkylightManager : MonoBehaviour
     {
         [SerializeField] private Material skyboxMat;
-        [SerializeField] private Light dirLightMain;
-        [SerializeField] private Light dirLightSub;
+        [SerializeField] private Light lightMain;
+        [SerializeField] private Light lightContrast;
 
-        [SerializeField] private Color ph1MainLightColor;
+        [Space(10), SerializeField] private Color ph1MainLightColor;
         [SerializeField] private Color ph2MainLightColor;
         [SerializeField] private Color ph1SubLightColor;
         [SerializeField] private Color ph2SubLightColor;
@@ -23,8 +23,8 @@ namespace KS
 
         private void Awake()
         {
-            ph1MainLightColor = dirLightMain.color;
-            ph1SubLightColor = dirLightSub.color;
+            //ph1MainLightColor = lightMain.color;
+            //ph1SubLightColor = lightContrast.color;
 
             //ChangeSkyBack();
         }
@@ -49,13 +49,15 @@ namespace KS
 
                 skyboxMat.SetFloat("_Blend", i / phaseChangeDuration);
 
-                //dirLightMain.color = Color.Lerp(dirLightMain.color, ph2MainLightColor, phaseChangeDuration * Time.deltaTime);
-                //dirLightSub.color = Color.Lerp(dirLightSub.color, ph2SubLightColor, phaseChangeDuration * Time.deltaTime);
+                lightMain.color = Color.Lerp(lightMain.color, ph2MainLightColor, phaseChangeDuration * Time.deltaTime);
+                lightContrast.color = Color.Lerp(lightContrast.color, ph2SubLightColor, phaseChangeDuration * Time.deltaTime);
 
-                //for (int x = 0; x < materialList.Count; x++) 
+                //for (int x = 0; x < materialList.Count; x++)
                 //{
                 //    materialList[x].material.color = Color.Lerp(materialList[x].material.color, fade, phaseChangeDuration * Time.unscaledDeltaTime);
                 //}
+
+                DynamicGI.UpdateEnvironment();
 
                 yield return null;
             }
@@ -68,13 +70,15 @@ namespace KS
 
                 skyboxMat.SetFloat("_Blend", i / phaseChangeDuration);
 
-                //dirLightMain.color = Color.Lerp(dirLightMain.color, ph1MainLightColor, phaseChangeDuration * Time.deltaTime);
-                //dirLightSub.color = Color.Lerp(dirLightSub.color, ph1SubLightColor, phaseChangeDuration * Time.deltaTime);
+                lightMain.color = Color.Lerp(lightMain.color, ph1MainLightColor, phaseChangeDuration * Time.deltaTime);
+                lightContrast.color = Color.Lerp(lightContrast.color, ph1SubLightColor, phaseChangeDuration * Time.deltaTime);
 
                 //for (int x = 0; x < materialList.Count; x++)
                 //{
                 //    materialList[x].material.color = Color.Lerp(materialList[x].material.color, cloudColor, phaseChangeDuration * Time.unscaledDeltaTime);
                 //}
+
+                DynamicGI.UpdateEnvironment();
 
                 yield return null;
             }

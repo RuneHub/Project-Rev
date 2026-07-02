@@ -73,7 +73,7 @@ namespace KS
         //animated the button to the target position via Tween.
         private void AnimateButton(Vector2 target)
         {
-            rectTransform.DOAnchorPos(target, animateDuration, false).SetEase(Ease.InOutSine).SetUpdate(true);
+            rectTransform.DOAnchorPos(target, animateDuration, false).SetEase(Ease.OutSine).SetUpdate(true);
         }
     }
 

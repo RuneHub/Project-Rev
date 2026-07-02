@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 namespace KS
 {
@@ -29,6 +31,15 @@ namespace KS
         [TextArea(2, 3), SerializeField] private string message = "";
         [SerializeField] private bool dynamic = true;
 
+        [Header("animated prompt")]
+        [SerializeField] private RectTransform affectedTransform;
+        [SerializeField] private Vector3 originalScale;
+        [SerializeField] private Vector3 targetScale;
+        [SerializeField] private float scaleFactor = .7f;
+        [SerializeField] private float animateDuration = .2f;
+        [SerializeField] private bool useAnimPrompt = false;
+
+
         private void OnValidate()
         {
             if (Application.isPlaying)
@@ -48,6 +59,13 @@ namespace KS
         {
             PlayerInputManager.ActiveDeviceChanged += SetPromptText;
             UIOptionsGamepadUI.GamepadUIChanged += SetPromptText;
+
+            if (useAnimPrompt)
+            {
+                inputReference.action.Enable();
+                inputReference.action.performed += i => AnimatePrompt(true);
+                inputReference.action.canceled += i => AnimatePrompt(false);
+            }
         }
 
         private void Awake()
@@ -59,6 +77,7 @@ namespace KS
         {
             PlayerInputManager.ActiveDeviceChanged -= SetPromptText;
             UIOptionsGamepadUI.GamepadUIChanged -= SetPromptText;
+            inputReference.action.Disable();
         }
 
         private void Start()
@@ -69,6 +88,15 @@ namespace KS
             {
                 GetBindingInfo();
                 SetPromptText();
+            }
+
+            if (useAnimPrompt)
+            {
+                if (affectedTransform == null)
+                    affectedTransform = GetComponent<RectTransform>();
+
+                originalScale = affectedTransform.transform.localScale;
+                targetScale = originalScale * scaleFactor;
             }
 
         }
@@ -135,6 +163,20 @@ namespace KS
                 );
 
         }
+
+        #region UI prompt animtion
+        private void AnimatePrompt(bool status)
+        {
+            if (status)
+            {
+                affectedTransform.DOScale(targetScale, animateDuration).SetEase(Ease.OutSine);
+            }
+            else
+            {
+                affectedTransform.DOScale(originalScale, animateDuration).SetEase(Ease.OutSine);
+            }
+        }
+        #endregion
 
     }
 }

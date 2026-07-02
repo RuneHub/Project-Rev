@@ -103,13 +103,20 @@ namespace KS
 
         private void OnReturnedToPool(APSoundEmitter soundEmitter)
         {
+            if (soundEmitter.Node != null)
+            {
+                frequentSoundEmitters.Remove(soundEmitter.Node);
+                soundEmitter.Node = null;
+            }
+
             soundEmitter.gameObject.SetActive(false);
             activeSoundEmitters.Remove(soundEmitter);
         }
 
         private void OnDestroyPoolObject(APSoundEmitter soundEmitter)
         {
-            Destroy(soundEmitter.gameObject);
+            if(soundEmitter != null)
+                Destroy(soundEmitter.gameObject);
         }
 
         #endregion

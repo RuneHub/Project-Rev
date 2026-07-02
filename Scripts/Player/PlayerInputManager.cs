@@ -109,6 +109,8 @@ namespace KS
         public bool cameraReset = false;
         public bool startBattle = false;
         public bool maxOutGauge = false;
+        public StormsEyeFinale SEFinale;
+        public bool finaleStart = false;
 
         //Rebinding Events
         public static event Action rebindComplete;
@@ -190,6 +192,7 @@ namespace KS
                 controls.Testing.CameraReset.performed += i => cameraReset = true;
                 controls.Testing.StartBattle.performed += i => startBattle = true;
                 controls.Testing.MaxOutGauge.performed += i => maxOutGauge = true;
+                controls.Testing.PlayStormsEyeFinale.performed += i => finaleStart = true;
 
             }
             else
@@ -221,6 +224,7 @@ namespace KS
             HandleTestCameraResetInput();
             HandleTestBattleStart();
             HandleTestMaxoutGauge();
+            HandleStormEyeFinale();
             // *******   Testing *****
 
             HandleSkillModifierInput();
@@ -477,8 +481,12 @@ namespace KS
                 }
                 else
                 {
-                    if (player.isInteracting)
-                        return;
+                    if (!player.dodgeCancellable)
+                    {
+                        if (player.isInteracting)
+                            return;
+                    }
+                    
                     if (player.UniqueFinisher)
                         return;
 
@@ -806,7 +814,7 @@ namespace KS
 
                 CSManager.TurnOnBossBehaviour();
 
-                //player.combatAnimationEvents.InvulnON();
+                player.combatAnimationEvents.InvulnON();
             }
 
             
@@ -823,6 +831,18 @@ namespace KS
                 {
                     player.uniqueMechManager.IncreaseLoadedGauge();
                 }
+            }
+        }
+
+        //start Storms Eye Finale
+        private void HandleStormEyeFinale()
+        {
+            if (finaleStart)
+            {
+                finaleStart = false;
+
+
+                SEFinale.PlayFinale();
             }
         }
 
