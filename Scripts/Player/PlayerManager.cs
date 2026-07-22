@@ -21,6 +21,7 @@ namespace KS {
         public PlayerEffectManager effectManager;
         public PlayerInteractionManager interactionManager;
         public PlayerUniqueMechanicManager uniqueMechManager;
+        public PlayerUltimateAttackManager UltManager;
         public PlayerUniqueUI uniqueUI;
         public PlayerUIHUDManager hudManager;
 
@@ -83,6 +84,7 @@ namespace KS {
 
             interactionManager = GetComponent<PlayerInteractionManager>();
             uniqueMechManager = GetComponent<PlayerUniqueMechanicManager>();
+            UltManager = GetComponent<PlayerUltimateAttackManager>();
 
             uniqueUI = FindObjectOfType<PlayerUniqueUI>();
             hudManager = FindObjectOfType<PlayerUIHUDManager>();

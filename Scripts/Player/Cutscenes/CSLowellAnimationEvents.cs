@@ -21,6 +21,13 @@ namespace KS
         [SerializeField] private SkinnedMeshRenderer[] SMR;
         [SerializeField] private MeshRenderer[] MR;
 
+        [Space(10)]
+        [SerializeField] private GameObject UltimateShot;
+        [SerializeField] private Transform UltShotOutputR;
+        [SerializeField] private Transform UltShotOutputL;
+        [SerializeField] private float UltShotDetroyTimer;
+        [SerializeField] private GameObject CCUltVFXParent;
+
         #region Visuals
         public void SwapWeaponToHand(string _side)
         {
@@ -175,6 +182,47 @@ namespace KS
                 }
             }
         }
+        #endregion
+
+        #region VFX
+
+        public void UltShot(string side)
+        {
+            if (UltimateShot != null)
+            {
+                if (CCUltVFXParent == null)
+                {
+                    CCUltVFXParent = new GameObject();
+                    CCUltVFXParent.name = "CCVFXParent";
+                }
+
+                GameObject fx = Instantiate(UltimateShot);
+
+                if (side == "R")
+                {
+                    fx.transform.position = UltShotOutputR.transform.position;
+                    fx.transform.rotation = UltShotOutputR.transform.rotation;
+                }
+                else if (side == "L")
+                {
+                    fx.transform.position = UltShotOutputL.transform.position;
+                    fx.transform.rotation = UltShotOutputL.transform.rotation;
+                }
+
+                fx.transform.parent = CCUltVFXParent.transform;
+                
+                Destroy(fx, UltShotDetroyTimer);
+            }
+        }
+
+        public void DestroyUltVFXParent()
+        {
+            if (CCUltVFXParent != null)
+            {
+                Destroy(CCUltVFXParent.gameObject);
+            }
+        }
+
         #endregion
 
     }

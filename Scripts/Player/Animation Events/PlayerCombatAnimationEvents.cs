@@ -268,6 +268,13 @@ namespace KS
 
         #endregion
 
+        #region Ultimate Attack
+        public void ShootUltimate()
+        {
+            player.UltManager.ShootUltHitbox();
+        }
+        #endregion
+
         #region Release VFX
 
         public void SetReleaseVFX(GameObject VFX, float timer)

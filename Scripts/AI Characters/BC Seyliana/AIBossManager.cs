@@ -169,6 +169,11 @@ namespace KS
             behaviourRunner.enabled = true;
         }
 
+        public void TurnOffBehaviour()
+        {
+            behaviourRunner.enabled = false;
+        }
+
         public void MoveBoss()
         {
             transform.position = targetLocation.transform.position;   

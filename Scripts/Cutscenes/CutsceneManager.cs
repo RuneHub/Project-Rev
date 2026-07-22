@@ -35,6 +35,7 @@ namespace KS
         private void Start()
         {
             pd.Stop();
+
         }
 
         public void PlayCutscene(PlayableAsset PA)
@@ -82,6 +83,16 @@ namespace KS
         {
             bossManager.behaviourRunner.enabled = true;
             bossManager.bossLocomotion.enabled = true;
+        }
+
+        public void TurnBossInvisible()
+        {
+            bossManager.animationEvents.CharInvisible();
+        }
+
+        public void TurnBossVisible()
+        {
+            bossManager.animationEvents.CharVisible();
         }
         #endregion
 
@@ -131,7 +142,7 @@ namespace KS
         public void SetPropCharacterOFF()
         {
             csLowell.SetActive(false);
-            csSeyliana.SetActive(false);
+            csClone.SetActive(false);
         }
 
         //boss
@@ -181,6 +192,20 @@ namespace KS
         {
             TriggerManager.StartHpTrigger();
         }
+
+        public void StartUltimateAttackRecovery()
+        {
+            playerManager.UltManager.HandleUltimateAttackRecovery();
+            bossManager.statManager.RecoverUltimateHit();
+            csClone.GetComponent<CSLowellAnimationEvents>().DestroyUltVFXParent();
+        }
+
+        public void DoUltimateAttackDamage()
+        {
+            Debug.Log("Do Ultimate Attack Damage");
+        }
+
         #endregion
+
     }
 }

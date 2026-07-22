@@ -56,6 +56,10 @@ namespace KS
         [SerializeField] GridLayoutGroup iconContainer;
         public StatusEffectUI_Icon icon;
 
+        [Header("Player Ultimate Bar")]
+        [SerializeField] private Slider UltimateBarSlider;
+        [SerializeField] private TextMeshProUGUI UltimateBarText;
+
         [Header("Animating HUD")]
         public bool isAnimated = false;
         public bool abilitiesOpen = false;
@@ -91,6 +95,8 @@ namespace KS
             UpdateHealingItems();
 
             UpdateStatusEffects();
+
+            CheckUltimate();
 
             UpdateHUDAbilities();
 
@@ -205,6 +211,16 @@ namespace KS
             portraitUIEffectTween.Stop();
         }
 
+        //plays the UI VFX that is on the healthbar.
+        //get called with the "OnChanged" events on the slider 
+        public void PlayHealthEditVFX()
+        {
+            if (healthParticle != null)
+            {
+                healthParticle.Play();
+            }
+        }
+
         #endregion
 
         #region boss vitality
@@ -268,16 +284,6 @@ namespace KS
 
             //set to UI text
             bossHealthText.text = bossHealthPercentage.ToString() + "%";
-        }
-
-        //plays the UI VFX that is on the healthbar.
-        //get called with the "OnChanged" events on the slider 
-        public void PlayHealthEditVFX()
-        {
-            if (healthParticle != null)
-            {
-                healthParticle.Play();
-            }
         }
 
         #endregion
@@ -629,6 +635,27 @@ namespace KS
             {
                 statusEffects[i].UpdateIcon();
             }
+        }
+
+        #endregion
+
+        #region Player Ultimate
+
+        public void SetupPlayerUltimateBar()
+        {
+            UltimateBarSlider.maxValue = UIManager.instance.player.UltManager.MaxUltimateBar;
+            UltimateBarSlider.value = UIManager.instance.player.UltManager.currentUltimateBar;
+        }
+
+        private void CheckUltimate()
+        {
+            UltimateBarSlider.value = UIManager.instance.player.UltManager.currentUltimateBar;
+        }
+
+        public void EditUltimateBarText()
+        {
+            float percentage = Mathf.Floor(UIManager.instance.player.UltManager.UltimateBarPercentage);
+            UltimateBarText.text = percentage.ToString() + "%";
         }
 
         #endregion

@@ -90,6 +90,7 @@ namespace KS
 
             player.playerAnimations.PlayTargetAnimation("Dodge", isInteracting, false, layerNum: animationLayer);
 
+            player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.JustDodge);
         }
 
     }

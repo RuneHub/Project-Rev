@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace KS { 
@@ -44,6 +45,21 @@ namespace KS {
         private int celestialSize = Shader.PropertyToID("_MaskSize");
         #endregion
 
+        #region Dark Scene
+        [Header("Darken Scene")]
+        [SerializeField] private Volume GlobalVolume;
+        [SerializeField] private Volume UltVolume;
+        [SerializeField] private float DarkenTime = 1.5f;
+        [SerializeField] private AnimationCurve SceneDarkenCurve;
+        [SerializeField] private AnimationCurve SceneDarkenReverseCurve;
+        [SerializeField] private Vector2 baseTargetDarkenAmount;
+
+        private ColorAdjustments globalColorAdjustments;
+
+        
+
+        #endregion
+
         private void Awake()
         {
             instance = this;
@@ -55,6 +71,9 @@ namespace KS {
             fullscreenDamage.SetActive(false);
             fullscreenSpeedlines.SetActive(false);
             fullscreenCelestial.SetActive(false);
+
+            GlobalVolume.profile.TryGet(out globalColorAdjustments);
+
         }
 
         #region Screen Shatter
@@ -153,7 +172,7 @@ namespace KS {
         #endregion
 
         #region Celestial Effect
-        [ContextMenu("Celestial Effect")]
+        //[ContextMenu("Celestial Effect")]
         public void FullscreenCelestial(float sizeAmount, float moveTime)
         {
             Debug.Log("FullscreenCelestial");
@@ -192,6 +211,53 @@ namespace KS {
             }
 
             yield return new WaitForSeconds(celestialFadeTime);
+        }
+
+        #endregion
+
+        #region Darken Scene
+
+        [ContextMenu("DarkenScene")]
+        public void DarkenScene()
+        {
+            StartCoroutine(UseDarkeningScene(baseTargetDarkenAmount, true));
+        }
+
+        [ContextMenu("Revert Darken Scene")]
+        public void RevertDarkenScene()
+        {
+            Vector2 reverse = new Vector2(baseTargetDarkenAmount.y, baseTargetDarkenAmount.x);
+            StartCoroutine(UseDarkeningScene(reverse, false));
+        }
+
+        IEnumerator UseDarkeningScene(Vector2 baseToTarget, bool toDark)
+        {
+            float timestamp = Time.time;
+            while (Time.time < timestamp + DarkenTime)
+            {
+                float t = (Time.time - timestamp) / DarkenTime;
+                if (toDark)
+                {
+                    t = SceneDarkenCurve.Evaluate(t);
+                }
+                else
+                {
+                    t = SceneDarkenReverseCurve.Evaluate(t);
+                }
+                
+                globalColorAdjustments.postExposure.value = Mathf.LerpUnclamped(baseToTarget.x, baseToTarget.y, t);
+                yield return null;
+            }
+
+            if (toDark)
+            {
+                UltVolume.gameObject.SetActive(true);
+            }
+            else
+            {
+                UltVolume.gameObject.SetActive(false);
+            }
+
         }
 
         #endregion

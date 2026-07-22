@@ -127,6 +127,18 @@ namespace KS
 
             _hitbox.Init(DestroyHitbox, player, baseDamage);
             //Debug.LogError("Check");
+
+            CheckCollision(_hitbox);
+        }
+
+        private void CheckCollision(BaseDamageCollider collider)
+        {
+            bool check = collider.CheckCollision();
+
+            if (check)
+            {
+                player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.SkillAttack);
+            }
         }
 
         public void CleanSkill(System.Object sender, EventArgs e)

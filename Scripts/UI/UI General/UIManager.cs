@@ -62,6 +62,7 @@ namespace KS
             hudManager.SetupBossVitality();
             hudManager.SetSkillSlotIcon();
             hudManager.SetUpHealingItems();
+            hudManager.SetupPlayerUltimateBar();
         }
 
         public void CloseAllMenuWindows()

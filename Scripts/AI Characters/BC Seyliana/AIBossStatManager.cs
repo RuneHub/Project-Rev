@@ -22,6 +22,7 @@ namespace KS
         [Space]
         [SerializeField] private CutsceneManager cutsceneManager;
         [SerializeField] private PlayableAsset QuestClearCS;
+        [SerializeField] private float recoveryTime = 2f;
 
         protected override void Awake()
         {
@@ -106,6 +107,50 @@ namespace KS
 
             boss.animator.SetBool("isDamaged", false);
         }
+
+        public override void TakeUltimateHit()
+        {
+            base.TakeUltimateHit();
+
+            Debug.Log("Boss Took Ultimate Hit");
+
+            //turn off behaviour
+            boss.TurnOffBehaviour();
+
+            //rotate to face player
+            Vector3 lookTarget = new Vector3(boss.GetTarget().transform.position.x,
+                                           boss.transform.position.y,
+                                           boss.GetTarget().transform.position.z);
+            boss.transform.LookAt(lookTarget);
+
+            //turn off locomotion
+            boss.bossLocomotion.enabled = false;
+            
+            // do break damage animation
+            boss.animator.SetBool("Staggered", true);
+            boss.bossAnimations.PlayTargetAnimation("StaggerBreak", true, layerNum: 3);
+        
+        }
+
+        public override void RecoverUltimateHit()
+        {
+            base.RecoverUltimateHit();
+
+            StartCoroutine(RecoveryTimer());
+
+            Debug.Log("Boss Ultimate Hit Recover");
+
+            boss.bossLocomotion.enabled = true;
+            boss.bossAnimations.PlayTargetAnimation("Stagger Recovery", true, layerNum: 3);
+            boss.TurnOnBehaviour();
+
+        }
+
+        private IEnumerator RecoveryTimer()
+        {
+            yield return new WaitForSeconds(recoveryTime);
+        }
+
         #endregion
 
         #region Armor

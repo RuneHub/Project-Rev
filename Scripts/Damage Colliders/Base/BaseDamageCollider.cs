@@ -93,5 +93,10 @@ namespace KS
             }
         }
 
+        public bool CheckCollision()
+        {
+            return collided;
+        }
+
     }
 }

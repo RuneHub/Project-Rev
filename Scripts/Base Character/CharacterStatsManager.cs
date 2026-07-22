@@ -127,6 +127,23 @@ namespace KS {
 
         }
 
+        public virtual void TakeUltimateHit()
+        {
+            if (character.isInvulnerable)
+                return;
+
+            if (character.isDead)
+                return;
+
+
+        }
+
+        public virtual void RecoverUltimateHit()
+        {
+            if (character.isDead)
+                return;
+        }
+
         #region Status Effect
         //add status effect
         public virtual void AddStatusEffect(StatusEffectsSO adding)

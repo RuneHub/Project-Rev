@@ -32,6 +32,7 @@ namespace KS
             {
                 if (moveBoss)
                 {
+                    boss.animationEvents.CharVisible();
                     boss.transform.position = targetLocationBoss.position;
                 }
             }
@@ -39,12 +40,14 @@ namespace KS
             {
                 if (movePlayer)
                 {
+                    player.animationEvents.HandleVisibile();
                     player.transform.position = targetLocationPlayer.position;
                     player.transform.rotation = targetLocationPlayer.rotation;
                     gameplayCam.StopFollowingTarget = StopFollowingTarget;
                     gameplayCam.transform.rotation = targetLocationPlayer.rotation;
                 }
             }
+
         }
 
     }

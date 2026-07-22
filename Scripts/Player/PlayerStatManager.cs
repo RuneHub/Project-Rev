@@ -156,6 +156,8 @@ namespace KS {
 
             player.inputs.GamepadRumble(gamepadRumbleLowFreq, gamepadRumbleHighFreq, gamepadRumbleDuration);
 
+            player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.Damage);
+
             Debug.Log("hit");
             Debug.Log("Player damaged for: " + damage);
             //Debug.Log("angle: " + angledContact)

@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Windows;
+using UnityEngine.Playables;
 
 namespace KS
 {
@@ -84,6 +85,7 @@ namespace KS
         [Header("Unique Aerial Attack")]
         public AttackStandardSO uniqueAerialAttack;
         public PlayerSkillsSO UASkill;
+        
 
         private void Awake()
         {
@@ -451,6 +453,15 @@ namespace KS
                         if (perfectCombo)
                         {
                             player.uniqueMechManager.IncreaseLoadedGauge();
+
+                            //increase ultimate attack bar
+                            player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.PerfectTimedAttack);
+
+                        }
+                        else
+                        {
+                            //increase ultimate attack bar
+                            player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.Attack);
                         }
 
                         //temp
@@ -461,6 +472,7 @@ namespace KS
                         //temp end
                     }
                 }
+
 
                 //temp, the line when hitting something
                 Debug.DrawLine(outputTransform.position, hit.point, Color.blue, 3);
@@ -836,7 +848,28 @@ namespace KS
             player.playerAnimations.PlayTargetAnimation("U_Aerial_Start", true, layerNum: 1);
 
         }
-        #endregion  
+        #endregion
+
+        #region Ultimate Attack
+
+        public void HandleUltimateAttack()
+        {
+            if (player.isInteracting)
+                return;
+
+            if (!player.isGrounded)
+                return;
+
+            player.UltManager.PerformUltimate();           
+        }
+
+        public void UltimateAttackHitConfirmed()
+        {
+            player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.UltimateStartUpUse);
+            player.UltManager.ApprovedUlt();
+        }
+
+        #endregion
 
         #region Celestial Clone
         public void CelestialCloneAddition()

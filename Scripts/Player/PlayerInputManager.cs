@@ -47,6 +47,8 @@ namespace KS
         public bool SkillWestInput;
         public bool SkillEastInput;
 
+        public bool UltimateInput;
+
         [Header("Healing Inputs")]
         public bool smallHealInput;
         public bool largeHealInput;
@@ -99,6 +101,7 @@ namespace KS
         [SerializeField] bool quedSkillSInput;
         [SerializeField] bool quedSkillWInput;
         [SerializeField] bool quedSkillEInput;
+        [SerializeField] bool quedUltimateInput;
 
         [Header("UI inputs")]
         [SerializeField] bool uiOpenMenu = false;
@@ -159,6 +162,8 @@ namespace KS
                 controls.PlayerAction.Skill2.performed += i => SkillNorthInput = true;
                 controls.PlayerAction.Skill3.performed += i => SkillEastInput = true;
                 controls.PlayerAction.Skill4.performed += i => SkillSouthInput = true;
+
+                controls.PlayerAction.Ultimate.performed += i => UltimateInput = true;
 
                 controls.PlayerAction.HealSmall.performed += i => smallHealInput = true;
                 controls.PlayerAction.HealSmall.canceled += i => smallHealInput = false;
@@ -240,6 +245,8 @@ namespace KS
             HandleBasicAttackInput();
             HandleSkillInput();
             HandleUniqueAbilityInput();
+
+            HandleUltimateAttackInput();
 
             HandleSmallHealInput();
             HandleLargeHealInput();
@@ -581,6 +588,16 @@ namespace KS
             }
         }
 
+        //handles the Ultimate attack input
+        private void HandleUltimateAttackInput()
+        {
+            if (UltimateInput && player.UltManager.UltimateAvailable)
+            {
+                UltimateInput = false;
+                player.combatManager.HandleUltimateAttack();
+            }
+        }
+
         //handles small heal input
         private void HandleSmallHealInput()
         {
@@ -865,6 +882,11 @@ namespace KS
                     //Debug.Log("que unique");
                     QueInput(ref quedUniqueInput, defaultQueTime);
                 }
+
+                if (UltimateInput & player.isInteracting)
+                {
+                    QueInput(ref quedUltimateInput, defaultQueTime);
+                }
             } 
 
             if (SkillNorthInput && player.isInteracting && player.skillCancellable)
@@ -930,6 +952,11 @@ namespace KS
             {
                 //Debug.Log("qued unique!");
                 uniqueAttackInput = true;
+            }
+
+            if (quedUltimateInput && !player.isInteracting)
+            {
+                UltimateInput = true;
             }
 
            
