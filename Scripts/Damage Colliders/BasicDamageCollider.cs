@@ -87,6 +87,7 @@ namespace KS
         private void HitTarget(CharacterManager target, float hitAngle)
         {
             var (damage, isCrit) = StatCalculator.CalculateDamage(_owner, colliderAtkPwr, target);
+            dealtDamage = damage;
             target.charStatManager.TakeDamage(damage, isCrit, _owner.charStatManager.HUDDisplayColor, hitAngle, properties.getProperty(_owner));
         }
 

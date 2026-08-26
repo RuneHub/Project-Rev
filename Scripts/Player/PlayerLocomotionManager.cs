@@ -17,9 +17,10 @@ namespace KS
         [SerializeField] float rotationSpeed = 15;
 
         [Header("Jumping")]
-        //[SerializeField]
         public float jumpHeight = 4;
         [SerializeField] Vector3 jumpDirection;
+        [SerializeField] private float JumpDirectionSpeed = 5;
+        [SerializeField] private float FreeFallMovementSpeed = 2;
 
         [Header("Dodging")]
         [SerializeField] private PlayerDodgeSO playerDodge;
@@ -67,6 +68,7 @@ namespace KS
             HandleGroundMovement();
             HandleRotation();
             HandleJumpMovement();
+            HandleFreeFallMovement();
         }
 
         //handles all ground movement related changes,
@@ -183,7 +185,23 @@ namespace KS
         {
             if (player.isJumping)
             {
-                player.controller.Move(jumpDirection * movementSpeed * Time.deltaTime);
+                player.controller.Move(jumpDirection * JumpDirectionSpeed * Time.deltaTime);
+            }
+        }
+
+        //makes the charatcer able to move slightly whilst falling in the air.
+        //has same principle as the ground movement but does it whilst falling.
+        private void HandleFreeFallMovement()
+        {
+            if (!player.isGrounded)
+            {
+                Vector3 freeFallDirection;
+
+                freeFallDirection = player.cameraHandler.transform.forward * player.inputs.verticalInput;
+                freeFallDirection = freeFallDirection + player.cameraHandler.transform.right * player.inputs.horizontalInput;
+                freeFallDirection.y = 0;
+
+                player.controller.Move(freeFallDirection * FreeFallMovementSpeed * Time.deltaTime);
             }
         }
 
@@ -218,7 +236,7 @@ namespace KS
                 {
                     jumpDirection *= 1f;
                 }
-                else if (player.inputs.moveAmount < 0.5f)
+                else if (player.inputs.moveAmount <= 0.5f)
                 {
                     jumpDirection *= 0.5f;
                 }

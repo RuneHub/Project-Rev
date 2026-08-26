@@ -17,10 +17,10 @@ namespace KS
         public bool DestroyWithTime = true;
         public float DestroyTimer = 15f;
 
-      //  [SerializeField] protected 
         public float colliderAtkPwr;
 
-        [SerializeField] protected bool collided;
+        public bool collided;
+        public float dealtDamage;
         protected Action<BaseDamageCollider> _killAction;
         [SerializeField] protected DamageColliderProperties properties;
         protected CharacterManager _owner;

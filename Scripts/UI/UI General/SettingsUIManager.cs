@@ -10,6 +10,8 @@ namespace KS
         public enum UIGamepadPrompts { xbox, playstation }
         public static UIGamepadPrompts uiPrompt;
 
+        public UIControllerLayoutManager controllerLayoutManager;
+
         public override void OpenMenu()
         {
             UIManager.instance.menuWindowIsOpen = true;

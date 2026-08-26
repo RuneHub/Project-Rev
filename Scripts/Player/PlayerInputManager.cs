@@ -1,11 +1,12 @@
+using System;
+using System.Collections;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
-using System;
-using TMPro;
-using Unity.VisualScripting;
-using System.Collections;
 
 
 namespace KS
@@ -269,7 +270,7 @@ namespace KS
         private void HandleCameraInput()
         {
             if (UIManager.instance.menuWindowIsOpen)
-                return; //might change this later?
+                return;
 
             float camX = invertedXCamera ? -cameraInput.x : cameraInput.x;
             float camY = invertedYCamera ? -cameraInput.y : cameraInput.y;
@@ -298,6 +299,15 @@ namespace KS
             }
 
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
+
+            if (moveAmount <= 0.5f && moveAmount > 0)
+            {
+                moveAmount = 0.5f;
+            }
+            else if (moveAmount > 0.5 && moveAmount < 1)
+            {
+                moveAmount = 1;
+            }
         }
 
         //changes the boolean value based on if the sprint button is held down.
@@ -594,6 +604,8 @@ namespace KS
             if (UltimateInput && player.UltManager.UltimateAvailable)
             {
                 UltimateInput = false;
+                player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.UltimateStartUpUse);
+                player.hudManager.UltimatePromptUsed();
                 player.combatManager.HandleUltimateAttack();
             }
         }
@@ -832,6 +844,8 @@ namespace KS
                 CSManager.TurnOnBossBehaviour();
 
                 player.combatAnimationEvents.InvulnON();
+
+                //player.UltManager.ChangeBarAmount(PlayerUltimateAttackManager.BarSource.FullBar);
             }
 
             
@@ -885,6 +899,7 @@ namespace KS
 
                 if (UltimateInput & player.isInteracting)
                 {
+                    //Debug.Log("que Ultimate");
                     QueInput(ref quedUltimateInput, defaultQueTime);
                 }
             } 
@@ -1011,6 +1026,7 @@ namespace KS
             quedAttackInput = false;
             quedJumpInput = false;
             quedUniqueInput = false;
+            quedUltimateInput = false;
             quedSkillNInput = false;
             quedSkillSInput = false;
             quedSkillWInput = false;
@@ -1271,6 +1287,53 @@ namespace KS
         {
             InputAction action = controls.asset.FindAction(actionName);
             return action.GetBindingDisplayString(bindingIndex);
+        }
+
+        public static InputAction GetInputAction(string targetPath)
+        { 
+
+            InputAction foundAction;
+            int bindingIndex = controls.FindBinding(
+                new InputBinding { path = targetPath },
+                out foundAction
+            );
+
+           
+
+            if (foundAction != null)
+            {
+                //Debug.Log("Foundaction: " + foundAction.name+ " - " + targetPath);
+                InputAction baseAction = controls.asset.FindAction(foundAction.name);
+                if (baseAction != null)
+                {
+
+                    for (int i = 0; i < baseAction.bindings.Count; i++)
+                    {
+                        if (!string.IsNullOrEmpty(PlayerPrefs.GetString(baseAction.actionMap + baseAction.name + i)))
+                        {
+                            //Debug.Log("override Path: " + PlayerPrefs.GetString(baseAction.actionMap + baseAction.name + i));
+                            
+                            UIManager.instance.settingsManager.controllerLayoutManager.SetOverrideLayout(
+                               PlayerPrefs.GetString(baseAction.actionMap + baseAction.name + i),
+                               foundAction);
+
+                            foundAction = null;
+
+                            break;
+                           
+                        }
+                    }
+                }
+            }
+
+            if (bindingIndex != -1)
+            {
+                return foundAction;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private static void SaveBindingOverride(InputAction action)

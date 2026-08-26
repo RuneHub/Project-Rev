@@ -16,6 +16,7 @@ namespace KS
         [SerializeField] private AIBossManager bossManager;
 
         [SerializeField] CanvasGroup[] canvasGroup;
+        [SerializeField] bool HUDActive;
 
         [Header("Player Vitality")]
         [SerializeField] GameObject playerVitality;
@@ -59,6 +60,11 @@ namespace KS
         [Header("Player Ultimate Bar")]
         [SerializeField] private Slider UltimateBarSlider;
         [SerializeField] private TextMeshProUGUI UltimateBarText;
+
+        [Header("Player Ultimate Prompt")]
+        [SerializeField] private GameObject UltimatePrompVFX;
+        [SerializeField] private GameObject UltimatePrompt; 
+        [SerializeField] private GameObject UltimatePrompVFXUsed;
 
         [Header("Animating HUD")]
         public bool isAnimated = false;
@@ -108,6 +114,8 @@ namespace KS
         {
             if (status)
             {
+                HUDActive = true;
+                StopAllCoroutines();
                 foreach (var canvas in canvasGroup)
                 {
                     StartCoroutine(FadeinHUD(canvas, canvas.alpha, 1, 1.5f));
@@ -115,6 +123,8 @@ namespace KS
             }
             else
             {
+                HUDActive = false;
+                StopAllCoroutines();
                 foreach (var canvas in canvasGroup)
                 {
                     canvas.alpha = 0;
@@ -127,7 +137,7 @@ namespace KS
         {
             float elapsed = 0;
 
-            while (elapsed < durartion) 
+            while (elapsed < durartion && HUDActive) 
             {
                 elapsed += Time.deltaTime;
                 group.alpha = Mathf.Lerp(start, end, elapsed / durartion);
@@ -650,6 +660,11 @@ namespace KS
         private void CheckUltimate()
         {
             UltimateBarSlider.value = UIManager.instance.player.UltManager.currentUltimateBar;
+
+            if (UIManager.instance.player.UltManager.UltimateAvailable)
+            {
+                UltimatePromptActivate();
+            }
         }
 
         public void EditUltimateBarText()
@@ -657,6 +672,39 @@ namespace KS
             float percentage = Mathf.Floor(UIManager.instance.player.UltManager.UltimateBarPercentage);
             UltimateBarText.text = percentage.ToString() + "%";
         }
+
+        public void UltimatePromptActivate()
+        {
+            StartCoroutine(ActivateUltimatePrompt());
+        }
+
+        private IEnumerator ActivateUltimatePrompt()
+        {
+            UltimatePrompVFX.SetActive(true);
+
+            yield return new WaitForSeconds(0.2f);
+
+            UltimatePrompt.GetComponent<CanvasGroup>().alpha = 1;
+
+        }
+
+        public void UltimatePromptUsed()
+        {
+            StartCoroutine(ActivateUsedUltimatePrompt());
+        }
+
+        private IEnumerator ActivateUsedUltimatePrompt()
+        {
+            UltimatePrompt.GetComponent<CanvasGroup>().alpha = 0;
+            UltimatePrompVFX.SetActive(false);
+
+            UltimatePrompVFXUsed.SetActive(true);
+
+            yield return new WaitForSeconds(.5f);
+
+            UltimatePrompVFXUsed.SetActive(false);
+        }
+
 
         #endregion
 

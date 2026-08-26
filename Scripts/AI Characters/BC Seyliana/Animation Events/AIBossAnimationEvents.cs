@@ -112,7 +112,12 @@ namespace KS
             {
                 smrVFX[i].SetActive(false);
             }
-            DisableStormAura();
+            
+            if (manager.auraOn)
+            {
+                DisableStormAura();
+            }
+            
         }
 
         //loops through list of visuals to turn them ON.
@@ -127,7 +132,12 @@ namespace KS
             {
                 smrVFX[i].SetActive(true);
             }
-            ActivateStormAura();
+           
+            if (manager.auraOn)
+            {
+                ActivateStormAura();
+            }
+            
         }
 
         #endregion

@@ -126,15 +126,14 @@ namespace KS {
 
             player.playerAnimations.PlayTargetAnimation("Death", true, layerNum: 1);
 
-
-            if (ReviveUsed)
+            if (player.isGrounded && !ReviveUsed)
             {
-                player.inputs.DisableGameplayInput();
-                UIManager.instance.popupManager.SendQuestFailedPopup();
+                UIManager.instance.hudManager.SetReviveMaskOff();
             }
             else
             {
-                UIManager.instance.hudManager.SetReviveMaskOff();
+                player.inputs.DisableGameplayInput();
+                UIManager.instance.popupManager.SendQuestFailedPopup();
             }
             
         }

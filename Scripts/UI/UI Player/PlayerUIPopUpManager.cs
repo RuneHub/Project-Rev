@@ -1,9 +1,11 @@
+using Coffee.UIEffects;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace KS
 {
@@ -14,25 +16,48 @@ namespace KS
         [SerializeField] TextMeshProUGUI popUpMessageText;
 
         [Header("Stage Intro")]
-        [SerializeField] GameObject stageIntroObject;
-        [SerializeField] CanvasGroup stageIntroCanvas;
+        [SerializeField] float IntroAppearTime;
+        [SerializeField] float IntroStayTime;
+        [SerializeField] float IntroDisappearTime;
 
-        [Header("Quest popup")]
-        [SerializeField] GameObject popupObject;
-        [SerializeField] TextMeshProUGUI popupBgText;
-        [SerializeField] TextMeshProUGUI popupText;
-        [SerializeField] CanvasGroup popupCG;
+        [SerializeField] List<GameObject> introObjects = new List<GameObject>();
 
-        [SerializeField] string QuestFailedText;
-        [SerializeField] string QuestClearedText;
+        [Header("Quest Window")]
+        [SerializeField] GameObject questWindow;
+
+        [Header("Failed Window")]
+        [SerializeField] GameObject failedWindow;
+        [SerializeField] GameObject questFailedObject;
+        [SerializeField] float qfoEntranceTime = 0.8f;
+
+        [Header("Cleared Window")]
+        [SerializeField] GameObject clearedWindow;
+
+        [Header("Middle Clear Object")]
+        [SerializeField] float MCOintroTime;
+        [SerializeField] float MCOWaitForEffects;
+        [SerializeField] float MCOShutDownTimer;
+        [SerializeField] GameObject MiddleClearObject;
+        [SerializeField] GameObject MCOBackParticels;
+        [SerializeField] GameObject MCOQuest;
+        [SerializeField] GameObject MCOCleared;
+        [SerializeField] GameObject MCOFrontParticels;
+
+        [Header("Clear Menu")]
+        [SerializeField] GameObject CMBgLeft;
+        [SerializeField] GameObject CMBgRight;
+        [SerializeField] GameObject CMClearObject;
+        [SerializeField] GameObject CMClearObjectQuest;
+        [SerializeField] float CMBgFadeInTime;
+        [SerializeField] float CMClearSlideInTime;
 
         [Header("Result Menu")]
         [SerializeField] GameObject resultOptions;
-        [SerializeField] GameObject RetryOption;
+        [SerializeField] GameObject retryOption;
 
         [Header("Event system")]
         [SerializeField] EventSystem eventSystem;
-        [SerializeField] GameObject SelectOnOpen;
+        [SerializeField] GameObject selectOnOpen;
 
         public void CloseAllPopUpWindows()
         {
@@ -47,110 +72,118 @@ namespace KS
             popupMessageGameObject.SetActive(true);
         }
 
+        [ContextMenu("Intro")]
+        public void SendQuestIntro()
+        {
+            StartCoroutine(ActivateQuestIntro());
+        }
+
+        IEnumerator ActivateQuestIntro()
+        {
+            for (int i = 0; i < introObjects.Count; i++)
+            {
+                introObjects[i].SetActive(true);
+                introObjects[i].GetComponent<UIAutoAnimation>().EntranceAnimation();
+
+                yield return new WaitForSeconds(IntroAppearTime);
+            }
+
+            yield return new WaitForSeconds(IntroStayTime);
+
+            for (int i = introObjects.Count -1; i >= 0; i--)
+            {
+                introObjects[i].GetComponent<UIAutoAnimation>().ExitAnimation();
+
+                yield return new WaitForSeconds(IntroDisappearTime);
+
+                introObjects[i].SetActive(false);
+            }
+        }
+
+        [ContextMenu("Failed")]
         public void SendQuestFailedPopup()
         {
-            //activate Post Processing effects
-
             UIManager.instance.player.inputs.DisableGameplayInput();
 
-            popupBgText.text = QuestFailedText;
-            popupText.text = QuestFailedText;
+            StartCoroutine(QuestFailedEvent());
 
-            popupObject.SetActive(true);
-            popupBgText.characterSpacing = 0;
-            StartCoroutine(StretchPopUpTextOverTime(popupBgText, 8, 20f));
-            StartCoroutine(FadeIn(popupCG, 5));
-
-            eventSystem.SetSelectedGameObject(SelectOnOpen);
+            eventSystem.SetSelectedGameObject(selectOnOpen);
         }
 
+        [ContextMenu("Cleared")]
         public void SendQuestClearedPopup()
         {
-            //activate Post Processing effects
+            UIManager.instance.player.inputs.DisableGameplayInput();
 
-            popupBgText.text = QuestClearedText;
-            popupText.text = QuestClearedText;
-
-            popupObject.SetActive(true);
-            popupBgText.characterSpacing = 0;
-            StartCoroutine(StretchPopUpTextOverTime(popupBgText, 8, 20f));
-            StartCoroutine(FadeIn(popupCG, 5));
-            StartCoroutine(WaitThenFadeOutPopupOverTimer(popupCG, 2, 5));
-
-
-            eventSystem.SetSelectedGameObject(SelectOnOpen);
+            clearedWindow.SetActive(true);
+            MiddleClearObject.SetActive(true);
+            StartCoroutine(QuestClearedEvent());
         }
 
-        public void FadeOutStageIntro()
+        [ContextMenu("Clear Menu")]
+        public void SendQuestClearMenu()
         {
-            StartCoroutine(WaitThenFadeOutPopupOverTimer(stageIntroCanvas, 2, 1));
+            UIManager.instance.player.inputs.DisableGameplayInput();
+
+            clearedWindow.SetActive(true);
+
+            StartCoroutine(QuestClearedMenu());
+
+            eventSystem.SetSelectedGameObject(selectOnOpen);
         }
 
-        private IEnumerator StretchPopUpTextOverTime(TextMeshProUGUI text, float duration, float stretchAmount)
+        private IEnumerator QuestFailedEvent()
         {
-            if (duration > 0)
+            if (failedWindow != null)
             {
-                text.characterSpacing = 0; //resets spacing
-                float timer = 0;
-                yield return null;
-
-                while (timer < duration)
-                {
-                    timer = timer + Time.deltaTime;
-                    text.characterSpacing = Mathf.Lerp(text.characterSpacing, stretchAmount, duration * (Time.deltaTime / 20)); //might remove the divide depending on the look.
-                    yield return null;
-                }
-
-            }
-        }
-
-        private IEnumerator FadeIn(CanvasGroup canvas, float duration)
-        {
-            if (duration > 0)
-            {
-                canvas.alpha = 0;
-                float timer = 0;
-                yield return null;
-
-                while (timer < duration)
-                {
-                    timer = timer + Time.deltaTime;
-                    canvas.alpha = Mathf.Lerp(canvas.alpha, 1, duration * Time.deltaTime);
-                    yield return null;
-                }
-
+                failedWindow.SetActive(true);
+                failedWindow.GetComponent<UIAutoAnimation>().EntranceAnimation();
             }
 
-            canvas.alpha = 1;
-            yield return null;
+            yield return new WaitForSeconds(qfoEntranceTime);
+
+            if(questFailedObject != null)
+            {
+                questFailedObject.SetActive(true);
+                questFailedObject.GetComponent<UIAutoAnimation>().EntranceAnimation();
+                questFailedObject.GetComponent<UIEffectTweener>().PlayForward();
+            }
 
         }
 
-        private IEnumerator WaitThenFadeOutPopupOverTimer(CanvasGroup canvas, float duration, float delay)
+        private IEnumerator QuestClearedEvent()
         {
-            if (duration > 0)
-            {
-                while (delay > 0)
-                {
-                    delay = delay - Time.deltaTime;
-                    yield return null;
-                }
+            MiddleClearObject.GetComponent<UIAutoAnimation>().EntranceAnimation();
+            yield return new WaitForSeconds(MCOintroTime);
 
-                canvas.alpha = 1;
-                float timer = 0;
-                yield return null;
+            MCOBackParticels.SetActive(true);
+            MCOQuest.GetComponent<UIEffectTweener>().Play();
+            MCOFrontParticels.SetActive(true);
 
-                while (timer < duration)
-                {
-                    timer = timer + Time.deltaTime;
-                    canvas.alpha = Mathf.Lerp(canvas.alpha, 0, duration * Time.deltaTime); 
-                    yield return null;
-                }
+            yield return new WaitForSeconds(MCOWaitForEffects);
 
-            }
+            MiddleClearObject.GetComponent<UIAutoAnimation>().ExitAnimation();
 
-            canvas.alpha = 0;
-            yield return null;
+            yield return new WaitForSeconds(MCOShutDownTimer);
+
+            MiddleClearObject.SetActive(false);
+
+        }
+
+        private IEnumerator QuestClearedMenu()
+        {
+            CMBgLeft.SetActive(true);
+            CMBgRight.SetActive(true);
+
+            CMBgRight.GetComponent<UIAutoAnimation>().EntranceAnimation();
+            CMBgLeft.GetComponent<UIAutoAnimation>().EntranceAnimation();
+            yield return new WaitForSeconds(CMBgFadeInTime);
+
+            CMClearObject.SetActive(true);
+            CMClearObject.GetComponent<UIAutoAnimation>().EntranceAnimation();
+            yield return new WaitForSeconds(CMClearSlideInTime);
+
+            CMClearObjectQuest.GetComponent<UIEffectTweener>().Play();
 
         }
 

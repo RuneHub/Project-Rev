@@ -54,6 +54,7 @@ namespace KS
 
         [Header("Other")]
         public Transform targetLocation;
+        public bool auraOn;
 
         protected override void Awake()
         {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -16,7 +17,7 @@ namespace KS
         public float currentUltimateBar = 0;
         [Range(0,100)] public float UltimateBarPercentage;
         public enum BarSource { Attack, PerfectTimedAttack, SkillAttack,
-            JustDodge, UltimateStartUpUse, UltimateUse, Damage };
+            JustDodge, UltimateStartUpUse, UltimateUse, Damage, FullBar };
 
         [Header("The actual attack")]
         [SerializeField] private CutsceneManager csManager;
@@ -27,6 +28,13 @@ namespace KS
         [SerializeField] private float UltWaitTimer = 2f;
         [SerializeField] private UltimateAttackCollider UltimateAttackStarterHitBox;
         [SerializeField] private float UltInitialTime = 2f;
+
+        [Header("Damager Percentages")]
+        public float cloneUltShotDamage;
+        public float LaserUltDamage;
+
+        [Header("Total Ult Damage")]
+        public float totalUltDamage;
 
         private void Awake()
         {
@@ -66,21 +74,25 @@ namespace KS
                 case BarSource.Damage:
                     currentUltimateBar += 1;
                     break;
+                case BarSource.FullBar:
+                    currentUltimateBar = 100;
+                    break;
             }
 
             if (currentUltimateBar > MaxUltimateBar)
                 currentUltimateBar = MaxUltimateBar;
 
-            if (currentUltimateBar == MaxUltimateBar)
-                UltimateAvailable = true;
-            else
-                UltimateAvailable = false;
+            //if (currentUltimateBar == MaxUltimateBar)
+            //    UltimateAvailable = true;
+            //else
+            //    UltimateAvailable = false;
 
             if (currentUltimateBar < 0)
                 currentUltimateBar = 0;
 
             UltimateBarPercentage = (currentUltimateBar / MaxUltimateBar) * 100;
 
+            player.hudManager.EditUltimateBarText();
 
         }
 
@@ -192,5 +204,15 @@ namespace KS
             Destroy(obj.gameObject);
         }
         #endregion
+
+        public void AddUltDamage(float damage)
+        {
+            totalUltDamage += damage;
+        }
+
+        public void DisplayTotalUltDamage()
+        {
+            FloatingUIManager.instance.DamageDone((int)totalUltDamage, player.transform.position, false, player.playerStats.HUDDisplayColor);
+        }
     }
 }

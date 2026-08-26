@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace KS
@@ -126,6 +127,8 @@ namespace KS
             _hitbox.DestroyTimer = hitboxKillTime;
 
             _hitbox.Init(DestroyHitbox, player, baseDamage);
+            _hitbox.AddComponent<PlayerColliderProperties>().Init(player);
+
             //Debug.LogError("Check");
 
             CheckCollision(_hitbox);

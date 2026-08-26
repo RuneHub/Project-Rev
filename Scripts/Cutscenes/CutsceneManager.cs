@@ -26,6 +26,10 @@ namespace KS
         [SerializeField] private CanvasFading fadingCanvas;
         [SerializeField] private CameraManager cameraManager;
         [SerializeField] private AIBossHpTriggerManager TriggerManager;
+        [SerializeField] private UIManager uiManager;
+
+        [Header("others")]
+        [SerializeField] private GameObject UILabelFocus;
 
         private void Awake()
         {
@@ -119,14 +123,42 @@ namespace KS
             return fadingCanvas.GetDuration();
         }
 
+        public void HandleQuestIntro()
+        {
+            UIManager.instance.popupManager.SendQuestIntro();
+        }
+
+        public void HandleQuestClear()
+        {
+            UIManager.instance.popupManager.SendQuestClearedPopup();
+        }
+
+        public void HandleQuestClearMenu()
+        {
+            UIManager.instance.popupManager.SendQuestClearMenu();
+        }
+
         public void ToggleHUD(bool toggle)
         {
-            playerManager.hudManager.ToggleHUD(toggle);
+           playerManager.hudManager.ToggleHUD(toggle);
         }
 
         public void ToggleHUDBossVitality(bool toggle)
         {
             playerManager.hudManager.ToggleBossHUD(true, 1f);
+        }
+
+        public void ToggleDamageLabel(bool toggle)
+        {
+            if (toggle)
+            {
+                FloatingUIManager.instance.GetComponent<CanvasGroup>().alpha = 1;
+                FloatingUIManager.instance.GetComponentInChildren<UIWorldLookAt>().gameObject.SetActive(false);
+            }
+            else
+            {
+                FloatingUIManager.instance.GetComponent<CanvasGroup>().alpha = 0;
+            }
         }
         #endregion
 
@@ -137,6 +169,11 @@ namespace KS
             csLowell.SetActive(true);
             csLowell.GetComponent<GetCharacterTheme>().UpdateCharacterTheme();
             csSeyliana.SetActive(true);
+        }
+
+        public void SetCharacterTheme()
+        {
+            csLowell.GetComponent<GetCharacterTheme>().UpdateCharacterTheme();
         }
 
         public void SetPropCharacterOFF()
@@ -203,6 +240,14 @@ namespace KS
         public void DoUltimateAttackDamage()
         {
             Debug.Log("Do Ultimate Attack Damage");
+            var (damage, isCrit) = StatCalculator.CalculateDamage(playerManager, playerManager.UltManager.LaserUltDamage, bossManager);
+            playerManager.UltManager.AddUltDamage(damage);
+            bossManager.statManager.TakeDamage(damage, false, playerManager.playerStats.HUDDisplayColor);
+        }
+
+        public void DisplayUltDamage()
+        {
+            playerManager.UltManager.DisplayTotalUltDamage();
         }
 
         #endregion

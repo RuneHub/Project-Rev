@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace KS
 {
     public class CSLowellAnimationEvents : MonoBehaviour
     {
+        private PlayerManager player;
+        private AIBossManager boss;
 
         public GameObject LeftHandWeapon;
         public GameObject RightHandWeapon;
@@ -27,6 +30,14 @@ namespace KS
         [SerializeField] private Transform UltShotOutputL;
         [SerializeField] private float UltShotDetroyTimer;
         [SerializeField] private GameObject CCUltVFXParent;
+        [SerializeField] private BaseDamageCollider hitbox;
+        [SerializeField] private float hitboxDestroyTimer;
+
+        private void Awake()
+        {
+            player = FindObjectOfType<PlayerManager>();
+            boss = FindObjectOfType<AIBossManager>();
+        }
 
         #region Visuals
         public void SwapWeaponToHand(string _side)
@@ -174,10 +185,11 @@ namespace KS
                     for (int x = 0; x < MR.Length; x++)
                     {
                         MR[x].materials[0].SetFloat("_DissolveAmount", counter);
+                        MR[x].materials[1].SetFloat("_DissolveAmount", counter);
                     }
 
                     yield return new WaitForSeconds(refreshRate);
-                    
+
 
                 }
             }
@@ -207,10 +219,13 @@ namespace KS
                 {
                     fx.transform.position = UltShotOutputL.transform.position;
                     fx.transform.rotation = UltShotOutputL.transform.rotation;
+
+                   
                 }
 
+                spawnUltHitbox(fx);
                 fx.transform.parent = CCUltVFXParent.transform;
-                
+
                 Destroy(fx, UltShotDetroyTimer);
             }
         }
@@ -221,6 +236,26 @@ namespace KS
             {
                 Destroy(CCUltVFXParent.gameObject);
             }
+        }
+
+        private void spawnUltHitbox(GameObject vfx)
+        {
+
+            BaseDamageCollider _hitbox = Instantiate(hitbox);
+
+            _hitbox.transform.position = boss.transform.position;
+
+            _hitbox.DestroyWithTime = true;
+            _hitbox.DestroyTimer = hitboxDestroyTimer;
+
+            _hitbox.Init(DestroyHitbox, player, player.UltManager.cloneUltShotDamage);
+
+        }
+
+        private void DestroyHitbox(BaseDamageCollider obj)
+        {
+            player.UltManager.AddUltDamage(obj.dealtDamage);
+            Destroy(obj.gameObject);
         }
 
         #endregion

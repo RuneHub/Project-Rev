@@ -164,7 +164,7 @@ namespace KS
 
         }
 
-        #region UI prompt animtion
+        #region UI prompt animation
         private void AnimatePrompt(bool status)
         {
             if (status)
